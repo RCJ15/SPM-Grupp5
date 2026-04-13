@@ -9,8 +9,10 @@ ABoxSpawner::ABoxSpawner()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
-	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
-	RootComponent = BoxComponent;
+	BoxMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BoxMesh"));
+	RootComponent = BoxMesh;
+	SpawnLocation = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SpawnLocation"));
+	SpawnLocation->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -25,11 +27,16 @@ void ABoxSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	SpawnBox();
+	SpawnBox(DeltaTime);
 
 }
 
-void ABoxSpawner::SpawnBox()
+void ABoxSpawner::SpawnBox(float DeltaTime)
 {
-	GetWorld()->SpawnActor<AActor>(BoxToSpawn, SpawnLocation, FRotator::ZeroRotator);
+	if (timer <= 0)
+	{
+		GetWorld()->SpawnActor<AActor>(BoxToSpawn, SpawnLocation->GetComponentLocation(), FRotator::ZeroRotator);
+		timer = SpawnRate;
+	}
+	timer -= DeltaTime;
 }
