@@ -49,6 +49,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* MouseLookAction;
 
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* PickupAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* DropAction;
+
 public:
 
 	/** Constructor */
@@ -66,6 +72,10 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+
+	void Pickup(const FInputActionValue& Value);
+
+	void Drop(const FInputActionValue& Value);
 
 public:
 

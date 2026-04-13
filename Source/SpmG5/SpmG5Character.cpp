@@ -65,10 +65,40 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASpmG5Character::Look);
+
+		// Pickup and Drop
+		EnhancedInputComponent->BindAction(PickupAction, ETriggerEvent::Triggered, this, &ASpmG5Character::Pickup);
+		EnhancedInputComponent->BindAction(DropAction, ETriggerEvent::Triggered, this, &ASpmG5Character::Drop);
+		
+
 	}
 	else
 	{
 		UE_LOG(LogSpmG5, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
+	}
+}
+
+
+
+void ASpmG5Character::Pickup(const FInputActionValue& Value)
+{
+	// input is a boolean
+	bool bIsPressed = Value.Get<bool>();
+
+	if (bIsPressed)
+	{
+		// Implement pickup logic here
+	}
+}
+
+void ASpmG5Character::Drop(const FInputActionValue& Value)
+{
+	// input is a boolean
+	bool bIsPressed = Value.Get<bool>();
+
+	if (bIsPressed)
+	{
+		// Implement drop logic here
 	}
 }
 
