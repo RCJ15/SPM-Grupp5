@@ -28,8 +28,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(VisibleAnywhere)
-	UBoxComponent* BoxComponent;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> BoxToSpawn;
