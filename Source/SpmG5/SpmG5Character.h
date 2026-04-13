@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Components/BoxComponent.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
@@ -30,8 +31,15 @@ class ASpmG5Character : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
+	UBoxComponent* PickupBox;
 	
 protected:
+
+	bool IsHoldingItem = false;
+
+	AItem* HeldItem = nullptr;
 
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, Category="Input")
@@ -67,6 +75,7 @@ protected:
 
 protected:
 
+	virtual void Tick(float DeltaTime) override;
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
 
@@ -78,6 +87,9 @@ protected:
 	void Drop(const FInputActionValue& Value);
 
 public:
+
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* HoldingLocation;
 
 	/** Handles move inputs from either controls or UI interfaces */
 	UFUNCTION(BlueprintCallable, Category="Input")

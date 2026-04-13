@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "SpmG5Character.h"
+#include "Item.h"
 #include "Engine/LocalPlayer.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -46,6 +47,16 @@ ASpmG5Character::ASpmG5Character()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 
+
+	// Create a pickup box
+	PickupBox = CreateDefaultSubobject<UBoxComponent>(TEXT("PickupBox"));
+	PickupBox->SetupAttachment(RootComponent);
+
+
+	HoldingLocation = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HoldingLocation"));
+	HoldingLocation->SetupAttachment(RootComponent);
+
+
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
@@ -67,8 +78,8 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASpmG5Character::Look);
 
 		// Pickup and Drop
-		EnhancedInputComponent->BindAction(PickupAction, ETriggerEvent::Triggered, this, &ASpmG5Character::Pickup);
-		EnhancedInputComponent->BindAction(DropAction, ETriggerEvent::Triggered, this, &ASpmG5Character::Drop);
+		EnhancedInputComponent->BindAction(PickupAction, ETriggerEvent::Started, this, &ASpmG5Character::Pickup);
+		EnhancedInputComponent->BindAction(DropAction, ETriggerEvent::Started, this, &ASpmG5Character::Drop);
 		
 
 	}
@@ -82,23 +93,41 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void ASpmG5Character::Pickup(const FInputActionValue& Value)
 {
-	// input is a boolean
-	bool bIsPressed = Value.Get<bool>();
+	UE_LOG(LogTemp, Warning, TEXT("Pickup"));
+	if (HeldItem)
+		return;	
 
-	if (bIsPressed)
+	TArray<AActor*> OverlappingActors;
+	PickupBox->GetOverlappingActors(OverlappingActors);	
+	for(AActor* Actor : OverlappingActors)
 	{
-		// Implement pickup logic here
+		AItem* Item = Cast<AItem>(Actor);
+		if (Item)
+		{
+			HeldItem = Item;
+			UE_LOG(LogTemp, Warning, TEXT("Pickup done!"));
+			break;
+		}
 	}
 }
 
 void ASpmG5Character::Drop(const FInputActionValue& Value)
 {
-	// input is a boolean
-	bool bIsPressed = Value.Get<bool>();
+	UE_LOG(LogTemp, Warning, TEXT("Drop"));
+	if (!HeldItem)
+		return;
+	
+	HeldItem = nullptr;
+	UE_LOG(LogTemp, Warning, TEXT("Drop done!"));
+}
 
-	if (bIsPressed)
+void ASpmG5Character::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	if (IsHoldingItem && HeldItem)
 	{
-		// Implement drop logic here
+		FVector HoldingLocationWorld = HoldingLocation->GetComponentLocation();
+		HeldItem->SetActorLocation(HoldingLocationWorld);
 	}
 }
 
