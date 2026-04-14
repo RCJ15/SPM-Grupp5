@@ -9,13 +9,10 @@
   <component name="ChangeListManager">
     <list default="true" id="4665db54-d73c-4780-902a-22128b22e8e2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SpmG5.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SpmG5.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Input/IMC_Player.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Input/IMC_Player.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Levels/JamalTest.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Levels/JamalTest.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/ThirdPerson/Blueprints/BP_CustomCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ThirdPerson/Blueprints/BP_CustomCharacter.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/ThirdPerson/Blueprints/BP_CustomController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ThirdPerson/Blueprints/BP_CustomController.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/ThirdPerson/Blueprints/BP_ThirdPersonGameMode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ThirdPerson/Blueprints/BP_ThirdPersonGameMode.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/SpmG5/SpmG5Character.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/SpmG5/SpmG5Character.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/ThirdPerson/Lvl_Leveldesign/D/X3/WTY7AXV9MRC1CDXT9SNTJS.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/ThirdPerson/Lvl_Leveldesign/D/X3/WTY7AXV9MRC1CDXT9SNTJS.uasset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +49,7 @@
     "Uproject.SpmG5.executor": "Run",
     "cidr.known.project.marker": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "V-branch",
+    "git-widget-placeholder": "main",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -69,7 +66,7 @@
         <option name="PLATFORM" value="Win64" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.7/Engine/Binaries/Win64/UnrealEditor-Win64-DebugGame.exe" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\vira2008\Documents\GitHub\SPM-Grupp5\SpmG5.uproject&quot;" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\mabl0912\Documents\GitHub\SPM-Grupp5\SpmG5.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.7" />
         <option name="PASS_PARENT_ENVS" value="1" />
@@ -95,7 +92,7 @@
         <option name="PLATFORM" value="Win64" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.7/Engine/Binaries/Win64/UnrealEditor.exe" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\vira2008\Documents\GitHub\SPM-Grupp5\SpmG5.uproject&quot;" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\mabl0912\Documents\GitHub\SPM-Grupp5\SpmG5.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.7" />
         <option name="PASS_PARENT_ENVS" value="1" />
@@ -147,6 +144,7 @@
       <workItem from="1776071668936" duration="413000" />
       <workItem from="1776072296460" duration="8216000" />
       <workItem from="1776177080137" duration="2444000" />
+      <workItem from="1776181592336" duration="986000" />
     </task>
     <servers />
   </component>
