@@ -24,12 +24,14 @@ class ASpmG5Character : public ACharacter
 	GENERATED_BODY()
 
 	/** Camera boom positioning the camera behind the character */
+	/*
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
 
-	/** Follow camera */
+	/** Follow camera #1#
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
+	*/
 	
 protected:
 
@@ -42,12 +44,12 @@ protected:
 	UInputAction* MoveAction;
 
 	/** Look Input Action */
-	UPROPERTY(EditAnywhere, Category="Input")
-	UInputAction* LookAction;
+	//UPROPERTY(EditAnywhere, Category="Input")
+	//UInputAction* LookAction;
 
 	/** Mouse Look Input Action */
-	UPROPERTY(EditAnywhere, Category="Input")
-	UInputAction* MouseLookAction;
+	//UPROPERTY(EditAnywhere, Category="Input")
+	//UInputAction* MouseLookAction;
 
 public:
 
@@ -65,7 +67,9 @@ protected:
 	void Move(const FInputActionValue& Value);
 
 	/** Called for looking input */
+	/*
 	void Look(const FInputActionValue& Value);
+	*/
 
 public:
 
@@ -74,8 +78,8 @@ public:
 	virtual void DoMove(float Right, float Forward);
 
 	/** Handles look inputs from either controls or UI interfaces */
-	UFUNCTION(BlueprintCallable, Category="Input")
-	virtual void DoLook(float Yaw, float Pitch);
+	/*UFUNCTION(BlueprintCallable, Category="Input")
+	virtual void DoLook(float Yaw, float Pitch);*/
 
 	/** Handles jump pressed inputs from either controls or UI interfaces */
 	UFUNCTION(BlueprintCallable, Category="Input")
@@ -88,9 +92,9 @@ public:
 public:
 
 	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	/*FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
-	/** Returns FollowCamera subobject **/
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	/** Returns FollowCamera subobject *#1#
+	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }*/
 };
 
