@@ -48,9 +48,11 @@ ASpmG5Character::ASpmG5Character()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+	
+	FollowCamera->bUsePawnControlRotation = false;*/
 	HoldingLocation = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HoldingLocation"));
 	HoldingLocation->SetupAttachment(RootComponent);
-	FollowCamera->bUsePawnControlRotation = false;*/
+	
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -86,12 +88,14 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void ASpmG5Character::Pickup(const FInputActionValue& Value)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Pickup"))
 	if (HeldItem)
 		return;
 	
 	float Distance = 5.0f;
 	FVector BoxDimentions = PickUpBoxSize;
-	FVector Location = HoldingLocation->GetComponentLocation();
+	FVector Location;
+	Location = HoldingLocation->GetComponentLocation();	
 	FVector End = Location + GetActorForwardVector() * Distance;
 	FCollisionShape Box = FCollisionShape::MakeBox(BoxDimentions);
 	FQuat Rotation = GetActorRotation().Quaternion();
@@ -104,6 +108,8 @@ void ASpmG5Character::Pickup(const FInputActionValue& Value)
 	{
 		if (Cast<AItem>(HitResult.GetActor()))
 		{
+			
+			UE_LOG(LogTemp, Warning, TEXT("Added item"))
 			HeldItem = Cast<AItem>(HitResult.GetActor());
 			HeldActor = HitResult.GetActor();
 			HeldComponent = HitResult.GetComponent();
@@ -118,16 +124,21 @@ void ASpmG5Character::Pickup(const FInputActionValue& Value)
 
 void ASpmG5Character::Drop(const FInputActionValue& Value)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Drop"))
 	if (!HeldItem)
 		return;
 	
 	HeldActor->SetActorEnableCollision(true);                                                                               
 	HeldComponent->SetEnableGravity(true);                                                                                  
 	HeldComponent->SetSimulatePhysics(true);
+
+	HeldComponent->SetPhysicsLinearVelocity(FVector(0,0,0));
 	
 	HeldItem = nullptr;
 	HeldActor = nullptr;
 	HeldComponent = nullptr;
+	
+	UE_LOG(LogTemp, Warning, TEXT("Drop done"))
 }
 
 void ASpmG5Character::Tick(float DeltaTime)
