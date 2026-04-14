@@ -3,10 +3,10 @@
 #include "SpmG5Character.h"
 #include "Item.h"
 #include "Engine/LocalPlayer.h"
-#include "Camera/CameraComponent.h"
+//#include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/SpringArmComponent.h"
+//#include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Controller.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -39,7 +39,7 @@ ASpmG5Character::ASpmG5Character()
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 
 	// Create a camera boom (pulls in towards the player if there is a collision)
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	/*CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 400.0f;
 	CameraBoom->bUsePawnControlRotation = true;
@@ -48,11 +48,9 @@ ASpmG5Character::ASpmG5Character()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
-	
-
 	HoldingLocation = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HoldingLocation"));
 	HoldingLocation->SetupAttachment(RootComponent);
-
+	FollowCamera->bUsePawnControlRotation = false;*/
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -69,15 +67,14 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASpmG5Character::Move);
-		EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &ASpmG5Character::Look);
+		//EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &ASpmG5Character::Look);
 
 		// Looking
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASpmG5Character::Look);
+		//EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASpmG5Character::Look);
 
 		// Pickup and Drop
 		EnhancedInputComponent->BindAction(PickupAction, ETriggerEvent::Started, this, &ASpmG5Character::Pickup);
 		EnhancedInputComponent->BindAction(DropAction, ETriggerEvent::Started, this, &ASpmG5Character::Drop);
-		
 
 	}
 	else
@@ -152,14 +149,14 @@ void ASpmG5Character::Move(const FInputActionValue& Value)
 	DoMove(MovementVector.X, MovementVector.Y);
 }
 
-void ASpmG5Character::Look(const FInputActionValue& Value)
+/*void ASpmG5Character::Look(const FInputActionValue& Value)
 {
 	// input is a Vector2D
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 
 	// route the input
 	DoLook(LookAxisVector.X, LookAxisVector.Y);
-}
+}*/
 
 void ASpmG5Character::DoMove(float Right, float Forward)
 {
@@ -181,7 +178,7 @@ void ASpmG5Character::DoMove(float Right, float Forward)
 	}
 }
 
-void ASpmG5Character::DoLook(float Yaw, float Pitch)
+/*void ASpmG5Character::DoLook(float Yaw, float Pitch)
 {
 	if (GetController() != nullptr)
 	{
@@ -189,7 +186,7 @@ void ASpmG5Character::DoLook(float Yaw, float Pitch)
 		AddControllerYawInput(Yaw);
 		AddControllerPitchInput(Pitch);
 	}
-}
+}*/
 
 void ASpmG5Character::DoJumpStart()
 {
