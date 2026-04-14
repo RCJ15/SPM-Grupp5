@@ -1,20 +1,20 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Marcus hopefully approves of this.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-//#include "BoxDestroyer.h"
-#include "Item.generated.h"
+#include "Item.h"
+#include "BoxDestroyer.generated.h"
 
 UCLASS()
-class SPMG5_API AItem : public AActor
+class SPMG5_API ABoxDestroyer : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AItem();
+	ABoxDestroyer();
 
 protected:
 	// Called when the game starts or when spawned
@@ -24,8 +24,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	           FVector NormalImpulse,
+	           const FHitResult& Hit);
+	
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* BaseMesh;
-	
-	virtual void Disintegrate();
 };
