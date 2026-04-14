@@ -10,8 +10,10 @@
 #include "GameFramework/Controller.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "INodeAndChannelMappings.h"
 #include "InputActionValue.h"
 #include "SpmG5.h"
+#include "StateTreeTypes.h"
 
 ASpmG5Character::ASpmG5Character()
 {
@@ -41,17 +43,12 @@ ASpmG5Character::ASpmG5Character()
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 400.0f;
 	CameraBoom->bUsePawnControlRotation = true;
-
+													
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
-
-
-	// Create a pickup box
-	PickupBox = CreateDefaultSubobject<UBoxComponent>(TEXT("PickupBox"));
-	PickupBox->SetupAttachment(RootComponent);
-
+	
 
 	HoldingLocation = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HoldingLocation"));
 	HoldingLocation->SetupAttachment(RootComponent);
@@ -90,44 +87,59 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 }
 
 
-
 void ASpmG5Character::Pickup(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Pickup"));
 	if (HeldItem)
-		return;	
+		return;
+	
+	float Distance = 5.0f;
+	FVector BoxDimentions = PickUpBoxSize;
+	FVector Location = HoldingLocation->GetComponentLocation();
+	FVector End = Location + GetActorForwardVector() * Distance;
+	FCollisionShape Box = FCollisionShape::MakeBox(BoxDimentions);
+	FQuat Rotation = GetActorRotation().Quaternion();
+	
+	GetWorld()->SweepSingleByChannel(HitResult,Location, End,Rotation,ECollisionChannel::ECC_GameTraceChannel1,Box);
 
-	TArray<AActor*> OverlappingActors;
-	PickupBox->GetOverlappingActors(OverlappingActors);	
-	for(AActor* Actor : OverlappingActors)
+	//DrawDebugBox(GetWorld(),End, BoxDimentions, UE::StateTree::Colors::Red, false, 10.0f);
+	
+	if (HitResult.GetActor() && HitResult.GetComponent())
 	{
-		AItem* Item = Cast<AItem>(Actor);
-		if (Item)
+		if (Cast<AItem>(HitResult.GetActor()))
 		{
-			HeldItem = Item;
-			UE_LOG(LogTemp, Warning, TEXT("Pickup done!"));
-			break;
+			HeldItem = Cast<AItem>(HitResult.GetActor());
+			HeldActor = HitResult.GetActor();
+			HeldComponent = HitResult.GetComponent();
+			HeldActor->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());                                            
+			HeldActor->SetActorRelativeRotation(FRotator(0,0,0));                                                                    
+			HeldActor->SetActorEnableCollision(false);                                                                               
+			HeldComponent->SetEnableGravity(false);                                                                                  
+			HeldComponent->SetSimulatePhysics(false);                                                                                
 		}
 	}
 }
 
 void ASpmG5Character::Drop(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Drop"));
 	if (!HeldItem)
 		return;
 	
+	HeldActor->SetActorEnableCollision(true);                                                                               
+	HeldComponent->SetEnableGravity(true);                                                                                  
+	HeldComponent->SetSimulatePhysics(true);
+	
 	HeldItem = nullptr;
-	UE_LOG(LogTemp, Warning, TEXT("Drop done!"));
+	HeldActor = nullptr;
+	HeldComponent = nullptr;
 }
 
 void ASpmG5Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (IsHoldingItem && HeldItem)
+	if (HeldItem)
 	{
 		FVector HoldingLocationWorld = HoldingLocation->GetComponentLocation();
-		HeldItem->SetActorLocation(HoldingLocationWorld);
+		HeldItem->SetActorLocationAndRotation(HoldingLocationWorld, GetActorRotation());		
 	}
 }
 

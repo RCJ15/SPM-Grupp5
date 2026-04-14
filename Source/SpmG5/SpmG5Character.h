@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Item.h"
 #include "Logging/LogMacros.h"
 #include "SpmG5Character.generated.h"
 
@@ -31,15 +32,23 @@ class ASpmG5Character : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
-	UBoxComponent* PickupBox;
 	
 protected:
 
 	bool IsHoldingItem = false;
 
+	UPROPERTY(EditAnywhere)
+	FVector PickUpBoxSize = FVector(80.0f, 50.0f, 120.0f);
+	UPROPERTY(EditAnywhere)
+	float Offset = 10.0f;
+
+	FHitResult HitResult;
+	
 	AItem* HeldItem = nullptr;
+
+	AActor* HeldActor = nullptr;
+
+	UPrimitiveComponent* HeldComponent = nullptr;
 
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, Category="Input")
@@ -89,7 +98,7 @@ protected:
 public:
 
 	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* HoldingLocation;
+	USceneComponent* HoldingLocation;
 
 	/** Handles move inputs from either controls or UI interfaces */
 	UFUNCTION(BlueprintCallable, Category="Input")
