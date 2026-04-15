@@ -8,7 +8,7 @@
 	return Score;
 }
 
-void UScoreManager::AddScore(int AddedScore)
+void UScoreManager::AddScore(int MewScore)
 {
 }
 

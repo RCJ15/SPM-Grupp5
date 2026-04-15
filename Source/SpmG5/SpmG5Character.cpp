@@ -115,7 +115,7 @@ void ASpmG5Character::Pickup(const FInputActionValue& Value)
 			HeldComponent = HitResult.GetComponent();
 			HeldActor->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());                                            
 			HeldActor->SetActorRelativeRotation(FRotator(0,0,0));                                                                    
-			HeldActor->SetActorEnableCollision(false);                                                                               
+			HeldActor->SetActorEnableCollision(false);                                                                          
 			HeldComponent->SetEnableGravity(false);                                                                                  
 			HeldComponent->SetSimulatePhysics(false);                                                                                
 		}
@@ -174,8 +174,7 @@ void ASpmG5Character::DoMove(float Right, float Forward)
 	if (GetController() != nullptr)
 	{
 		// find out which way is forward
-		const FRotator Rotation = GetController()->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
+		const FRotator YawRotation(0, 0, 0);
 
 		// get forward vector
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
