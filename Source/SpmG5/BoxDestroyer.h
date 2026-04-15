@@ -30,5 +30,11 @@ public:
 	           const FHitResult& Hit);
 	
 	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* CoreMesh;
+	
+	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* BaseMesh;
+	
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* LidMesh;
 };

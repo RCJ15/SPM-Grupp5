@@ -9,8 +9,13 @@ ABoxDestroyer::ABoxDestroyer()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	CoreMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CoreMesh"));
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>("BaseMesh");
-	SetRootComponent(BaseMesh);
+	LidMesh = CreateDefaultSubobject<UStaticMeshComponent>("LidMesh");
+	
+	SetRootComponent(CoreMesh);
+	BaseMesh->SetupAttachment(CoreMesh);
+	LidMesh->SetupAttachment(BaseMesh);
 }
 
 // Called when the game starts or when spawned
@@ -18,7 +23,7 @@ void ABoxDestroyer::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	BaseMesh->OnComponentHit.AddDynamic(this, &ABoxDestroyer::OnHit);
+	LidMesh->OnComponentHit.AddDynamic(this, &ABoxDestroyer::OnHit);
 }
 
 // Called every frame

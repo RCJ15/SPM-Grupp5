@@ -19,13 +19,16 @@ private:
 	int Score;
 	
 public:
-	
+	UFUNCTION(BlueprintCallable)
 	int GetScore();
 	
+	UFUNCTION(BlueprintCallable)
 	void AddScore(int AddedScore);
 	
+	UFUNCTION(BlueprintCallable)
 	void SetScore(int NewScore);
 	
+	UFUNCTION(BlueprintCallable)
 	void ResetScore();
 	
 };	
