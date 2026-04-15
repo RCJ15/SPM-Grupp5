@@ -92,15 +92,14 @@ void ASpmG5Character::Pickup(const FInputActionValue& Value)
 	if (HeldActor)
 		return;
 	
+	//Sätter allt som SweepSingleByChannel behöver, ECC_GameTraceChannel1 är items
 	float Distance = 5.0f;
-	FVector BoxDimentions = PickUpBoxSize;
-	FVector Location;
-	Location = HoldingLocation->GetComponentLocation();	
+	FVector Location = HoldingLocation->GetComponentLocation();	
 	FVector End = Location + GetActorForwardVector() * Distance;
-	FCollisionShape Box = FCollisionShape::MakeBox(BoxDimentions);
+	FCollisionShape Box = FCollisionShape::MakeBox(PickUpBoxSize);
 	FQuat Rotation = GetActorRotation().Quaternion();
 	
-	GetWorld()->SweepSingleByChannel(HitResult,Location, End,Rotation,ECollisionChannel::ECC_GameTraceChannel1,Box);
+	GetWorld()->SweepSingleByChannel(HitResult,Location, End, Rotation, ECC_GameTraceChannel1,Box);
 
 	//DrawDebugBox(GetWorld(),End, BoxDimentions, UE::StateTree::Colors::Red, false, 10.0f);
 	
@@ -108,16 +107,22 @@ void ASpmG5Character::Pickup(const FInputActionValue& Value)
 	{
 		if (Cast<AItem>(HitResult.GetActor()))
 		{
-			
 			UE_LOG(LogTemp, Warning, TEXT("Added item"))
-			//HeldItem = Cast<AItem>(HitResult.GetActor());
+			//Sätter in rellevanta data för att komma åt funktioner
 			HeldActor = HitResult.GetActor();
 			HeldComponent = HitResult.GetComponent();
-			HeldActor->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());                                            
-			HeldActor->SetActorRelativeRotation(FRotator(0,0,0));                                                                    
-			HeldActor->SetActorEnableCollision(false);                                                                          
-			HeldComponent->SetEnableGravity(false);                                                                                  
-			HeldComponent->SetSimulatePhysics(false);                                                                                
+			
+			HeldActor->SetActorEnableCollision(false);
+			HeldComponent->SetEnableGravity(false);
+			HeldComponent->SetSimulatePhysics(false);
+			
+			HeldActor->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());
+			HeldActor->SetActorRelativeRotation(FRotator(0,0,0));
+			
+			//Attatch to player
+			//har inte testat, bra att testa med båda
+			HeldActor->AttachToComponent(HoldingLocation, FAttachmentTransformRules(EAttachmentRule::KeepWorld/* KeepRelative*/, false));
+
 		}
 	}
 }
@@ -128,6 +133,7 @@ void ASpmG5Character::Drop(const FInputActionValue& Value)
 	if (!HeldActor && !HeldComponent)
 		return;
 	
+	//Testar att sätta den innan och efter
 	HeldComponent->SetPhysicsLinearVelocity(FVector(0,0,0));
 	
 	HeldActor->SetActorEnableCollision(true);                                                                               
@@ -136,11 +142,11 @@ void ASpmG5Character::Drop(const FInputActionValue& Value)
 
 	HeldComponent->SetPhysicsLinearVelocity(FVector(0,0,0));
 	
-	// HeldItem = nullptr;
+	//Resettar inför pickup
 	HeldActor = nullptr;
 	HeldComponent = nullptr;
+	//Detatch from player
 	
-	UE_LOG(LogTemp, Warning, TEXT("Drop done"))
 }
 
 void ASpmG5Character::Tick(float DeltaTime)
@@ -148,6 +154,7 @@ void ASpmG5Character::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if (HeldActor)
 	{
+		//Kan tas bort om "attach to player" inte fungerar
 		FVector HoldingLocationWorld = HoldingLocation->GetComponentLocation();
 		HeldActor->SetActorLocationAndRotation(HoldingLocationWorld, GetActorRotation());		
 	}
