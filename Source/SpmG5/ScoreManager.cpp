@@ -8,11 +8,11 @@
 	return Score;
 }
 
-void UScoreManager::AddScore(int Score)
+void UScoreManager::AddScore(int MewScore)
 {
 }
 
-void UScoreManager::SetScore(int Score)
+void UScoreManager::SetScore(int NewScore)
 {
 }
 
