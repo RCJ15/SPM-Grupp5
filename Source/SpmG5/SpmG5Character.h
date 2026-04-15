@@ -46,7 +46,6 @@ protected:
 
 	FHitResult HitResult;
 	
-	AItem* HeldItem = nullptr;
 
 	AActor* HeldActor = nullptr;
 

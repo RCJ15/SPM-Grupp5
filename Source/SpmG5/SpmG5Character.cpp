@@ -89,7 +89,7 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 void ASpmG5Character::Pickup(const FInputActionValue& Value)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Pickup"))
-	if (HeldItem)
+	if (HeldActor)
 		return;
 	
 	float Distance = 5.0f;
@@ -110,7 +110,7 @@ void ASpmG5Character::Pickup(const FInputActionValue& Value)
 		{
 			
 			UE_LOG(LogTemp, Warning, TEXT("Added item"))
-			HeldItem = Cast<AItem>(HitResult.GetActor());
+			//HeldItem = Cast<AItem>(HitResult.GetActor());
 			HeldActor = HitResult.GetActor();
 			HeldComponent = HitResult.GetComponent();
 			HeldActor->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());                                            
@@ -125,8 +125,10 @@ void ASpmG5Character::Pickup(const FInputActionValue& Value)
 void ASpmG5Character::Drop(const FInputActionValue& Value)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drop"))
-	if (!HeldItem)
+	if (!HeldActor && !HeldComponent)
 		return;
+	
+	HeldComponent->SetPhysicsLinearVelocity(FVector(0,0,0));
 	
 	HeldActor->SetActorEnableCollision(true);                                                                               
 	HeldComponent->SetEnableGravity(true);                                                                                  
@@ -134,7 +136,7 @@ void ASpmG5Character::Drop(const FInputActionValue& Value)
 
 	HeldComponent->SetPhysicsLinearVelocity(FVector(0,0,0));
 	
-	HeldItem = nullptr;
+	// HeldItem = nullptr;
 	HeldActor = nullptr;
 	HeldComponent = nullptr;
 	
@@ -144,10 +146,10 @@ void ASpmG5Character::Drop(const FInputActionValue& Value)
 void ASpmG5Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (HeldItem)
+	if (HeldActor)
 	{
 		FVector HoldingLocationWorld = HoldingLocation->GetComponentLocation();
-		HeldItem->SetActorLocationAndRotation(HoldingLocationWorld, GetActorRotation());		
+		HeldActor->SetActorLocationAndRotation(HoldingLocationWorld, GetActorRotation());		
 	}
 }
 
