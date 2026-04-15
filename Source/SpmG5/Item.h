@@ -20,14 +20,34 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
+	UPROPERTY(EditAnywhere)
+	bool IsFragile = false;
 	
+	UPROPERTY(EditAnywhere)
+	bool IsLarge = false;
+	
+	void CalculateIfBreakIfFragile();
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
+	virtual void Disintegrate();
+	
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+			   FVector NormalImpulse,
+			   const FHitResult& Hit);
+	
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* BaseMesh;
 	
-	virtual void Disintegrate();
+	UFUNCTION(BlueprintCallable)
+	bool GetIsFragile();
+	
+	UFUNCTION(BlueprintCallable)
+	bool GetIsLarge();
+	
+	UPROPERTY(EditAnywhere)
+	int MaxSpeedIfFragile = 500;
 };

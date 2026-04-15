@@ -8,6 +8,7 @@ AItem::AItem()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMesh"));
 	SetRootComponent(BaseMesh);
 }
@@ -16,6 +17,8 @@ AItem::AItem()
 void AItem::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	BaseMesh->OnComponentHit.AddDynamic(this, &AItem::OnHit);
 }
 
 // Called every frame
@@ -24,7 +27,39 @@ void AItem::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void AItem::CalculateIfBreakIfFragile()
+{
+	if (IsFragile)
+	{
+		int CurrentSpeed = GetVelocity().Size();
+		UE_LOG(LogTemp, Warning, TEXT("Current Speed: %d"), CurrentSpeed);
+		
+		if (CurrentSpeed > MaxSpeedIfFragile)
+		{
+			Disintegrate();
+		}
+	}
+}
+
 void AItem::Disintegrate()
 {
 	Destroy();
+}
+
+void AItem::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (OtherActor && OtherActor != this)
+	{
+		CalculateIfBreakIfFragile();
+	}
+}
+
+bool AItem::GetIsFragile()
+{
+	return IsFragile;
+}
+
+bool AItem::GetIsLarge()
+{
+	return IsLarge;
 }
