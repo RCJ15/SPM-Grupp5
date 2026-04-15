@@ -22,9 +22,9 @@ public:
 	
 	int GetScore();
 	
-	void AddScore(int Score);
+	void AddScore(int AddedScore);
 	
-	void SetScore(int Score);
+	void SetScore(int NewScore);
 	
 	void ResetScore();
 	
