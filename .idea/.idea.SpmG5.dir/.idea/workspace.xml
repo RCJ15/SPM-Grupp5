@@ -9,10 +9,16 @@
   <component name="ChangeListManager">
     <list default="true" id="4665db54-d73c-4780-902a-22128b22e8e2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SpmG5.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SpmG5.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_BoxDestroyer.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_BoxDestroyer.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_ConveyorSimple.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_ConveyorSimple.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_Item.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_Item.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/Levels/TestLevelLiv/4/QA/UZHFBONZYTJFA7RWIP7RBH.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/Levels/TestLevelLiv/4/QA/UZHFBONZYTJFA7RWIP7RBH.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/Levels/TestLevelLiv/4/VC/LNVZ3LE19RWINAZ8P7T3JN.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/Levels/TestLevelLiv/4/VC/LNVZ3LE19RWINAZ8P7T3JN.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/Levels/TestLevelLiv/9/LS/XV9NF0YH19DJT532XUTXS9.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/Levels/TestLevelLiv/9/LS/XV9NF0YH19DJT532XUTXS9.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/Levels/TestLevelLiv/A/OY/8HPZS4OQEROAP1OANA3FBP.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/Levels/TestLevelLiv/A/OY/8HPZS4OQEROAP1OANA3FBP.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/Levels/TestLevelLiv/B/OQ/9WPHI04N7V0PB7E0XSTTYB.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/Levels/TestLevelLiv/B/OQ/9WPHI04N7V0PB7E0XSTTYB.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/SpmG5/Item.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/SpmG5/Item.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/SpmG5/Item.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/SpmG5/Item.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/SpmG5/SpmG5Character.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/SpmG5/SpmG5Character.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +59,7 @@
     "Uproject.SpmG5.executor": "Run",
     "cidr.known.project.marker": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Liv",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",

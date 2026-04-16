@@ -22,7 +22,7 @@ protected:
 	
 	UPROPERTY(EditAnywhere)
 	bool IsFragile = false;
-	
+
 	UPROPERTY(EditAnywhere)
 	bool IsLarge = false;
 	
@@ -41,13 +41,13 @@ public:
 			   FVector NormalImpulse,
 			   const FHitResult& Hit);
 	
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(BlueprintReadWrite)
 	UStaticMeshComponent* BaseMesh;
 	
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool GetIsFragile();
 	
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool GetIsLarge();
 	
 	UFUNCTION(BlueprintCallable)

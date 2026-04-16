@@ -19,6 +19,11 @@ void AItem::BeginPlay()
 	Super::BeginPlay();
 	
 	BaseMesh->OnComponentHit.AddDynamic(this, &AItem::OnHit);
+	
+	/*if (IsLarge)
+	{
+		SetActorScale3D(FVector(1.5, 0.7, 0.7));
+	}*/
 }
 
 // Called every frame
