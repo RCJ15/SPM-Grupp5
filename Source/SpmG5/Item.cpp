@@ -50,7 +50,14 @@ void AItem::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimit
 {
 	if (OtherActor && OtherActor != this)
 	{
-		CalculateIfBreakIfFragile();
+		if (MostRecentHolder)
+		{
+			if (OtherActor != MostRecentHolder)
+			{
+				MostRecentHolder = nullptr;
+				CalculateIfBreakIfFragile();
+			}
+		}
 	}
 }
 
@@ -62,4 +69,10 @@ bool AItem::GetIsFragile()
 bool AItem::GetIsLarge()
 {
 	return IsLarge;
+}
+
+void AItem::SetMostRecentHolder(AActor* holder)
+{
+	MostRecentHolder = holder;
+	//return (MostRecentHolder) ? MostRecentHolder : nullptr;
 }

@@ -9,7 +9,10 @@
   <component name="ChangeListManager">
     <list default="true" id="4665db54-d73c-4780-902a-22128b22e8e2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SpmG5.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SpmG5.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/SpmG5/ScoreManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/SpmG5/ScoreManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/Levels/TestLevelLiv/4/QA/UZHFBONZYTJFA7RWIP7RBH.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/Levels/TestLevelLiv/4/QA/UZHFBONZYTJFA7RWIP7RBH.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/SpmG5/Item.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/SpmG5/Item.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/SpmG5/Item.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/SpmG5/Item.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/SpmG5/SpmG5Character.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/SpmG5/SpmG5Character.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +53,7 @@
     "Uproject.SpmG5.executor": "Run",
     "cidr.known.project.marker": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "Marcus",
+    "git-widget-placeholder": "main",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -67,7 +70,7 @@
         <option name="PLATFORM" value="Win64" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.7/Engine/Binaries/Win64/UnrealEditor-Win64-DebugGame.exe" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\mabl0912\Documents\GitHub\SPM-Grupp5\SpmG5.uproject&quot;" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\liar3045\Documents\GitHub\SPM-Grupp5\SpmG5.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.7" />
         <option name="PASS_PARENT_ENVS" value="1" />
@@ -93,7 +96,7 @@
         <option name="PLATFORM" value="Win64" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.7/Engine/Binaries/Win64/UnrealEditor.exe" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\mabl0912\Documents\GitHub\SPM-Grupp5\SpmG5.uproject&quot;" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\liar3045\Documents\GitHub\SPM-Grupp5\SpmG5.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.7" />
         <option name="PASS_PARENT_ENVS" value="1" />
@@ -149,6 +152,7 @@
       <workItem from="1776241832402" duration="1245000" />
       <workItem from="1776244449933" duration="2096000" />
       <workItem from="1776246673778" duration="393000" />
+      <workItem from="1776322858526" duration="2451000" />
     </task>
     <servers />
   </component>

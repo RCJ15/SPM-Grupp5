@@ -114,10 +114,12 @@ void ASpmG5Character::Pickup(const FInputActionValue& Value)
 			HeldActor = HitResult.GetActor();
 			HeldComponent = HitResult.GetComponent();
 			HeldActor->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());                                            
-			HeldActor->SetActorRelativeRotation(FRotator(0,0,0));                                                                    
-			HeldActor->SetActorEnableCollision(false);                                                                          
-			HeldComponent->SetEnableGravity(false);                                                                                  
-			HeldComponent->SetSimulatePhysics(false);                                                                                
+			HeldActor->SetActorRelativeRotation(FRotator(0,0,0));
+			HeldActor->SetActorEnableCollision(false);
+			HeldComponent->SetEnableGravity(false);
+			HeldComponent->SetSimulatePhysics(false);
+			
+			HeldItem->SetMostRecentHolder(this);
 		}
 	}
 }

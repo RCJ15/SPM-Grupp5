@@ -26,6 +26,8 @@ protected:
 	UPROPERTY(EditAnywhere)
 	bool IsLarge = false;
 	
+	AActor* MostRecentHolder;
+	
 	void CalculateIfBreakIfFragile();
 
 public:	
@@ -47,6 +49,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	bool GetIsLarge();
+	
+	UFUNCTION(BlueprintCallable)
+	void SetMostRecentHolder(AActor* holder);
 	
 	UPROPERTY(EditAnywhere)
 	int MaxSpeedIfFragile = 500;
