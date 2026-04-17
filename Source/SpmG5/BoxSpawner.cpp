@@ -1,5 +1,8 @@
 #include "BoxSpawner.h"
 
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
+
 ABoxSpawner::ABoxSpawner()
 {
  	PrimaryActorTick.bCanEverTick = true;
@@ -16,35 +19,56 @@ ABoxSpawner::ABoxSpawner()
 void ABoxSpawner::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	LoopSpawnBox(SpawnRate);
 }
 
 void ABoxSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	SpawnBox(DeltaTime);
 }
 
-void ABoxSpawner::SpawnBox(float DeltaTime)
+void ABoxSpawner::SpawnBox()
 {
-	if (Timer <= 0)
+	FTransform SpawnTransform = FTransform(FRotator::ZeroRotator, SpawnLocation->GetComponentLocation());
+	AActor* NewActor = GetWorld()->SpawnActorDeferred<AActor>(BoxToSpawn, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+	AItem* Item = Cast<AItem>(NewActor);
+	
+	if (Item)
 	{
-		AItem* item = Cast<AItem>(BoxToSpawn);
-		
-		if (item)
-		{
-			item->SetIsLarge(ShouldHappen(LargeBoxSpawnRate));
-			item->SetIsFragile(ShouldHappen(FragileBoxSpawnRate));
-            
-            GetWorld()->SpawnActor<AItem>(BoxToSpawn, SpawnLocation->GetComponentLocation(), FRotator::ZeroRotator);
-            Timer = SpawnRate;
-		}
+		UE_LOG(LogTemp, Warning, TEXT("Spawning Box"));
+		Item->SetIsLarge(ShouldHappen(LargeBoxSpawnRate));
+		Item->SetIsFragile(ShouldHappen(FragileBoxSpawnRate));
+		Item->SetIsDangerous(ShouldHappen(DangerousBoxSpawnRate));
 	}
-	Timer -= DeltaTime;
+
+	UGameplayStatics::FinishSpawningActor(NewActor, SpawnTransform);
+}
+
+void ABoxSpawner::LoopSpawnBox(float NewSpawnRate)
+{
+	GetWorld()->GetTimerManager().SetTimer(
+		SpawnRateTimer,
+		this,
+		&ABoxSpawner::SpawnBox,
+		NewSpawnRate,
+		true
+		);
 }
 
 bool ABoxSpawner::ShouldHappen(int percentage)
 {
 	return (FMath::RandRange(1, 100/percentage) == 1 ? true : false);
 }
+
+/*void ABoxSpawner::RetRandomNumber(int32& Number)
+{
+	TArray<int32> Arr;
+	int32 RandomInt;
+	int32 ArrayGetItem;
+	
+	
+
+	RandomInt = UKismetMathLibrary::RandomIntegerInRange(0, 99);
+	FCustomThunkTemplates::Array_Get(Arr, RandomInt, ArrayGetItem);
+	Number = ArrayGetItem;
+}*/

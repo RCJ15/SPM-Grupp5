@@ -84,6 +84,11 @@ bool AItem::GetIsLarge()
 	return IsLarge;
 }
 
+bool AItem::GetIsDangerous()
+{
+	return IsDangerous;
+}
+
 void AItem::SetMostRecentHolder(AActor* Holder)
 {
 	MostRecentHolder = Holder;
@@ -98,4 +103,9 @@ void AItem::SetIsLarge(bool SetTo)
 void AItem::SetIsFragile(bool SetTo)
 {
 	IsFragile = SetTo;
+}
+
+void AItem::SetIsDangerous(bool SetTo)
+{
+	IsDangerous = SetTo;
 }

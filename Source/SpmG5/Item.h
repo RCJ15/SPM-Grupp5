@@ -20,13 +20,14 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
-	UPrimitiveComponent* PrimComp;
-	
 	UPROPERTY(EditAnywhere)
 	bool IsFragile;
 
 	UPROPERTY(EditAnywhere)
 	bool IsLarge;
+	
+	UPROPERTY(EditAnywhere)
+	bool IsDangerous;
 	
 	UPrimitiveComponent* PrimComp;
 	AActor* MostRecentHolder;
@@ -38,12 +39,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 	void SetPhysics(bool SetTo);
-	
 	void ResetVelocity(){PrimComp->SetPhysicsLinearVelocity(FVector(0,0,0));}
+	void AddVelocity(int x, int y, int z){PrimComp->AddForce(FVector(x,y,z));}
 	
 	virtual void Disintegrate();
-	
-	void AItem::SetPhysics(bool SetTo);
 	
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
@@ -59,6 +58,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool GetIsLarge();
 	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool GetIsDangerous();
+	
 	UFUNCTION(BlueprintCallable)
 	void SetMostRecentHolder(AActor* holder);
 	
@@ -67,4 +69,5 @@ public:
 	
 	void SetIsLarge(bool SetTo);
 	void SetIsFragile(bool SetTo);
+	void SetIsDangerous(bool SetTo);
 };
