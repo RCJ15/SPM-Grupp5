@@ -37,20 +37,16 @@ class ASpmG5Character : public ACharacter
 	
 protected:
 
-	bool IsHoldingItem = false;
-
+	UPROPERTY(EditAnywhere)
+	USceneComponent* HoldingLocation;
+	
 	UPROPERTY(EditAnywhere)
 	FVector PickUpBoxSize = FVector(80.0f, 50.0f, 120.0f);
 	UPROPERTY(EditAnywhere)
 	float Offset = 10.0f;
 
 	FHitResult HitResult;
-	
 	AItem* HeldItem = nullptr;
-
-	AActor* HeldActor = nullptr;
-
-	UPrimitiveComponent* HeldComponent = nullptr;
 
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, Category="Input")
@@ -101,8 +97,6 @@ protected:
 
 public:
 
-	UPROPERTY(EditAnywhere)
-	USceneComponent* HoldingLocation;
 
 	/** Handles move inputs from either controls or UI interfaces */
 	UFUNCTION(BlueprintCallable, Category="Input")
