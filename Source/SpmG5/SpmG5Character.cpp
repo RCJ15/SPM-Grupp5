@@ -77,6 +77,7 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		// Pickup and Drop
 		EnhancedInputComponent->BindAction(PickupAction, ETriggerEvent::Started, this, &ASpmG5Character::Pickup);
 		EnhancedInputComponent->BindAction(DropAction, ETriggerEvent::Started, this, &ASpmG5Character::Drop);
+		EnhancedInputComponent->BindAction(ThrowAction, ETriggerEvent::Started, this, &ASpmG5Character::Throw);
 
 	}
 	else
@@ -143,12 +144,26 @@ void ASpmG5Character::Drop(const FInputActionValue& Value)
 	
 }
 
+void ASpmG5Character::Throw(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Throw"))
+	if (!HeldItem)
+		return;
+	
+	//Testar att sätta den innan och efter
+	HeldItem->SetPhysics(true);
+	HeldItem->AddVelocity(500000.f, 0.f, 0.f);
+	
+	//Resettar inför pickup
+	HeldItem = nullptr;
+}
+
 void ASpmG5Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	if (HeldItem)
 	{
-		//Kan tas bort om "attach to player" sfungerar
+		//Kan tas bort om "attach to player" fungerar
 		FVector HoldingLocationWorld = HoldingLocation->GetComponentLocation();
 		HeldItem->SetActorLocationAndRotation(HoldingLocationWorld, GetActorRotation());		
 	}

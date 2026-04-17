@@ -69,6 +69,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* DropAction;
+	
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* ThrowAction;
 
 public:
 
@@ -94,6 +97,8 @@ protected:
 	void Pickup(const FInputActionValue& Value);
 
 	void Drop(const FInputActionValue& Value);
+	
+	void Throw(const FInputActionValue& Value);
 
 public:
 
