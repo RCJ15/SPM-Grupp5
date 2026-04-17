@@ -8,9 +8,9 @@ AItem::AItem()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMesh"));
 	SetRootComponent(BaseMesh);
+	PrimComp = Cast<UPrimitiveComponent>(GetRootComponent());
 }
 
 // Called when the game starts or when spawned
@@ -30,6 +30,13 @@ void AItem::BeginPlay()
 void AItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void AItem::SetPhysics(bool SetTo)
+{
+	SetActorEnableCollision(SetTo);
+	PrimComp->SetEnableGravity(SetTo);
+	PrimComp->SetSimulatePhysics(SetTo);
 }
 
 void AItem::CalculateIfBreakIfFragile()

@@ -20,6 +20,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
+	UPrimitiveComponent* PrimComp;
+	
 	UPROPERTY(EditAnywhere)
 	bool IsFragile = false;
 
@@ -33,6 +35,10 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	
+	void SetPhysics(bool SetTo);
+	
+	void ResetVelocity(){PrimComp->SetPhysicsLinearVelocity(FVector(0,0,0));}
 	
 	virtual void Disintegrate();
 	

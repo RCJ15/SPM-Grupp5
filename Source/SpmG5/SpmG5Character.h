@@ -46,8 +46,7 @@ protected:
 	float Offset = 10.0f;
 
 	FHitResult HitResult;
-	AActor* HeldActor = nullptr;
-	UPrimitiveComponent* HeldComponent = nullptr;
+	AItem* HeldItem = nullptr;
 
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, Category="Input")

@@ -89,7 +89,7 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 void ASpmG5Character::Pickup(const FInputActionValue& Value)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Pickup"))
-	if (HeldActor)
+	if (HeldItem)
 		return;
 	
 	//Sätter allt som SweepSingleByChannel behöver, ECC_GameTraceChannel1 är items
@@ -107,21 +107,18 @@ void ASpmG5Character::Pickup(const FInputActionValue& Value)
 	{
 		if (Cast<AItem>(HitResult.GetActor()))
 		{
+			//Fult men vet inte hur man kan göra det på bättre sätt
+			HeldItem = Cast<AItem>(HitResult.GetActor());
+			
 			UE_LOG(LogTemp, Warning, TEXT("Added item"))
-			//Sätter in rellevanta data för att komma åt funktioner
-			HeldActor = HitResult.GetActor();
-			HeldComponent = HitResult.GetComponent();
-
-			HeldActor->SetActorEnableCollision(false);
-			HeldComponent->SetEnableGravity(false);
-			HeldComponent->SetSimulatePhysics(false);
-
-			HeldActor->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());
-			HeldActor->SetActorRelativeRotation(FRotator(0,0,0));
+			HeldItem->SetPhysics(false);
+			HeldItem->ResetVelocity();
+			HeldItem->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());
+			HeldItem->SetActorRelativeRotation(FRotator(0,0,0));
 			
 			//Attatch to player
 			//har inte testat, bra att testa med båda
-			HeldActor->AttachToComponent(HoldingLocation, FAttachmentTransformRules(EAttachmentRule::KeepWorld/* KeepRelative*/, false));
+			//HeldActor->AttachToComponent(HoldingLocation, FAttachmentTransformRules(EAttachmentRule::KeepWorld/* KeepRelative*/, false));
 
 			HeldItem->SetMostRecentHolder(this);
 
@@ -132,21 +129,16 @@ void ASpmG5Character::Pickup(const FInputActionValue& Value)
 void ASpmG5Character::Drop(const FInputActionValue& Value)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drop"))
-	if (!HeldActor && !HeldComponent)
+	if (!HeldItem)
 		return;
 	
-	//Testar att sätta den innan och efter
-	HeldComponent->SetPhysicsLinearVelocity(FVector(0,0,0));
-	
-	HeldActor->SetActorEnableCollision(true);                                                                               
-	HeldComponent->SetEnableGravity(true);                                                                                  
-	HeldComponent->SetSimulatePhysics(true);
-
-	HeldComponent->SetPhysicsLinearVelocity(FVector(0,0,0));
+	//Testar att sätta den innan och efter	
+	HeldItem->ResetVelocity();
+	HeldItem->SetPhysics(true);
+	HeldItem->ResetVelocity();
 	
 	//Resettar inför pickup
-	HeldActor = nullptr;
-	HeldComponent = nullptr;
+	HeldItem = nullptr;
 	//Detatch from player
 	
 }
@@ -154,11 +146,11 @@ void ASpmG5Character::Drop(const FInputActionValue& Value)
 void ASpmG5Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (HeldActor)
+	if (HeldItem)
 	{
-		//Kan tas bort om "attach to player" inte fungerar
+		//Kan tas bort om "attach to player" sfungerar
 		FVector HoldingLocationWorld = HoldingLocation->GetComponentLocation();
-		HeldActor->SetActorLocationAndRotation(HoldingLocationWorld, GetActorRotation());		
+		HeldItem->SetActorLocationAndRotation(HoldingLocationWorld, GetActorRotation());		
 	}
 }
 
