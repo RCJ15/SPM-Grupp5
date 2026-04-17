@@ -10,6 +10,7 @@ AItem::AItem()
 	PrimaryActorTick.bCanEverTick = true;
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMesh"));
 	SetRootComponent(BaseMesh);
+
 	PrimComp = Cast<UPrimitiveComponent>(GetRootComponent());
 }
 
@@ -83,8 +84,28 @@ bool AItem::GetIsLarge()
 	return IsLarge;
 }
 
-void AItem::SetMostRecentHolder(AActor* holder)
+bool AItem::GetIsDangerous()
 {
-	MostRecentHolder = holder;
+	return IsDangerous;
+}
+
+void AItem::SetMostRecentHolder(AActor* Holder)
+{
+	MostRecentHolder = Holder;
 	//return (MostRecentHolder) ? MostRecentHolder : nullptr;
+}
+
+void AItem::SetIsLarge(bool SetTo)
+{
+	IsLarge = SetTo;
+}
+
+void AItem::SetIsFragile(bool SetTo)
+{
+	IsFragile = SetTo;
+}
+
+void AItem::SetIsDangerous(bool SetTo)
+{
+	IsDangerous = SetTo;
 }
