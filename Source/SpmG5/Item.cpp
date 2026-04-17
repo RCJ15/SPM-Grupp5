@@ -11,6 +11,8 @@ AItem::AItem()
 	
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMesh"));
 	SetRootComponent(BaseMesh);
+	
+	PrimComp = Cast<UPrimitiveComponent>(GetRootComponent());
 }
 
 // Called when the game starts or when spawned
@@ -30,6 +32,13 @@ void AItem::BeginPlay()
 void AItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void AItem::SetPhysics(bool SetTo)
+{
+	SetActorEnableCollision(SetTo);
+	PrimComp->SetEnableGravity(SetTo);
+	PrimComp->SetSimulatePhysics(SetTo);
 }
 
 void AItem::CalculateIfBreakIfFragile()
@@ -76,8 +85,18 @@ bool AItem::GetIsLarge()
 	return IsLarge;
 }
 
-void AItem::SetMostRecentHolder(AActor* holder)
+void AItem::SetMostRecentHolder(AActor* Holder)
 {
-	MostRecentHolder = holder;
+	MostRecentHolder = Holder;
 	//return (MostRecentHolder) ? MostRecentHolder : nullptr;
+}
+
+void AItem::SetIsLarge(bool SetTo)
+{
+	IsLarge = SetTo;
+}
+
+void AItem::SetIsFragile(bool SetTo)
+{
+	IsFragile = SetTo;
 }

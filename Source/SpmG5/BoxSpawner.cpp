@@ -11,7 +11,6 @@ ABoxSpawner::ABoxSpawner()
 	SpawnLocation->SetupAttachment(RootComponent);
 
 	//SpawnLocation += GetActorLocation();
-
 }
 
 void ABoxSpawner::BeginPlay()
@@ -25,15 +24,27 @@ void ABoxSpawner::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	SpawnBox(DeltaTime);
-
 }
 
 void ABoxSpawner::SpawnBox(float DeltaTime)
 {
-	if (timer <= 0)
+	if (Timer <= 0)
 	{
-		GetWorld()->SpawnActor<AActor>(BoxToSpawn, SpawnLocation->GetComponentLocation(), FRotator::ZeroRotator);
-		timer = SpawnRate;
+		AItem* item = Cast<AItem>(BoxToSpawn);
+		
+		if (item)
+		{
+			item->SetIsLarge(ShouldHappen(LargeBoxSpawnRate));
+			item->SetIsFragile(ShouldHappen(FragileBoxSpawnRate));
+            
+            GetWorld()->SpawnActor<AItem>(BoxToSpawn, SpawnLocation->GetComponentLocation(), FRotator::ZeroRotator);
+            Timer = SpawnRate;
+		}
 	}
-	timer -= DeltaTime;
+	Timer -= DeltaTime;
+}
+
+bool ABoxSpawner::ShouldHappen(int percentage)
+{
+	return (FMath::RandRange(1, 100/percentage) == 1 ? true : false);
 }

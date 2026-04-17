@@ -21,11 +21,12 @@ protected:
 	virtual void BeginPlay() override;
 	
 	UPROPERTY(EditAnywhere)
-	bool IsFragile = false;
+	bool IsFragile;
 
 	UPROPERTY(EditAnywhere)
-	bool IsLarge = false;
+	bool IsLarge;
 	
+	UPrimitiveComponent* PrimComp;
 	AActor* MostRecentHolder;
 	
 	void CalculateIfBreakIfFragile();
@@ -35,6 +36,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 	virtual void Disintegrate();
+	
+	void AItem::SetPhysics(bool SetTo);
 	
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
@@ -55,4 +58,7 @@ public:
 	
 	UPROPERTY(EditAnywhere)
 	int MaxSpeedIfFragile = 500;
+	
+	void SetIsLarge(bool SetTo);
+	void SetIsFragile(bool SetTo);
 };
