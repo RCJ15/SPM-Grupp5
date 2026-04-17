@@ -51,7 +51,7 @@ void ABoxSpawner::LoopSpawnBox(float NewSpawnRate)
 		this,
 		&ABoxSpawner::SpawnBox,
 		NewSpawnRate,
-		true
+		true, -9
 		);
 }
 

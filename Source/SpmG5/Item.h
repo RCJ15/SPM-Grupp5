@@ -49,7 +49,7 @@ public:
 			   FVector NormalImpulse,
 			   const FHitResult& Hit);
 	
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* BaseMesh;
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
