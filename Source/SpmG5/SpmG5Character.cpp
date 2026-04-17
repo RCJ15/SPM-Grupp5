@@ -111,17 +111,19 @@ void ASpmG5Character::Pickup(const FInputActionValue& Value)
 			//Sätter in rellevanta data för att komma åt funktioner
 			HeldActor = HitResult.GetActor();
 			HeldComponent = HitResult.GetComponent();
-			
+
 			HeldActor->SetActorEnableCollision(false);
 			HeldComponent->SetEnableGravity(false);
 			HeldComponent->SetSimulatePhysics(false);
-			
+
 			HeldActor->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());
 			HeldActor->SetActorRelativeRotation(FRotator(0,0,0));
 			
 			//Attatch to player
 			//har inte testat, bra att testa med båda
 			HeldActor->AttachToComponent(HoldingLocation, FAttachmentTransformRules(EAttachmentRule::KeepWorld/* KeepRelative*/, false));
+
+			HeldItem->SetMostRecentHolder(this);
 
 		}
 	}
