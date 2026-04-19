@@ -42,9 +42,13 @@ protected:
 	
 	UPROPERTY(EditAnywhere)
 	FVector PickUpBoxSize = FVector(80.0f, 50.0f, 120.0f);
+	
 	UPROPERTY(EditAnywhere)
 	float Offset = 10.0f;
-
+	
+	UPROPERTY(EditAnywhere)
+	float ThrowForce = 5000000.0f;
+	
 	FHitResult HitResult;
 	AItem* HeldItem = nullptr;
 

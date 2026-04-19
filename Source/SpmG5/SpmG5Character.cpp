@@ -152,7 +152,7 @@ void ASpmG5Character::Throw(const FInputActionValue& Value)
 	
 	//Testar att sätta den innan och efter
 	HeldItem->SetPhysics(true);
-	HeldItem->AddVelocity(500000.f, 0.f, 0.f);
+	HeldItem->AddVelocity(ThrowForce);
 	
 	//Resettar inför pickup
 	HeldItem = nullptr;

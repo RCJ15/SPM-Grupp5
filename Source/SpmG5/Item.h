@@ -40,7 +40,8 @@ public:
 	
 	void SetPhysics(bool SetTo);
 	void ResetVelocity(){PrimComp->SetPhysicsLinearVelocity(FVector(0,0,0));}
-	void AddVelocity(int x, int y, int z){PrimComp->AddForce(FVector(x,y,z));}
+	void AddVelocity(int Force){PrimComp->AddForce(GetActorForwardVector() * Force);}
+	
 	
 	virtual void Disintegrate();
 	
