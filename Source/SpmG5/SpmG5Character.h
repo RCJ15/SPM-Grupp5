@@ -69,10 +69,7 @@ protected:
 	//UInputAction* MouseLookAction;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputAction* PickupAction;
-
-	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputAction* DropAction;
+	UInputAction* PickupOrDropAction;
 	
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* ThrowAction;
@@ -98,9 +95,7 @@ protected:
 	void Look(const FInputActionValue& Value);
 	*/
 
-	void Pickup(const FInputActionValue& Value);
-
-	void Drop(const FInputActionValue& Value);
+	void PickupAndDrop(const FInputActionValue& Value);
 	
 	void Throw(const FInputActionValue& Value);
 
