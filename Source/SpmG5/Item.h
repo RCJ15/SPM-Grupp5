@@ -4,17 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/StaticMeshComponent.h"
 //#include "BoxDestroyer.h"
 #include "Item.generated.h"
 
+class AConveyorBelt; // forward-declaration
+
 UCLASS()
-class SPMG5_API AItem : public AActor
+class AItem : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
 	AItem();
+	
+	UPROPERTY(VisibleAnywhere)
+	AConveyorBelt* Conveyor = nullptr; //pekar til conveyor om den är attatched
 
 protected:
 	// Called when the game starts or when spawned
