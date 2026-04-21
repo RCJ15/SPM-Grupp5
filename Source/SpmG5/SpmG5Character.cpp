@@ -12,6 +12,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "INodeAndChannelMappings.h"
 #include "InputActionValue.h"
+#include "InteractiveToolActionSet.h"
 #include "SpmG5.h"
 #include "StateTreeTypes.h"
 
@@ -77,6 +78,9 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		// Pickup and Drop
 		EnhancedInputComponent->BindAction(PickupOrDropAction, ETriggerEvent::Started, this, &ASpmG5Character::PickupAndDrop);
 		EnhancedInputComponent->BindAction(ThrowAction, ETriggerEvent::Started, this, &ASpmG5Character::Throw);
+		
+		//interact
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &ASpmG5Character::Interact);
 
 	}
 	else
@@ -113,6 +117,7 @@ void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
 			{
 				//Fult men vet inte hur man kan göra det på bättre sätt
 				HeldItem = Cast<AItem>(HitResult.GetActor());
+				HasItem = true;
 				
 				UE_LOG(LogTemp, Warning, TEXT("Added item"))
 				HeldItem->SetPhysics(false);
@@ -136,6 +141,7 @@ void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
 		HeldItem->ResetVelocity();
 	
 		HeldItem = nullptr;
+		HasItem = false;
 	}
 }
 
@@ -151,6 +157,7 @@ void ASpmG5Character::Throw(const FInputActionValue& Value)
 	
 	//Resettar inför pickup
 	HeldItem = nullptr;
+	HasItem = false;
 }
 
 void ASpmG5Character::Tick(float DeltaTime)
@@ -220,4 +227,13 @@ void ASpmG5Character::DoJumpEnd()
 {
 	// signal the character to stop jumping
 	StopJumping();
+}
+bool ASpmG5Character::GetHasItem()
+{
+	return HasItem;
+}
+
+AItem* ASpmG5Character::GetItem()
+{
+	return HeldItem;
 }

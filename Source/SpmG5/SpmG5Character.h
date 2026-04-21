@@ -45,11 +45,14 @@ protected:
 	
 	UPROPERTY(EditAnywhere)
 	float Offset = 10.0f;
-	
+	         
 	UPROPERTY(EditAnywhere)
 	float ThrowForce = 5000000.0f;
 	
+	bool HasItem = false;
+
 	FHitResult HitResult;
+	
 	AItem* HeldItem = nullptr;
 
 	/** Jump Input Action */
@@ -73,6 +76,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* ThrowAction;
+	
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* InteractAction;
 
 public:
 
@@ -117,6 +123,15 @@ public:
 	/** Handles jump pressed inputs from either controls or UI interfaces */
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoJumpEnd();
+	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="Input")
+	void Interact();
+	
+	UFUNCTION(BlueprintCallable, Category="Input")
+	bool GetHasItem();
+	
+	UFUNCTION(BlueprintCallable, Category="Input")
+	AItem* GetItem();
 
 public:
 
