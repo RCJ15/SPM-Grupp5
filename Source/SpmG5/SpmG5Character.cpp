@@ -7,12 +7,14 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 //#include "GameFramework/SpringArmComponent.h"
+#include "ConveyorBelt.h"
 #include "GameFramework/Controller.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "INodeAndChannelMappings.h"
 #include "InputActionValue.h"
 #include "SpmG5.h"
+#include "ConveyorSegment.h"
 #include "StateTreeTypes.h"
 
 ASpmG5Character::ASpmG5Character()
@@ -88,7 +90,6 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
 {
-	bool b = Value.Get<bool>();
 	if (!HeldItem)//Pickup
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Pickup"))
@@ -126,15 +127,57 @@ void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
 	}
 	else //Drop
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Drop"))
 		if (!HeldItem)
 			return;
-	
-		//Testar att sätta den innan och efter	
-		HeldItem->ResetVelocity();
-		HeldItem->SetPhysics(true);
-		HeldItem->ResetVelocity();
-	
+		
+		//raycast för att kolla om segment
+		float Distance = 5.0f;
+		FVector Location = HoldingLocation->GetComponentLocation();	
+		FVector End = Location + GetActorForwardVector() * Distance;
+		FCollisionShape Box = FCollisionShape::MakeBox(PickUpBoxSize);
+		FQuat Rotation = GetActorRotation().Quaternion();
+		
+		GetWorld()->SweepSingleByChannel(HitResult,Location, End, Rotation, ECC_GameTraceChannel2,Box);
+		
+		//jämföra för att se vilket segment som är närmast om man får upp flera
+		if (HitResult.GetActor() && Cast<AConveyorSegment>(HitResult.GetActor()))
+		{
+			AConveyorSegment* Segment = Cast<AConveyorSegment>(HitResult.GetActor());
+			//kolla om segment är tomt
+			if (AConveyorBelt* Belt = Segment ->Belt)
+			{
+				if (Segment->IndexInConveyorBelt == 0)
+					return;
+				
+				//NOTE FÖR FRAMTIDEN ISTÄLLET FÖR ATT KOLLA OM DEN ÄR ÖVER 0.5 och byta
+				//KOLLA ATT DEN ÄR UNDER 0.25 på current segment, 
+				//eller över 0.75 på previous segment
+				
+				if (Belt->MovedDelta > 0.5)
+				{
+					Segment = Belt->Conveyor[Segment->IndexInConveyorBelt-1];
+				}
+				if (Belt->HasItemInSegment(Segment))
+				{
+					//ARG!!!!!!!!!!!!!!!!!!!!!
+					UE_LOG(LogTemp, Warning, TEXT("Can't put item here, GRRR!!!"))
+				}
+				else
+				{
+					Belt->ReceiveItem(HeldItem,Segment);
+					UE_LOG(LogTemp, Warning, TEXT("Putting item on belt WEEEEEEEEEE!!"))
+				}
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Drop"))
+			
+			//Testar att sätta den innan och efter	
+			HeldItem->ResetVelocity();
+			HeldItem->SetPhysics(true);
+			HeldItem->ResetVelocity();
+		}
 		HeldItem = nullptr;
 	}
 }

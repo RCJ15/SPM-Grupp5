@@ -20,6 +20,7 @@ public:
 	void DropItem(AItem*); //borde ha param som vad som ska droppas
 	void ReceiveItem(AItem*); //borde ha param på vad som ska läggas in
 	void ReceiveItem(AItem*, AConveyorSegment*);
+	bool HasItemInSegment(AConveyorSegment*);
 
 protected:
 	// Called when the game starts or when spawned
@@ -98,5 +99,6 @@ private:
 	int GetArrayShift();
 	void UpdateCurrentSegment();
 	void UpdateCurrentFirstIndex();
+
 	
 };

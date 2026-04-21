@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "ConveyorSegment.generated.h"
 
+class AConveyorBelt;
+
 UCLASS()
 class SPMG5_API AConveyorSegment : public AActor
 {
@@ -19,6 +21,9 @@ public:
 	AConveyorSegment();
 	UPROPERTY(EditAnywhere)
 	int Direction = 1; //1 är fram, -1 är bakåt
+	int IndexInConveyorBelt = -1;
+	
+	AConveyorBelt* Belt = nullptr;
 
 protected:
 	// Called when the game starts or when spawned

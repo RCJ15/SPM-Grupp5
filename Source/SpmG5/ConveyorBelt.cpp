@@ -37,6 +37,13 @@ void AConveyorBelt::BeginPlay()
 	}
 	UE_LOG(LogTemp, Display, TEXT("MaxItems: %d  "), MaxItems);
 	
+	for (int i = 0; i < Conveyor.Num(); i++)
+	{
+		Conveyor[i]->Belt = this;
+		Conveyor[i]->IndexInConveyorBelt=i;
+	}
+	
+	
 	//sätter DistBetweenItems till längden av ett conveyor belt segment 
 	//delat på hur många items som ska få plats där
 	if (Conveyor.Num() > 0 && Conveyor[0] != nullptr)
@@ -113,6 +120,7 @@ void AConveyorBelt::ReceiveItem(AItem* Item)
 
 void AConveyorBelt::ReceiveItem(AItem* Item, AConveyorSegment* Segment)
 {
+	//ReceiveItem(Item,1);
 	ReceiveItem(Item,GetItemIndexFromSegment(Segment));
 }
 
@@ -504,7 +512,7 @@ int AConveyorBelt::GetItemIndexFromSegment(AConveyorSegment* Segment)
 	for (int i = 0; i < Conveyor.Num(); i++)
 	{
 		if (Conveyor[i] == Segment)
-			return GetSegmentIndexFromItemIndex(i);
+			return GetItemIndexFromSegmentIndex(i);
 	}
 	return -1;
 }
@@ -552,5 +560,13 @@ void AConveyorBelt::UpdateCurrentFirstIndex()
 	CurrentFirstIndex=CurrentFirstIndex-1;
 	if (CurrentFirstIndex < 0) 
 		CurrentFirstIndex = Items.Num() - 1;
+}
+
+bool AConveyorBelt::HasItemInSegment(AConveyorSegment* Segment)
+{
+	AItem* Item = Items[GetItemIndexFromSegment(Segment)];
+	if (Item != nullptr)
+		return true;
+	return false;
 }
 
