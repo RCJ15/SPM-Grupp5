@@ -1,16 +1,19 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "SpmG5Character.h"
+#include "Item.h"
 #include "Engine/LocalPlayer.h"
-#include "Camera/CameraComponent.h"
+//#include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/SpringArmComponent.h"
+//#include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Controller.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "INodeAndChannelMappings.h"
 #include "InputActionValue.h"
 #include "SpmG5.h"
+#include "StateTreeTypes.h"
 
 ASpmG5Character::ASpmG5Character()
 {
@@ -36,15 +39,20 @@ ASpmG5Character::ASpmG5Character()
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 
 	// Create a camera boom (pulls in towards the player if there is a collision)
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	/*CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 400.0f;
 	CameraBoom->bUsePawnControlRotation = true;
-
+													
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+	
+	FollowCamera->bUsePawnControlRotation = false;*/
+	HoldingLocation = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HoldingLocation"));
+	HoldingLocation->SetupAttachment(RootComponent);
+	
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -61,14 +69,97 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASpmG5Character::Move);
-		EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &ASpmG5Character::Look);
+		//EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &ASpmG5Character::Look);
 
 		// Looking
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASpmG5Character::Look);
+		//EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASpmG5Character::Look);
+
+		// Pickup and Drop
+		EnhancedInputComponent->BindAction(PickupOrDropAction, ETriggerEvent::Started, this, &ASpmG5Character::PickupAndDrop);
+		EnhancedInputComponent->BindAction(ThrowAction, ETriggerEvent::Started, this, &ASpmG5Character::Throw);
+
 	}
 	else
 	{
 		UE_LOG(LogSpmG5, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
+	}
+}
+
+
+void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
+{
+	bool b = Value.Get<bool>();
+	if (!HeldItem)//Pickup
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Pickup"))
+		if (HeldItem)
+			return;
+		
+		//Sätter allt som SweepSingleByChannel behöver, ECC_GameTraceChannel1 är items
+		float Distance = 5.0f;
+		FVector Location = HoldingLocation->GetComponentLocation();	
+		FVector End = Location + GetActorForwardVector() * Distance;
+		FCollisionShape Box = FCollisionShape::MakeBox(PickUpBoxSize);
+		FQuat Rotation = GetActorRotation().Quaternion();
+		
+		GetWorld()->SweepSingleByChannel(HitResult,Location, End, Rotation, ECC_GameTraceChannel1,Box);
+
+		//Om man vill se hur lådan ser ut
+		//DrawDebugBox(GetWorld(),End, BoxDimentions, UE::StateTree::Colors::Red, false, 10.0f);
+		
+		if (HitResult.GetActor() && HitResult.GetComponent())
+		{
+			if (Cast<AItem>(HitResult.GetActor()))
+			{
+				//Fult men vet inte hur man kan göra det på bättre sätt
+				HeldItem = Cast<AItem>(HitResult.GetActor());
+				
+				UE_LOG(LogTemp, Warning, TEXT("Added item"))
+				HeldItem->SetPhysics(false);
+				HeldItem->ResetVelocity();
+				HeldItem->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());
+				HeldItem->SetActorRelativeRotation(FRotator(0,0,0));
+		
+				HeldItem->SetMostRecentHolder(this);
+			}
+		}
+	}
+	else //Drop
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Drop"))
+		if (!HeldItem)
+			return;
+	
+		//Testar att sätta den innan och efter	
+		HeldItem->ResetVelocity();
+		HeldItem->SetPhysics(true);
+		HeldItem->ResetVelocity();
+	
+		HeldItem = nullptr;
+	}
+}
+
+void ASpmG5Character::Throw(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Throw"))
+	if (!HeldItem)
+		return;
+	
+	//Testar att sätta den innan och efter
+	HeldItem->SetPhysics(true);
+	HeldItem->AddVelocity(ThrowForce);
+	
+	//Resettar inför pickup
+	HeldItem = nullptr;
+}
+
+void ASpmG5Character::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	if (HeldItem)
+	{
+		FVector HoldingLocationWorld = HoldingLocation->GetComponentLocation();
+		HeldItem->SetActorLocationAndRotation(HoldingLocationWorld, GetActorRotation());		
 	}
 }
 
@@ -81,22 +172,21 @@ void ASpmG5Character::Move(const FInputActionValue& Value)
 	DoMove(MovementVector.X, MovementVector.Y);
 }
 
-void ASpmG5Character::Look(const FInputActionValue& Value)
+/*void ASpmG5Character::Look(const FInputActionValue& Value)
 {
 	// input is a Vector2D
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 
 	// route the input
 	DoLook(LookAxisVector.X, LookAxisVector.Y);
-}
+}*/
 
 void ASpmG5Character::DoMove(float Right, float Forward)
 {
 	if (GetController() != nullptr)
 	{
 		// find out which way is forward
-		const FRotator Rotation = GetController()->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
+		const FRotator YawRotation(0, 0, 0);
 
 		// get forward vector
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
@@ -110,7 +200,7 @@ void ASpmG5Character::DoMove(float Right, float Forward)
 	}
 }
 
-void ASpmG5Character::DoLook(float Yaw, float Pitch)
+/*void ASpmG5Character::DoLook(float Yaw, float Pitch)
 {
 	if (GetController() != nullptr)
 	{
@@ -118,7 +208,7 @@ void ASpmG5Character::DoLook(float Yaw, float Pitch)
 		AddControllerYawInput(Yaw);
 		AddControllerPitchInput(Pitch);
 	}
-}
+}*/
 
 void ASpmG5Character::DoJumpStart()
 {

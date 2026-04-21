@@ -2,8 +2,10 @@
 
 #pragma once
 
+#include "Components/BoxComponent.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Item.h"
 #include "Logging/LogMacros.h"
 #include "SpmG5Character.generated.h"
 
@@ -24,14 +26,31 @@ class ASpmG5Character : public ACharacter
 	GENERATED_BODY()
 
 	/** Camera boom positioning the camera behind the character */
+	/*
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
 
-	/** Follow camera */
+	/** Follow camera #1#
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
+	*/
 	
 protected:
+
+	UPROPERTY(EditAnywhere)
+	USceneComponent* HoldingLocation;
+	
+	UPROPERTY(EditAnywhere)
+	FVector PickUpBoxSize = FVector(80.0f, 50.0f, 120.0f);
+	
+	UPROPERTY(EditAnywhere)
+	float Offset = 10.0f;
+	
+	UPROPERTY(EditAnywhere)
+	float ThrowForce = 5000000.0f;
+	
+	FHitResult HitResult;
+	AItem* HeldItem = nullptr;
 
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, Category="Input")
@@ -42,12 +61,18 @@ protected:
 	UInputAction* MoveAction;
 
 	/** Look Input Action */
-	UPROPERTY(EditAnywhere, Category="Input")
-	UInputAction* LookAction;
+	//UPROPERTY(EditAnywhere, Category="Input")
+	//UInputAction* LookAction;
 
 	/** Mouse Look Input Action */
-	UPROPERTY(EditAnywhere, Category="Input")
-	UInputAction* MouseLookAction;
+	//UPROPERTY(EditAnywhere, Category="Input")
+	//UInputAction* MouseLookAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* PickupOrDropAction;
+	
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* ThrowAction;
 
 public:
 
@@ -61,21 +86,29 @@ protected:
 
 protected:
 
+	virtual void Tick(float DeltaTime) override;
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
 
 	/** Called for looking input */
+	/*
 	void Look(const FInputActionValue& Value);
+	*/
+
+	void PickupAndDrop(const FInputActionValue& Value);
+	
+	void Throw(const FInputActionValue& Value);
 
 public:
+
 
 	/** Handles move inputs from either controls or UI interfaces */
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoMove(float Right, float Forward);
 
 	/** Handles look inputs from either controls or UI interfaces */
-	UFUNCTION(BlueprintCallable, Category="Input")
-	virtual void DoLook(float Yaw, float Pitch);
+	/*UFUNCTION(BlueprintCallable, Category="Input")
+	virtual void DoLook(float Yaw, float Pitch);*/
 
 	/** Handles jump pressed inputs from either controls or UI interfaces */
 	UFUNCTION(BlueprintCallable, Category="Input")
@@ -88,9 +121,9 @@ public:
 public:
 
 	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	/*FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
-	/** Returns FollowCamera subobject **/
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	/** Returns FollowCamera subobject *#1#
+	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }*/
 };
 
