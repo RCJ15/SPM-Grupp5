@@ -7,6 +7,7 @@
 #include "CoreMinimal.h"
 #include "Components/SplineComponent.h"
 #include "GameFramework/Actor.h"
+#include "BoxSpawner.h"
 #include "ConveyorBelt.generated.h"
 
 UCLASS()
@@ -61,6 +62,9 @@ public:
 	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AItem> BoxToSpawn;
+	
+	UPROPERTY(EditAnywhere)
+	ABoxSpawner* BoxSpawner;
 	//UPROPERTY(EditAnywhere)
 	//UStaticMeshComponent* SpawnLocation;
 	UPROPERTY(EditAnywhere, Category="Function tests | Add")

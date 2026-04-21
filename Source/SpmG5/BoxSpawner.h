@@ -31,6 +31,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	//UFUNCTION(BlueprintImplementableEvent)
+	AItem* SpawnBox(int temp);
 	void SpawnBox();
 	
 	void LoopSpawnBox(float NewSpawnRate);

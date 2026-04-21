@@ -86,11 +86,16 @@ void AConveyorBelt::Tick(float DeltaTime)
 
 void AConveyorBelt::SpawnItem(AItem* Item)
 {
-	FRotator Rotation(0.0f, 0.0f, 0.0f);
-	//FActorSpawnParameters SpawnInfo;
-	AItem* AI = GetWorld()->SpawnActor<AItem>(BoxToSpawn, GetActorLocation(), Rotation);
-	AI->Conveyor = this; //gör så item pekar på denna conveyor
-	AI->SetPhysics(false);
+	AItem* AI = Item;
+	if (Item == nullptr)
+	{
+		FRotator Rotation(0.0f, 0.0f, 0.0f);
+		//FActorSpawnParameters SpawnInfo;
+		AI = GetWorld()->SpawnActor<AItem>(BoxToSpawn, GetActorLocation(), Rotation);
+		AI->Conveyor = this; //gör så item pekar på denna conveyor
+		AI->SetPhysics(false);
+	}
+
 	ReceiveItem(AI, CurrentFirstIndex);
 }
 
@@ -326,7 +331,8 @@ void AConveyorBelt::MoveRevolvingArraySplinePath()
 		FVector NewLoc = Path->GetLocationAtSplineInputKey(SegmentIndex+MovedDelta,ESplineCoordinateSpace::World);
 		if (Item)
 			Item->SetActorLocation(NewLoc);
-		//Item->SetActorRotation(Path->GetRotationAtSplineInputKey(SegmentIndex+MovedDelta,ESplineCoordinateSpace::World));
+		//if (Item)
+			//Item->SetActorRotation(Path->GetRotationAtSplineInputKey(SegmentIndex+MovedDelta,ESplineCoordinateSpace::World));
 		
 		//den flippar efter den bör flippa.. så like yeah
 		/*if (MovedDelta >= 0.5 && i-1 >= 0 && Segment->GetActorForwardVector() != Conveyor[CalculateCurrentSegment(i-1)]->GetActorForwardVector()) //(MovedDelta >= 0.5 && i+1 < Conveyor.Num() && Conveyor[i]->GetActorForwardVector() != Conveyor[i+1]->GetActorForwardVector()) //börja rotera
@@ -364,6 +370,8 @@ void AConveyorBelt::MoveRevolvingArraySplinePath()
 				
 				//HERE YOU CAN TRIGGER SPAWNING THE NEXT ITEM!!!
 				//SpawnItem(nullptr);//JUST FOR FUN SHOULD NOT ACTUALLY BE HERE MAYBE??
+				
+				SpawnItem(BoxSpawner -> SpawnBox(1));
 				MovedDelta = 0;
 			}
 			/*if (CurrDistMoved >= DistBetweenItems)

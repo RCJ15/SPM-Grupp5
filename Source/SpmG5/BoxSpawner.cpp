@@ -27,6 +27,23 @@ void ABoxSpawner::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+AItem* ABoxSpawner::SpawnBox(int temp)
+{
+	FTransform SpawnTransform = FTransform(FRotator::ZeroRotator, SpawnLocation->GetComponentLocation());
+	AActor* NewActor = GetWorld()->SpawnActorDeferred<AActor>(BoxToSpawn, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+	AItem* Item = Cast<AItem>(NewActor);
+	
+	if (Item)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Spawning Box"));
+		Item->SetIsLarge(ShouldHappen(LargeBoxSpawnRate));
+		Item->SetIsFragile(ShouldHappen(FragileBoxSpawnRate));
+		Item->SetIsDangerous(ShouldHappen(DangerousBoxSpawnRate));
+	}
+
+	UGameplayStatics::FinishSpawningActor(NewActor, SpawnTransform);
+	return Item;
+}
 void ABoxSpawner::SpawnBox()
 {
 	FTransform SpawnTransform = FTransform(FRotator::ZeroRotator, SpawnLocation->GetComponentLocation());
