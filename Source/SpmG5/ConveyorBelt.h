@@ -22,6 +22,7 @@ public:
 	void ReceiveItem(AItem*); //borde ha param på vad som ska läggas in
 	void ReceiveItem(AItem*, AConveyorSegment*);
 	bool HasItemInSegment(AConveyorSegment*);
+	AItem* GetItemFromSegment(AConveyorSegment*);
 
 protected:
 	// Called when the game starts or when spawned

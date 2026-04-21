@@ -123,7 +123,52 @@ void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
 		
 				HeldItem->SetMostRecentHolder(this);
 			}
+			
 		}
+		else //KANSKE VILL ÄNDRA SÅ MAN KOLLAR PÅ ITEM ISTÄLLET FÖR SEGMENT
+		{
+			GetWorld()->SweepSingleByChannel(HitResult,Location, End, Rotation, ECC_GameTraceChannel2,Box);
+			
+			if (HitResult.GetActor() && Cast<AConveyorSegment>(HitResult.GetActor()))
+			{
+				AConveyorSegment* Segment = Cast<AConveyorSegment>(HitResult.GetActor());
+				//kolla om segment är tomt
+				if (AConveyorBelt* Belt = Segment ->Belt)
+				{
+					if (Segment->IndexInConveyorBelt == 0)
+						return;
+				
+					//NOTE FÖR FRAMTIDEN ISTÄLLET FÖR ATT KOLLA OM DEN ÄR ÖVER 0.5 och byta
+					//KOLLA ATT DEN ÄR UNDER 0.25 på current segment, 
+					//eller över 0.75 på previous segment
+				
+					if (Belt->MovedDelta > 0.5)
+					{
+						Segment = Belt->Conveyor[Segment->IndexInConveyorBelt-1];
+					}
+					if (Belt->HasItemInSegment(Segment))
+					{
+						UE_LOG(LogTemp, Warning, TEXT("PICKING UP ITEM FROM CONVEYOR BELT"))
+						HeldItem = Belt->GetItemFromSegment(Segment);
+						Belt->DropItem(HeldItem);
+						
+						UE_LOG(LogTemp, Warning, TEXT("Added item"))
+						HeldItem->SetPhysics(false);
+						HeldItem->ResetVelocity();
+						HeldItem->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());
+						HeldItem->SetActorRelativeRotation(FRotator(0,0,0));
+		
+						HeldItem->SetMostRecentHolder(this);
+					}
+					else
+					{
+						//ARG
+						UE_LOG(LogTemp, Error, TEXT("NO ITEM TO PICK UP :C GRRRR!!!"))
+					}
+				}
+			}
+		}
+		
 	}
 	else //Drop
 	{
@@ -165,6 +210,7 @@ void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
 				else
 				{
 					Belt->ReceiveItem(HeldItem,Segment);
+					HeldItem = nullptr;
 					UE_LOG(LogTemp, Warning, TEXT("Putting item on belt WEEEEEEEEEE!!"))
 				}
 			}
@@ -177,8 +223,10 @@ void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
 			HeldItem->ResetVelocity();
 			HeldItem->SetPhysics(true);
 			HeldItem->ResetVelocity();
+			
+			HeldItem = nullptr;
 		}
-		HeldItem = nullptr;
+		
 	}
 }
 

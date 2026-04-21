@@ -144,7 +144,7 @@ void AConveyorBelt::ReceiveItem(AItem* Item, int Index)
 		AItem* AI = GetWorld()->SpawnActor<AItem>(BoxToSpawn, GetActorLocation(), Rotation);
 		Item = AI;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Recieving %s at index %d"), *Item -> GetName(), Index);
+	//UE_LOG(LogTemp, Warning, TEXT("Recieving %s at index %d"), *Item -> GetName(), Index);
 	Item->Conveyor = this; //gör så item pekar på denna conveyor
 	Item->SetPhysics(false);
 	Items[Index] = Item;
@@ -358,7 +358,7 @@ void AConveyorBelt::MoveRevolvingArraySplinePath()
 			if (MovedDelta>=1 )//Item->CurrDistMoved >= i+1) //kan inte ha i här för i är alltid 0
 			{
 				
-				UE_LOG(LogTemp, Warning, TEXT("Has passed Input Key Loc! key: %f  i: %d"), MovedDelta, SegmentIndex+1);
+				//UE_LOG(LogTemp, Warning, TEXT("Has passed Input Key Loc! key: %f  i: %d"), MovedDelta, SegmentIndex+1);
 				
 				DropItem(GetItemIndexFromSegmentIndex(Conveyor.Num()-1));//droppar item på last segment
 				//DropItem(GetLastIndex());
@@ -576,5 +576,10 @@ bool AConveyorBelt::HasItemInSegment(AConveyorSegment* Segment)
 	if (Item != nullptr)
 		return true;
 	return false;
+}
+
+AItem* AConveyorBelt::GetItemFromSegment(AConveyorSegment* Segment)
+{
+	return Items[GetItemIndexFromSegment(Segment)];
 }
 
