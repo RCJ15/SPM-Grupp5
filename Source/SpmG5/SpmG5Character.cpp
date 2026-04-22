@@ -215,21 +215,9 @@ void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
 				else
 				{
 					Belt->ReceiveItem(HeldItem,Segment);
-					HeldItem = nullptr;
 					UE_LOG(LogTemp, Warning, TEXT("Putting item on belt WEEEEEEEEEE!!"))
 				}
 			}
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Drop"))
-			
-			//Testar att sätta den innan och efter	
-			HeldItem->ResetVelocity();
-			HeldItem->SetPhysics(true);
-			HeldItem->ResetVelocity();
-			
-			HeldItem = nullptr;
 		}
 		
 	
