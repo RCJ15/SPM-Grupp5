@@ -44,6 +44,7 @@ AItem* ABoxSpawner::SpawnBox(int temp)
 	UGameplayStatics::FinishSpawningActor(NewActor, SpawnTransform);
 	return Item;
 }
+
 void ABoxSpawner::SpawnBox()
 {
 	FTransform SpawnTransform = FTransform(FRotator::ZeroRotator, SpawnLocation->GetComponentLocation());

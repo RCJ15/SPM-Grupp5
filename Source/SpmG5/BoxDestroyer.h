@@ -19,6 +19,10 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
+	// Kan agera som både inlämningsstation och soptunna
+	UPROPERTY(EditAnywhere)
+	bool IsTrashChute = false;
 
 public:	
 	// Called every frame

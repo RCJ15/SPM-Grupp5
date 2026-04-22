@@ -138,7 +138,7 @@ void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
 			{
 				AConveyorSegment* Segment = Cast<AConveyorSegment>(HitResult.GetActor());
 				//kolla om segment är tomt
-				if (AConveyorBelt* Belt = Segment ->Belt)
+				if (AConveyorBelt* Belt = Segment->Belt)
 				{
 					if (Segment->IndexInConveyorBelt == 0)
 						return;

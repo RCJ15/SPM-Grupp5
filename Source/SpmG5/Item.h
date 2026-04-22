@@ -35,6 +35,17 @@ protected:
 	UPROPERTY(EditAnywhere)
 	bool IsDangerous;
 	
+	UPROPERTY(EditAnywhere)
+	int32 SmallBoxPoints = 10;
+	
+	UPROPERTY(EditAnywhere)
+	int32 LargeBoxPoints = 20;
+	
+	UPROPERTY(EditAnywhere)
+	int32 FragileBoxPoints = 5;
+	
+	int32 points;
+	
 	UPrimitiveComponent* PrimComp;
 	AActor* MostRecentHolder;
 	
@@ -44,10 +55,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
+	void SetPoints();
 	void SetPhysics(bool SetTo);
 	void ResetVelocity(){PrimComp->SetPhysicsLinearVelocity(FVector(0,0,0));}
 	void AddVelocity(int Force){PrimComp->AddForce(GetActorForwardVector() * Force);}
-	
 	
 	virtual void Disintegrate();
 	
@@ -67,6 +78,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool GetIsDangerous();
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	int32 GetPoints();
 	
 	UFUNCTION(BlueprintCallable)
 	void SetMostRecentHolder(AActor* holder);
