@@ -2,6 +2,7 @@
 
 
 #include "Item.h"
+#include "ConveyorBelt.h"
 
 // Sets default values
 AItem::AItem()

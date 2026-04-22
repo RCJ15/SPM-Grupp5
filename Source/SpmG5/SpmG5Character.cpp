@@ -7,12 +7,15 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 //#include "GameFramework/SpringArmComponent.h"
+#include "ConveyorBelt.h"
 #include "GameFramework/Controller.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "INodeAndChannelMappings.h"
 #include "InputActionValue.h"
+#include "InteractiveToolActionSet.h"
 #include "SpmG5.h"
+#include "ConveyorSegment.h"
 #include "StateTreeTypes.h"
 
 ASpmG5Character::ASpmG5Character()
@@ -75,9 +78,11 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		//EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASpmG5Character::Look);
 
 		// Pickup and Drop
-		EnhancedInputComponent->BindAction(PickupAction, ETriggerEvent::Started, this, &ASpmG5Character::Pickup);
-		EnhancedInputComponent->BindAction(DropAction, ETriggerEvent::Started, this, &ASpmG5Character::Drop);
+		EnhancedInputComponent->BindAction(PickupOrDropAction, ETriggerEvent::Started, this, &ASpmG5Character::PickupAndDrop);
 		EnhancedInputComponent->BindAction(ThrowAction, ETriggerEvent::Started, this, &ASpmG5Character::Throw);
+		
+		//interact
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &ASpmG5Character::Interact);
 
 	}
 	else
@@ -87,61 +92,156 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 }
 
 
-void ASpmG5Character::Pickup(const FInputActionValue& Value)
+void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Pickup"))
-	if (HeldItem)
-		return;
-	
-	//Sätter allt som SweepSingleByChannel behöver, ECC_GameTraceChannel1 är items
-	float Distance = 5.0f;
-	FVector Location = HoldingLocation->GetComponentLocation();	
-	FVector End = Location + GetActorForwardVector() * Distance;
-	FCollisionShape Box = FCollisionShape::MakeBox(PickUpBoxSize);
-	FQuat Rotation = GetActorRotation().Quaternion();
-	
-	GetWorld()->SweepSingleByChannel(HitResult,Location, End, Rotation, ECC_GameTraceChannel1,Box);
-
-	//DrawDebugBox(GetWorld(),End, BoxDimentions, UE::StateTree::Colors::Red, false, 10.0f);
-	
-	if (HitResult.GetActor() && HitResult.GetComponent())
+	if (!HeldItem)//Pickup
 	{
-		if (Cast<AItem>(HitResult.GetActor()))
+		UE_LOG(LogTemp, Warning, TEXT("Pickup"))
+		if (HeldItem)
+			return;
+		
+		//Sätter allt som SweepSingleByChannel behöver, ECC_GameTraceChannel1 är items
+		float Distance = 5.0f;
+		FVector Location = HoldingLocation->GetComponentLocation();	
+		FVector End = Location + GetActorForwardVector() * Distance;
+		FCollisionShape Box = FCollisionShape::MakeBox(PickUpBoxSize);
+		FQuat Rotation = GetActorRotation().Quaternion();
+		
+		GetWorld()->SweepSingleByChannel(HitResult,Location, End, Rotation, ECC_GameTraceChannel1,Box);
+
+		//Om man vill se hur lådan ser ut
+		//DrawDebugBox(GetWorld(),End, BoxDimentions, UE::StateTree::Colors::Red, false, 10.0f);
+		
+		if (HitResult.GetActor() && HitResult.GetComponent())
 		{
-			//Fult men vet inte hur man kan göra det på bättre sätt
-			HeldItem = Cast<AItem>(HitResult.GetActor());
+			if (Cast<AItem>(HitResult.GetActor()))
+			{
+				//Fult men vet inte hur man kan göra det på bättre sätt
+				HeldItem = Cast<AItem>(HitResult.GetActor());
+				HasItem = true;
+				
+				UE_LOG(LogTemp, Warning, TEXT("Added item"))
+				HeldItem->SetPhysics(false);
+				HeldItem->ResetVelocity();
+				HeldItem->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());
+				HeldItem->SetActorRelativeRotation(FRotator(0,0,0));
+		
+				HeldItem->SetMostRecentHolder(this);
+			}
 			
-			UE_LOG(LogTemp, Warning, TEXT("Added item"))
-			HeldItem->SetPhysics(false);
-			HeldItem->ResetVelocity();
-			HeldItem->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());
-			HeldItem->SetActorRelativeRotation(FRotator(0,0,0));
-			
-			//Attatch to player
-			//har inte testat, bra att testa med båda
-			//HeldActor->AttachToComponent(HoldingLocation, FAttachmentTransformRules(EAttachmentRule::KeepWorld/* KeepRelative*/, false));
-
-			HeldItem->SetMostRecentHolder(this);
-
 		}
+		else //KANSKE VILL ÄNDRA SÅ MAN KOLLAR PÅ ITEM ISTÄLLET FÖR SEGMENT
+		{
+			GetWorld()->SweepSingleByChannel(HitResult,Location, End, Rotation, ECC_GameTraceChannel2,Box);
+			
+			if (HitResult.GetActor() && Cast<AConveyorSegment>(HitResult.GetActor()))
+			{
+				AConveyorSegment* Segment = Cast<AConveyorSegment>(HitResult.GetActor());
+				//kolla om segment är tomt
+				if (AConveyorBelt* Belt = Segment ->Belt)
+				{
+					if (Segment->IndexInConveyorBelt == 0)
+						return;
+				
+					//NOTE FÖR FRAMTIDEN ISTÄLLET FÖR ATT KOLLA OM DEN ÄR ÖVER 0.5 och byta
+					//KOLLA ATT DEN ÄR UNDER 0.25 på current segment, 
+					//eller över 0.75 på previous segment
+				
+					if (Belt->MovedDelta > 0.5)
+					{
+						Segment = Belt->Conveyor[Segment->IndexInConveyorBelt-1];
+					}
+					if (Belt->HasItemInSegment(Segment))
+					{
+						UE_LOG(LogTemp, Warning, TEXT("PICKING UP ITEM FROM CONVEYOR BELT"))
+						HeldItem = Belt->GetItemFromSegment(Segment);
+						Belt->DropItem(HeldItem);
+						
+						UE_LOG(LogTemp, Warning, TEXT("Added item"))
+						HeldItem->SetPhysics(false);
+						HeldItem->ResetVelocity();
+						HeldItem->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());
+						HeldItem->SetActorRelativeRotation(FRotator(0,0,0));
+		
+						HeldItem->SetMostRecentHolder(this);
+					}
+					else
+					{
+						//ARG
+						UE_LOG(LogTemp, Error, TEXT("NO ITEM TO PICK UP :C GRRRR!!!"))
+					}
+				}
+			}
+		}
+		
 	}
-}
+	else //Drop
+	{
+		if (!HeldItem)
+			return;
+	
+		//raycast för att kolla om segment
+		float Distance = 5.0f;
+		FVector Location = HoldingLocation->GetComponentLocation();	
+		FVector End = Location + GetActorForwardVector() * Distance;
+		FCollisionShape Box = FCollisionShape::MakeBox(PickUpBoxSize);
+		FQuat Rotation = GetActorRotation().Quaternion();
+		
+		GetWorld()->SweepSingleByChannel(HitResult,Location, End, Rotation, ECC_GameTraceChannel2,Box);
+		
+		//jämföra för att se vilket segment som är närmast om man får upp flera
+		if (HitResult.GetActor() && Cast<AConveyorSegment>(HitResult.GetActor()))
+		{
+			AConveyorSegment* Segment = Cast<AConveyorSegment>(HitResult.GetActor());
+			//kolla om segment är tomt
+			if (AConveyorBelt* Belt = Segment ->Belt)
+			{
+				if (Segment->IndexInConveyorBelt == 0)
+					return;
+				
+				//NOTE FÖR FRAMTIDEN ISTÄLLET FÖR ATT KOLLA OM DEN ÄR ÖVER 0.5 och byta
+				//KOLLA ATT DEN ÄR UNDER 0.25 på current segment, 
+				//eller över 0.75 på previous segment
+				
+				if (Belt->MovedDelta > 0.5)
+				{
+					Segment = Belt->Conveyor[Segment->IndexInConveyorBelt-1];
+				}
+				if (Belt->HasItemInSegment(Segment))
+				{
+					//ARG!!!!!!!!!!!!!!!!!!!!!
+					UE_LOG(LogTemp, Warning, TEXT("Can't put item here, GRRR!!!"))
+				}
+				else
+				{
+					Belt->ReceiveItem(HeldItem,Segment);
+					HeldItem = nullptr;
+					UE_LOG(LogTemp, Warning, TEXT("Putting item on belt WEEEEEEEEEE!!"))
+				}
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Drop"))
+			
+			//Testar att sätta den innan och efter	
+			HeldItem->ResetVelocity();
+			HeldItem->SetPhysics(true);
+			HeldItem->ResetVelocity();
+			
+			HeldItem = nullptr;
+		}
+		
+	
+		//Testar att sätta den innan och efter	
+		HeldItem->ResetVelocity();
+		HeldItem->SetPhysics(true);
+		HeldItem->ResetVelocity();
+	
+		HeldItem = nullptr;
+		HasItem = false;
 
-void ASpmG5Character::Drop(const FInputActionValue& Value)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Drop"))
-	if (!HeldItem)
-		return;
-	
-	//Testar att sätta den innan och efter	
-	HeldItem->ResetVelocity();
-	HeldItem->SetPhysics(true);
-	HeldItem->ResetVelocity();
-	
-	//Resettar inför pickup
-	HeldItem = nullptr;
-	//Detatch from player
-	
+	}
 }
 
 void ASpmG5Character::Throw(const FInputActionValue& Value)
@@ -152,10 +252,11 @@ void ASpmG5Character::Throw(const FInputActionValue& Value)
 	
 	//Testar att sätta den innan och efter
 	HeldItem->SetPhysics(true);
-	HeldItem->AddVelocity(500000.f, 0.f, 0.f);
+	HeldItem->AddVelocity(ThrowForce);
 	
 	//Resettar inför pickup
 	HeldItem = nullptr;
+	HasItem = false;
 }
 
 void ASpmG5Character::Tick(float DeltaTime)
@@ -163,7 +264,6 @@ void ASpmG5Character::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if (HeldItem)
 	{
-		//Kan tas bort om "attach to player" fungerar
 		FVector HoldingLocationWorld = HoldingLocation->GetComponentLocation();
 		HeldItem->SetActorLocationAndRotation(HoldingLocationWorld, GetActorRotation());		
 	}
@@ -226,4 +326,13 @@ void ASpmG5Character::DoJumpEnd()
 {
 	// signal the character to stop jumping
 	StopJumping();
+}
+bool ASpmG5Character::GetHasItem()
+{
+	return HasItem;
+}
+
+AItem* ASpmG5Character::GetItem()
+{
+	return HeldItem;
 }

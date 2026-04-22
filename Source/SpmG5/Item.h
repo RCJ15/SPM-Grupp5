@@ -4,17 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/StaticMeshComponent.h"
 //#include "BoxDestroyer.h"
 #include "Item.generated.h"
 
+class AConveyorBelt; // forward-declaration
+
 UCLASS()
-class SPMG5_API AItem : public AActor
+class AItem : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
 	AItem();
+	
+	UPROPERTY(VisibleAnywhere)
+	AConveyorBelt* Conveyor = nullptr; //pekar til conveyor om den är attatched
 
 protected:
 	// Called when the game starts or when spawned
@@ -40,7 +46,8 @@ public:
 	
 	void SetPhysics(bool SetTo);
 	void ResetVelocity(){PrimComp->SetPhysicsLinearVelocity(FVector(0,0,0));}
-	void AddVelocity(int x, int y, int z){PrimComp->AddForce(FVector(x,y,z));}
+	void AddVelocity(int Force){PrimComp->AddForce(GetActorForwardVector() * Force);}
+	
 	
 	virtual void Disintegrate();
 	
