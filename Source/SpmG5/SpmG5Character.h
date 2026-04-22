@@ -51,7 +51,8 @@ protected:
 	
 	bool HasItem = false;
 
-	FHitResult HitResult;
+	FHitResult HitResultBox;
+	FHitResult HitResultConvayer;
 	
 	AItem* HeldItem = nullptr;
 
@@ -102,6 +103,9 @@ protected:
 	*/
 
 	void PickupAndDrop(const FInputActionValue& Value);
+	void Pickup(FHitResult HitResultBox, FHitResult HitResultConvayer);
+	void AttatchPackage();
+	void Drop(FHitResult HitResult);
 	
 	void Throw(const FInputActionValue& Value);
 
