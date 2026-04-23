@@ -103,9 +103,10 @@ protected:
 	*/
 
 	void PickupAndDrop(const FInputActionValue& Value);
-	void Pickup(FHitResult HitResultBox, FHitResult HitResultConvayer);
+	void Pickup();
 	void AttatchPackage();
-	void Drop(FHitResult HitResult);
+	void InteractWithCoinvayer();
+	void Drop();
 	
 	void Throw(const FInputActionValue& Value);
 

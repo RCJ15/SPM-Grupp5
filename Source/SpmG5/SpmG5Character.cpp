@@ -83,7 +83,6 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		
 		//interact
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &ASpmG5Character::Interact);
-
 	}
 	else
 	{
@@ -104,17 +103,13 @@ void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
 	GetWorld()->SweepSingleByChannel(HitResultConvayer,Location, End, Rotation, ECC_GameTraceChannel2,Box);
 	
 	if (!HeldItem)//Pickup
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Pickup"))
-		Pickup(HitResultBox, HitResultConvayer);	
-	}
-	else //Drop
-	{				
-		Drop(HitResultConvayer);
-	}
+		Pickup();	
+	
+	else //Drop				
+		Drop();	
 }
 
-void ASpmG5Character::Pickup(FHitResult HitResultBox, FHitResult HitResultConvayer)
+void ASpmG5Character::Pickup()
 {
 	if (HitResultBox.GetActor() && HitResultBox.GetComponent() && Cast<AItem>(HitResultBox.GetActor()))
 	{
@@ -123,39 +118,8 @@ void ASpmG5Character::Pickup(FHitResult HitResultBox, FHitResult HitResultConvay
 		HasItem = true;
 		AttatchPackage();			
 	}
-	else //KANSKE VILL ÄNDRA SÅ MAN KOLLAR PÅ ITEM ISTÄLLET FÖR SEGMENT
-	{			
-		if (HitResultConvayer.GetActor() && Cast<AConveyorSegment>(HitResultConvayer.GetActor()))
-		{
-			AConveyorSegment* Segment = Cast<AConveyorSegment>(HitResultConvayer.GetActor());
-			//kolla om segment är tomt
-			if (AConveyorBelt* Belt = Segment->Belt)
-			{
-				if (Segment->IndexInConveyorBelt == 0)
-					return;
-				
-				//NOTE FÖR FRAMTIDEN ISTÄLLET FÖR ATT KOLLA OM DEN ÄR ÖVER 0.5 och byta
-				//KOLLA ATT DEN ÄR UNDER 0.25 på current segment, 
-				//eller över 0.75 på previous segment
-				
-				if (Belt->MovedDelta > 0.5)				
-					Segment = Belt->Conveyor[Segment->IndexInConveyorBelt-1];
-				
-				if (Belt->HasItemInSegment(Segment))
-				{
-					HeldItem = Belt->GetItemFromSegment(Segment);
-					Belt->DropItem(HeldItem);
-						
-					AttatchPackage();
-				}
-				else
-				{
-					//ARG
-					UE_LOG(LogTemp, Error, TEXT("NO ITEM TO PICK UP :C GRRRR!!!"))
-				}
-			}
-		}
-	}
+	else //KANSKE VILL ÄNDRA SÅ MAN KOLLAR PÅ ITEM ISTÄLLET FÖR SEGMENT			
+		InteractWithCoinvayer();	
 }
 
 void ASpmG5Character::AttatchPackage()
@@ -164,42 +128,39 @@ void ASpmG5Character::AttatchPackage()
 	HeldItem->ResetVelocity();
 	HeldItem->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());
 	HeldItem->SetActorRelativeRotation(FRotator(0,0,0));
-		
 	HeldItem->SetMostRecentHolder(this);
 }
 
-void ASpmG5Character::Drop(FHitResult HitResult)
+void ASpmG5Character::InteractWithCoinvayer()
 {
-	if (HitResult.GetActor() && Cast<AConveyorSegment>(HitResult.GetActor()))
+	if (HitResultConvayer.GetActor() && Cast<AConveyorSegment>(HitResultConvayer.GetActor()))
 	{
-		AConveyorSegment* Segment = Cast<AConveyorSegment>(HitResult.GetActor());
+		AConveyorSegment* Segment = Cast<AConveyorSegment>(HitResultConvayer.GetActor());
 		//kolla om segment är tomt
-		if (AConveyorBelt* Belt = Segment ->Belt)
+		if (AConveyorBelt* Belt = Segment->Belt)
 		{
 			if (Segment->IndexInConveyorBelt == 0)
 				return;
-				
 			//NOTE FÖR FRAMTIDEN ISTÄLLET FÖR ATT KOLLA OM DEN ÄR ÖVER 0.5 och byta
 			//KOLLA ATT DEN ÄR UNDER 0.25 på current segment, 
 			//eller över 0.75 på previous segment
-				
-			if (Belt->MovedDelta > 0.5)
-			{
-				Segment = Belt->Conveyor[Segment->IndexInConveyorBelt-1];
-			}
+			if (Belt->MovedDelta > 0.5)				
+				Segment = Belt->Conveyor[Segment->IndexInConveyorBelt-1];				
 			if (Belt->HasItemInSegment(Segment))
 			{
-				//ARG!!!!!!!!!!!!!!!!!!!!!
-				UE_LOG(LogTemp, Warning, TEXT("Can't put item here, GRRR!!!"))
+				HeldItem = Belt->GetItemFromSegment(Segment);
+				Belt->DropItem(HeldItem);
+				AttatchPackage();
 			}
-			else
-			{
-				Belt->ReceiveItem(HeldItem,Segment);
-				UE_LOG(LogTemp, Warning, TEXT("Putting item on belt WEEEEEEEEEE!!"))
-			}
+			else			
+				Belt->ReceiveItem(HeldItem,Segment);			
 		}
-	}		
-	
+	}
+}
+
+void ASpmG5Character::Drop()
+{
+	InteractWithCoinvayer();	
 	//Testar att sätta den innan och efter	
 	HeldItem->ResetVelocity();
 	HeldItem->SetPhysics(true);
@@ -208,8 +169,6 @@ void ASpmG5Character::Drop(FHitResult HitResult)
 	HeldItem = nullptr;
 	HasItem = false;	
 }
-
-
 
 void ASpmG5Character::Throw(const FInputActionValue& Value)
 {
