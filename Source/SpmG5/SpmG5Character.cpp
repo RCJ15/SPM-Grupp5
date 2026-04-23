@@ -83,7 +83,6 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		
 		//interact
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &ASpmG5Character::Interact);
-
 	}
 	else
 	{
@@ -93,143 +92,82 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 
 void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
-{
+{	
+	float Distance = 5.0f;
+	FVector Location = HoldingLocation->GetComponentLocation();	
+	FVector End = Location + GetActorForwardVector() * Distance;
+	FCollisionShape Box = FCollisionShape::MakeBox(PickUpBoxSize);
+	FQuat Rotation = GetActorRotation().Quaternion();
+		
+	GetWorld()->SweepSingleByChannel(HitResultBox,Location, End, Rotation, ECC_GameTraceChannel1,Box);
+	GetWorld()->SweepSingleByChannel(HitResultConvayer,Location, End, Rotation, ECC_GameTraceChannel2,Box);
+	
 	if (!HeldItem)//Pickup
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Pickup"))
-		if (HeldItem)
-			return;
-		
-		//Sätter allt som SweepSingleByChannel behöver, ECC_GameTraceChannel1 är items
-		float Distance = 5.0f;
-		FVector Location = HoldingLocation->GetComponentLocation();	
-		FVector End = Location + GetActorForwardVector() * Distance;
-		FCollisionShape Box = FCollisionShape::MakeBox(PickUpBoxSize);
-		FQuat Rotation = GetActorRotation().Quaternion();
-		
-		GetWorld()->SweepSingleByChannel(HitResult,Location, End, Rotation, ECC_GameTraceChannel1,Box);
+		Pickup();	
+	
+	else //Drop				
+		Drop();	
+}
 
-		//Om man vill se hur lådan ser ut
-		//DrawDebugBox(GetWorld(),End, BoxDimentions, UE::StateTree::Colors::Red, false, 10.0f);
-		
-		if (HitResult.GetActor() && HitResult.GetComponent())
-		{
-			if (Cast<AItem>(HitResult.GetActor()))
-			{
-				//Fult men vet inte hur man kan göra det på bättre sätt
-				HeldItem = Cast<AItem>(HitResult.GetActor());
-				HasItem = true;
-				
-				UE_LOG(LogTemp, Warning, TEXT("Added item"))
-				HeldItem->SetPhysics(false);
-				HeldItem->ResetVelocity();
-				HeldItem->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());
-				HeldItem->SetActorRelativeRotation(FRotator(0,0,0));
-		
-				HeldItem->SetMostRecentHolder(this);
-			}
-			
-		}
-		else //KANSKE VILL ÄNDRA SÅ MAN KOLLAR PÅ ITEM ISTÄLLET FÖR SEGMENT
-		{
-			GetWorld()->SweepSingleByChannel(HitResult,Location, End, Rotation, ECC_GameTraceChannel2,Box);
-			
-			if (HitResult.GetActor() && Cast<AConveyorSegment>(HitResult.GetActor()))
-			{
-				AConveyorSegment* Segment = Cast<AConveyorSegment>(HitResult.GetActor());
-				//kolla om segment är tomt
-				if (AConveyorBelt* Belt = Segment->Belt)
-				{
-					if (Segment->IndexInConveyorBelt == 0)
-						return;
-				
-					//NOTE FÖR FRAMTIDEN ISTÄLLET FÖR ATT KOLLA OM DEN ÄR ÖVER 0.5 och byta
-					//KOLLA ATT DEN ÄR UNDER 0.25 på current segment, 
-					//eller över 0.75 på previous segment
-				
-					if (Belt->MovedDelta > 0.5)
-					{
-						Segment = Belt->Conveyor[Segment->IndexInConveyorBelt-1];
-					}
-					if (Belt->HasItemInSegment(Segment))
-					{
-						UE_LOG(LogTemp, Warning, TEXT("PICKING UP ITEM FROM CONVEYOR BELT"))
-						HeldItem = Belt->GetItemFromSegment(Segment);
-						Belt->DropItem(HeldItem);
-						
-						UE_LOG(LogTemp, Warning, TEXT("Added item"))
-						HeldItem->SetPhysics(false);
-						HeldItem->ResetVelocity();
-						HeldItem->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());
-						HeldItem->SetActorRelativeRotation(FRotator(0,0,0));
-		
-						HeldItem->SetMostRecentHolder(this);
-					}
-					else
-					{
-						//ARG
-						UE_LOG(LogTemp, Error, TEXT("NO ITEM TO PICK UP :C GRRRR!!!"))
-					}
-				}
-			}
-		}
-		
-	}
-	else //Drop
+void ASpmG5Character::Pickup()
+{
+	if (HitResultBox.GetActor() && HitResultBox.GetComponent() && Cast<AItem>(HitResultBox.GetActor()))
 	{
-		if (!HeldItem)
-			return;
-	
-		//raycast för att kolla om segment
-		float Distance = 5.0f;
-		FVector Location = HoldingLocation->GetComponentLocation();	
-		FVector End = Location + GetActorForwardVector() * Distance;
-		FCollisionShape Box = FCollisionShape::MakeBox(PickUpBoxSize);
-		FQuat Rotation = GetActorRotation().Quaternion();
-		
-		GetWorld()->SweepSingleByChannel(HitResult,Location, End, Rotation, ECC_GameTraceChannel2,Box);
-		
-		//jämföra för att se vilket segment som är närmast om man får upp flera
-		if (HitResult.GetActor() && Cast<AConveyorSegment>(HitResult.GetActor()))
-		{
-			AConveyorSegment* Segment = Cast<AConveyorSegment>(HitResult.GetActor());
-			//kolla om segment är tomt
-			if (AConveyorBelt* Belt = Segment ->Belt)
-			{
-				if (Segment->IndexInConveyorBelt == 0)
-					return;
-				
-				//NOTE FÖR FRAMTIDEN ISTÄLLET FÖR ATT KOLLA OM DEN ÄR ÖVER 0.5 och byta
-				//KOLLA ATT DEN ÄR UNDER 0.25 på current segment, 
-				//eller över 0.75 på previous segment
-				
-				if (Belt->MovedDelta > 0.5)
-				{
-					Segment = Belt->Conveyor[Segment->IndexInConveyorBelt-1];
-				}
-				if (Belt->HasItemInSegment(Segment))
-				{
-					//ARG!!!!!!!!!!!!!!!!!!!!!
-					UE_LOG(LogTemp, Warning, TEXT("Can't put item here, GRRR!!!"))
-				}
-				else
-				{
-					Belt->ReceiveItem(HeldItem,Segment);
-					UE_LOG(LogTemp, Warning, TEXT("Putting item on belt WEEEEEEEEEE!!"))
-				}
-			}
-		}
-		
-	
-		//Testar att sätta den innan och efter	
-		HeldItem->ResetVelocity();
-		HeldItem->SetPhysics(true);
-		HeldItem->ResetVelocity();
-	
-		HeldItem = nullptr;
-		HasItem = false;
-
+		//Fult men vet inte hur man kan göra det på bättre sätt
+		HeldItem = Cast<AItem>(HitResultBox.GetActor());
+		HasItem = true;
+		AttachPackage();			
 	}
+	else //KANSKE VILL ÄNDRA SÅ MAN KOLLAR PÅ ITEM ISTÄLLET FÖR SEGMENT			
+		InteractWithConveyor();	
+}
+
+void ASpmG5Character::AttachPackage()
+{
+	HeldItem->SetPhysics(false);
+	HeldItem->ResetVelocity();
+	HeldItem->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());
+	HeldItem->SetActorRelativeRotation(FRotator(0,0,0));
+	HeldItem->SetMostRecentHolder(this);
+}
+
+void ASpmG5Character::InteractWithConveyor()
+{
+	if (HitResultConvayer.GetActor() && Cast<AConveyorSegment>(HitResultConvayer.GetActor()))
+	{
+		AConveyorSegment* Segment = Cast<AConveyorSegment>(HitResultConvayer.GetActor());
+		//kolla om segment är tomt
+		if (AConveyorBelt* Belt = Segment->Belt)
+		{
+			if (Segment->IndexInConveyorBelt == 0)
+				return;
+			//NOTE FÖR FRAMTIDEN ISTÄLLET FÖR ATT KOLLA OM DEN ÄR ÖVER 0.5 och byta
+			//KOLLA ATT DEN ÄR UNDER 0.25 på current segment, 
+			//eller över 0.75 på previous segment
+			if (Belt->MovedDelta > 0.5)				
+				Segment = Belt->Conveyor[Segment->IndexInConveyorBelt-1];				
+			if (Belt->HasItemInSegment(Segment))
+			{
+				HeldItem = Belt->GetItemFromSegment(Segment);
+				Belt->DropItem(HeldItem);
+				AttachPackage();
+			}
+			else			
+				Belt->ReceiveItem(HeldItem,Segment);			
+		}
+	}
+}
+
+void ASpmG5Character::Drop()
+{
+	InteractWithConveyor();	
+	//Testar att sätta den innan och efter	
+	HeldItem->ResetVelocity();
+	HeldItem->SetPhysics(true);
+	HeldItem->ResetVelocity();
+	
+	HeldItem = nullptr;
+	HasItem = false;	
 }
 
 void ASpmG5Character::Throw(const FInputActionValue& Value)
