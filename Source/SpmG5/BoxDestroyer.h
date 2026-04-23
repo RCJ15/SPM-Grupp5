@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Item.h"
+#include "ScoreManager.h"
 #include "BoxDestroyer.generated.h"
 
 UCLASS()

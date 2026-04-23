@@ -13,8 +13,6 @@ AItem::AItem()
 	SetRootComponent(BaseMesh);
 
 	PrimComp = Cast<UPrimitiveComponent>(GetRootComponent());
-	
-	SetPoints();
 }
 
 // Called when the game starts or when spawned
@@ -23,6 +21,8 @@ void AItem::BeginPlay()
 	Super::BeginPlay();
 	
 	BaseMesh->OnComponentHit.AddDynamic(this, &AItem::OnHit);
+	
+	SetPoints();
 	
 	/*if (IsLarge)
 	{
@@ -40,22 +40,22 @@ void AItem::SetPoints()
 {
 	if (IsDangerous)
 	{
-		points = 0;
+		Points = 0;
 		return;
 	}
 	
 	if (IsLarge)
 	{
-		points += LargeBoxPoints;
+		Points += LargeBoxPoints;
 	}
 	else
 	{
-		points += SmallBoxPoints;
+		Points += SmallBoxPoints;
 	}
 	
 	if (IsFragile)
 	{
-		points += FragileBoxPoints;
+		Points += FragileBoxPoints;
 	}
 }
 
@@ -117,7 +117,7 @@ bool AItem::GetIsDangerous()
 
 int32 AItem::GetPoints()
 {
-	return points;
+	return Points;
 }
 
 void AItem::SetMostRecentHolder(AActor* Holder)

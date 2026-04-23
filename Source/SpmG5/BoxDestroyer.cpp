@@ -42,6 +42,12 @@ void ABoxDestroyer::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 		
 		if (Item)
 		{
+			if (!IsTrashChute)
+			{
+				GetWorld()->GetSubsystem<UScoreManager>()->AddScore(Item->GetPoints());
+				//UE_LOG(LogTemp, Warning, TEXT("Score: %d"), Item->GetPoints());
+			}
+			
 			Item->Disintegrate();
 		}
 	}

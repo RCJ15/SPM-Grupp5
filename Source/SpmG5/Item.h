@@ -44,7 +44,7 @@ protected:
 	UPROPERTY(EditAnywhere)
 	int32 FragileBoxPoints = 5;
 	
-	int32 points;
+	int32 Points;
 	
 	UPrimitiveComponent* PrimComp;
 	AActor* MostRecentHolder;

@@ -8,14 +8,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4665db54-d73c-4780-902a-22128b22e8e2" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.SpmG5.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SpmG5.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Input/IMC_Player.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Input/IMC_Player.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/ThirdPerson/Blueprints/BP_CustomCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ThirdPerson/Blueprints/BP_CustomCharacter.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/ThirdPerson/Blueprints/BP_CustomController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ThirdPerson/Blueprints/BP_CustomController.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/ThirdPerson/Lvl_Leveldesign/D/X3/WTY7AXV9MRC1CDXT9SNTJS.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/ThirdPerson/Lvl_Leveldesign/D/X3/WTY7AXV9MRC1CDXT9SNTJS.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/SpmG5/SpmG5Character.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/SpmG5/SpmG5Character.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/SpmG5/SpmG5Character.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/SpmG5/SpmG5Character.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_BoxDestroyer.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_BoxDestroyer.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_BoxSpawner.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_BoxSpawner.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/ThirdPerson/Lvl_Leveldesign/8/0Z/IIPJ4YGK90NFARPBTXYDRQ.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/ThirdPerson/Lvl_Leveldesign/8/0Z/IIPJ4YGK90NFARPBTXYDRQ.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/SpmG5/BoxDestroyer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/SpmG5/BoxDestroyer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/SpmG5/BoxDestroyer.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/SpmG5/BoxDestroyer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/SpmG5/Item.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/SpmG5/Item.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/SpmG5/Item.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/SpmG5/Item.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/SpmG5/ScoreManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/SpmG5/ScoreManager.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +58,7 @@
     "Uproject.SpmG5.executor": "Run",
     "cidr.known.project.marker": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "Jamal",
+    "git-widget-placeholder": "Liv",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
