@@ -103,9 +103,13 @@ protected:
 	*/
 
 	void PickupAndDrop(const FInputActionValue& Value);
-	void Pickup();
 	void AttachPackage();
 	void InteractWithConveyor();
+	
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void Pickup();
+	
+	UFUNCTION(BlueprintCallable, Category="Input")
 	void Drop();
 	
 	void Throw(const FInputActionValue& Value);
@@ -132,10 +136,10 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="Input")
 	void Interact();
 	
-	UFUNCTION(BlueprintCallable, Category="Input")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Input")
 	bool GetHasItem();
 	
-	UFUNCTION(BlueprintCallable, Category="Input")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Input")
 	AItem* GetItem();
 
 public:
