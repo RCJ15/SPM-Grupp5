@@ -130,7 +130,7 @@ void ASpmG5Character::AttachPackage()
 	HeldItem->SetActorRelativeRotation(FRotator(0,0,0));
 	HeldItem->SetMostRecentHolder(this);
 }
-z
+
 void ASpmG5Character::InteractWithConveyor()
 {
 	if (HitResultConvayer.GetActor() && Cast<AConveyorSegment>(HitResultConvayer.GetActor()))
