@@ -104,8 +104,8 @@ protected:
 
 	void PickupAndDrop(const FInputActionValue& Value);
 	void Pickup();
-	void AttatchPackage();
-	void InteractWithCoinvayer();
+	void AttachPackage();
+	void InteractWithConveyor();
 	void Drop();
 	
 	void Throw(const FInputActionValue& Value);

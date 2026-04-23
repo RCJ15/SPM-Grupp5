@@ -116,13 +116,13 @@ void ASpmG5Character::Pickup()
 		//Fult men vet inte hur man kan göra det på bättre sätt
 		HeldItem = Cast<AItem>(HitResultBox.GetActor());
 		HasItem = true;
-		AttatchPackage();			
+		AttachPackage();			
 	}
 	else //KANSKE VILL ÄNDRA SÅ MAN KOLLAR PÅ ITEM ISTÄLLET FÖR SEGMENT			
-		InteractWithCoinvayer();	
+		InteractWithConveyor();	
 }
 
-void ASpmG5Character::AttatchPackage()
+void ASpmG5Character::AttachPackage()
 {
 	HeldItem->SetPhysics(false);
 	HeldItem->ResetVelocity();
@@ -130,8 +130,8 @@ void ASpmG5Character::AttatchPackage()
 	HeldItem->SetActorRelativeRotation(FRotator(0,0,0));
 	HeldItem->SetMostRecentHolder(this);
 }
-
-void ASpmG5Character::InteractWithCoinvayer()
+z
+void ASpmG5Character::InteractWithConveyor()
 {
 	if (HitResultConvayer.GetActor() && Cast<AConveyorSegment>(HitResultConvayer.GetActor()))
 	{
@@ -150,7 +150,7 @@ void ASpmG5Character::InteractWithCoinvayer()
 			{
 				HeldItem = Belt->GetItemFromSegment(Segment);
 				Belt->DropItem(HeldItem);
-				AttatchPackage();
+				AttachPackage();
 			}
 			else			
 				Belt->ReceiveItem(HeldItem,Segment);			
@@ -160,7 +160,7 @@ void ASpmG5Character::InteractWithCoinvayer()
 
 void ASpmG5Character::Drop()
 {
-	InteractWithCoinvayer();	
+	InteractWithConveyor();	
 	//Testar att sätta den innan och efter	
 	HeldItem->ResetVelocity();
 	HeldItem->SetPhysics(true);
