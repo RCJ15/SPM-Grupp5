@@ -3,7 +3,13 @@
 
 #include "ShiftManager.h"
 
-void UShiftManager::Timer(float Time)
+void UShiftManager::Initialize(FSubsystemCollectionBase& Collection)
+{
+	Super::Initialize(Collection);
+	Timer();
+}
+
+void UShiftManager::Timer()
 {
 	GetWorld()->GetTimerManager().SetTimer(
 		ShiftTimer, this, &UShiftManager::CountdownShift, TimeRate, true, -9);
@@ -22,7 +28,6 @@ void UShiftManager::CountdownShift()
 
 	CurrentMin = TimeRemaining / 60;
 	CurrentSec = TimeRemaining % 60;
-	//FString s =  "" + (TimeRemaining % 60)
 }
 
 
