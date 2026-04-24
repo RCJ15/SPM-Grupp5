@@ -350,7 +350,7 @@ void AConveyorBelt::MoveRevolvingArraySplinePath()
 		//håll koll på dist moved (valt att kolla på en fast position)
 		if (i == CurrentFirstIndex)//GetLastIndex())//CurrentFirstIndex)
 		{
-			MovedDelta += (Speed/100);
+			MovedDelta += Speed * GetWorld()->GetDeltaSeconds();
 			//om man har rört sig så långt
 			//if (Item->GetActorLocation() == Path->GetLocationAtSplineInputKey(i, ESplineCoordinateSpace::World))
 			//if it has reached or passed the next inputkey point
