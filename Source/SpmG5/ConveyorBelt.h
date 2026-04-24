@@ -40,7 +40,6 @@ public:
 	UPROPERTY(EditAnywhere, Category="Conveyor Settings")
 	float RunOffset = 25; //offset for how far the items should continue to move after leaving a segment/the last segment
 
-	UPROPERTY(EditAnywhere) 
 	int MaxItems = 10; //Max antal items som får plats på conveyor beltet på en och samma gång
 	UPROPERTY(EditAnywhere)
 	int ItemsPerSegment = 1; //hur många items som ska få plats på ett segment
