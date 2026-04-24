@@ -13,11 +13,13 @@ UCLASS(abstract)
 class ASpmG5GameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-
+private:
+	FTimerHandle TimerHandle;
 public:
 	
 	/** Constructor */
 	ASpmG5GameMode();
+	void Timer();
 };
 
 
