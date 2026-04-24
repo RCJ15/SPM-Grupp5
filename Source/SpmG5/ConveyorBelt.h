@@ -31,16 +31,6 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	
-	
-	UPROPERTY(EditAnywhere)
-	float MoveRate = 1;
-	
-	FTimerHandle MoveRateTimer;
-	void LoopTriggerMovement(float NewMoveRate);
-	
-	
-	
 	UPROPERTY(EditAnywhere, Category="Conveyor Settings")
 	bool On;
 	UPROPERTY(EditAnywhere, Category="Conveyor Settings")

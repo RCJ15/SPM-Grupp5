@@ -58,8 +58,6 @@ void AConveyorBelt::BeginPlay()
 		//MaxItems = Conveyor.Num() * ItemsPerSegment; //antal segment * antal items möjliga per segment ( + 1 ????)
 	}
 	PopulateTravelPath();
-	
-	LoopTriggerMovement(MoveRate/60);
 }
 
 // Called every frame
@@ -70,7 +68,7 @@ void AConveyorBelt::Tick(float DeltaTime)
 	{
 		//Move();
 		//MoveRevolvingArray();
-		//MoveRevolvingArraySplinePath();
+		MoveRevolvingArraySplinePath();
 	}
 	
 	if (Remove)
@@ -84,19 +82,6 @@ void AConveyorBelt::Tick(float DeltaTime)
 		ReceiveItem(nullptr,GetItemIndexFromSegmentIndex(AddAtIndex)); //borde göras om så att den
 		AddItem = false;
 	}
-}
-
-void AConveyorBelt::LoopTriggerMovement(float NewMoveRate)
-{
-	GetWorld()->GetTimerManager().SetTimer(
-	MoveRateTimer,
-	this,
-	&AConveyorBelt::MoveRevolvingArraySplinePath,
-	NewMoveRate,
-	true, -9
-	);
-	
-	
 }
 
 void AConveyorBelt::SpawnItem(AItem* Item)
