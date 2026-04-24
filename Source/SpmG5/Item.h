@@ -21,6 +21,11 @@ public:
 	
 	UPROPERTY(VisibleAnywhere)
 	AConveyorBelt* Conveyor = nullptr; //pekar til conveyor om den är attatched
+	
+	UPROPERTY(EditAnywhere)
+	bool bDoExplode = false; //används för att testa explosion
+	void AddImpulse(FVector Point, float Strength);
+	void Explode();
 
 protected:
 	// Called when the game starts or when spawned
