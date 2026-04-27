@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS(Abstract, BlueprintType, Blueprintable)
+UCLASS()
 class SPMG5_API UShiftManager : public UWorldSubsystem
 {
 	GENERATED_BODY()
@@ -26,8 +26,6 @@ protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	
 public:
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int ShiftLengthInSeconds = 300;
 
 	int TimeRemaining = ShiftLengthInSeconds;

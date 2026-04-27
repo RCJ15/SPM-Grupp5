@@ -65,6 +65,7 @@ public:
 	void ResetVelocity(){PrimComp->SetPhysicsLinearVelocity(FVector(0,0,0));}
 	void AddVelocity(int Force){PrimComp->AddForce(GetActorForwardVector() * Force);}
 	
+	UFUNCTION(BlueprintCallable)
 	virtual void Disintegrate();
 	
 	UFUNCTION()

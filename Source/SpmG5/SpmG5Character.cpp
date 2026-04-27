@@ -158,7 +158,7 @@ void ASpmG5Character::InteractWithConveyor()
 	}
 }
 
-void ASpmG5Character::Drop()
+AItem* ASpmG5Character::Drop()
 {
 	InteractWithConveyor();	
 	//Testar att sätta den innan och efter	
@@ -166,8 +166,11 @@ void ASpmG5Character::Drop()
 	HeldItem->SetPhysics(true);
 	HeldItem->ResetVelocity();
 	
+	AItem* Item = HeldItem;
+	
 	HeldItem = nullptr;
 	HasItem = false;	
+	return Item;
 }
 
 void ASpmG5Character::Throw(const FInputActionValue& Value)
