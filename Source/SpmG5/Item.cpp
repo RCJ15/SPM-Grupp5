@@ -123,7 +123,11 @@ void AItem::SetPoints()
 
 void AItem::SetPhysics(bool SetTo)
 {
-	SetActorEnableCollision(SetTo);
+	if (SetTo)
+		PrimComp->SetCollisionProfileName("DefultItem");
+	else 
+		PrimComp->SetCollisionProfileName("OnlyRaycast");
+	// SetActorEnableCollision(SetTo);
 	PrimComp->SetEnableGravity(SetTo);
 	PrimComp->SetSimulatePhysics(SetTo);
 }
