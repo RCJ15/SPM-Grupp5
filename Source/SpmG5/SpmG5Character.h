@@ -37,7 +37,7 @@ class ASpmG5Character : public ACharacter
 	
 protected:
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USceneComponent* HoldingLocation;
 	
 	UPROPERTY(EditAnywhere)
@@ -110,7 +110,7 @@ protected:
 	void Pickup();
 	
 	UFUNCTION(BlueprintCallable, Category="Input")
-	void Drop();
+	AItem* Drop();
 	
 	void Throw(const FInputActionValue& Value);
 
