@@ -21,6 +21,11 @@ public:
 	
 	UPROPERTY(VisibleAnywhere)
 	AConveyorBelt* Conveyor = nullptr; //pekar til conveyor om den är attatched
+	
+	UPROPERTY(EditAnywhere)
+	bool bDoExplode = false; //används för att testa explosion
+	void AddImpulse(FVector Point, float Strength);
+	void Explode();
 
 protected:
 	// Called when the game starts or when spawned
@@ -35,6 +40,17 @@ protected:
 	UPROPERTY(EditAnywhere)
 	bool IsDangerous;
 	
+	UPROPERTY(EditAnywhere)
+	int32 SmallBoxPoints = 10;
+	
+	UPROPERTY(EditAnywhere)
+	int32 LargeBoxPoints = 20;
+	
+	UPROPERTY(EditAnywhere)
+	int32 FragileBoxPoints = 5;
+	
+	int32 Points;
+	
 	UPrimitiveComponent* PrimComp;
 	AActor* MostRecentHolder;
 	
@@ -44,10 +60,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
+	void SetPoints();
 	void SetPhysics(bool SetTo);
 	void ResetVelocity(){PrimComp->SetPhysicsLinearVelocity(FVector(0,0,0));}
 	void AddVelocity(int Force){PrimComp->AddForce(GetActorForwardVector() * Force);}
-	
 	
 	virtual void Disintegrate();
 	
@@ -67,6 +83,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool GetIsDangerous();
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	int32 GetPoints();
 	
 	UFUNCTION(BlueprintCallable)
 	void SetMostRecentHolder(AActor* holder);

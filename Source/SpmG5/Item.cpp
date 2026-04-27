@@ -3,6 +3,9 @@
 
 #include "Item.h"
 #include "ConveyorBelt.h"
+#include "StateTreeTypes.h"
+#include "DynamicMesh/DynamicMesh3.h"
+#include "GameFramework/PawnMovementComponent.h"
 
 // Sets default values
 AItem::AItem()
@@ -15,12 +18,67 @@ AItem::AItem()
 	PrimComp = Cast<UPrimitiveComponent>(GetRootComponent());
 }
 
+void AItem::AddImpulse(FVector Point, float Strength)
+{
+	//hitta riktning mellan point och this object
+	FVector Imp = GetActorLocation() - Point;
+	//för att få 1 längd på vektor
+	//och 2 riktning
+	//lägg velocity på detta objekt
+	//i riktningen * strength (/längd på vektor, så längre bort blir påverkad mindre)
+	
+	UE_LOG(LogTemp, Warning, TEXT("Impulse on object!"));
+	//DrawDebugSphere(GetWorld(), GetActorLocation(), 50, 20, FColor::Blue, false, 0.2);
+	//this->AddVelocity(10);
+	//this->AddVelocity(Strength);
+	FVector Impulse = FVector(1,2,1);
+	//BaseMesh->AddForce(BaseMesh->GetBodyInstance()->GetBodyMass() * Impulse * 1000);
+	PrimComp->AddImpulse(Imp*30 * Strength * Impulse);
+}
+
+void AItem::Explode()
+{
+	//skapa sweepsphere
+	TArray<FHitResult> Hit;
+	float Radius = 200.0f;
+	//FVector End = GetActorLocation() + GetActorForwardVector() * Radius;
+	FQuat Rotation = GetActorRotation().Quaternion();
+		
+	GetWorld()->SweepMultiByChannel(Hit,GetActorLocation(), GetActorLocation(), Rotation, ECC_GameTraceChannel1, FCollisionShape::MakeSphere(Radius));
+	//DrawDebugSphere(GetWorld(),GetActorLocation(), Radius, 16, UE::StateTree::Colors::Red);
+	//DrawDebugSphere(GetWorld(), GetActorLocation(), Radius, 20, FColor::Red, false, 0.1);
+	//för varje item 
+	for (auto i : Hit)
+	{
+		if (i.GetActor() && i.GetComponent() && Cast<AItem>(i.GetActor()))
+		{
+			AItem* OtherItem = Cast<AItem>(i.GetActor());
+			//check if connected to conveyor
+			if (OtherItem->Conveyor != nullptr)
+			{
+				//disconnect from conveyor
+				OtherItem->Conveyor->DropItem(OtherItem);
+				OtherItem->Conveyor = nullptr;
+			}
+			
+			//add impulse
+			OtherItem->AddImpulse(GetActorLocation(), 5); //5 temp test för strength
+			
+		}
+	}
+	
+	//spela partikel effekt vid GetActorLocation()
+	Disintegrate();
+}
+
 // Called when the game starts or when spawned
 void AItem::BeginPlay()
 {
 	Super::BeginPlay();
 	
 	BaseMesh->OnComponentHit.AddDynamic(this, &AItem::OnHit);
+	
+	SetPoints();
 	
 	/*if (IsLarge)
 	{
@@ -32,6 +90,35 @@ void AItem::BeginPlay()
 void AItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+	if (bDoExplode)
+	{
+		Explode();
+		bDoExplode = false;
+	}
+}
+
+void AItem::SetPoints()
+{
+	if (IsDangerous)
+	{
+		Points = 0;
+		return;
+	}
+	
+	if (IsLarge)
+	{
+		Points += LargeBoxPoints;
+	}
+	else
+	{
+		Points += SmallBoxPoints;
+	}
+	
+	if (IsFragile)
+	{
+		Points += FragileBoxPoints;
+	}
 }
 
 void AItem::SetPhysics(bool SetTo)
@@ -88,6 +175,11 @@ bool AItem::GetIsLarge()
 bool AItem::GetIsDangerous()
 {
 	return IsDangerous;
+}
+
+int32 AItem::GetPoints()
+{
+	return Points;
 }
 
 void AItem::SetMostRecentHolder(AActor* Holder)

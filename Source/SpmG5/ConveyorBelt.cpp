@@ -15,19 +15,16 @@ AConveyorBelt::AConveyorBelt()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	//MaxItems = Conveyor.Num(); //This does not work
-	Items.SetNum(MaxItems) ;
 	//subobject needs to be created here
 	Path =  CreateDefaultSubobject<USplineComponent>("Path",true);
-	
-	
 }
 
 // Called when the game starts or when spawned
 void AConveyorBelt::BeginPlay()
 {
 	Super::BeginPlay();
-
+	MaxItems = Conveyor.Num(); 
+	Items.SetNum(MaxItems) ;
 	UE_LOG(LogTemp, Display, TEXT("Distance Between Items shall be: %f  "), DistBetweenItems);
 	
 	//fyller Items array med nullpointers
@@ -350,7 +347,7 @@ void AConveyorBelt::MoveRevolvingArraySplinePath()
 		//håll koll på dist moved (valt att kolla på en fast position)
 		if (i == CurrentFirstIndex)//GetLastIndex())//CurrentFirstIndex)
 		{
-			MovedDelta += (Speed/100);
+			MovedDelta += Speed * GetWorld()->GetDeltaSeconds();
 			//om man har rört sig så långt
 			//if (Item->GetActorLocation() == Path->GetLocationAtSplineInputKey(i, ESplineCoordinateSpace::World))
 			//if it has reached or passed the next inputkey point

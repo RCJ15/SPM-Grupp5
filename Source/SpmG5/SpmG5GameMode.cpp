@@ -4,5 +4,11 @@
 
 ASpmG5GameMode::ASpmG5GameMode()
 {
-	// stub
+	//GetWorld()->GetTimerManager().SetTimer(TimerHandle,this,&ASpmG5GameMode::Timer,300.0f, true);
 }
+
+void ASpmG5GameMode::Timer()
+{
+	
+}
+

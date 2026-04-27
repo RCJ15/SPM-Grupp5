@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Item.h"
+#include "ScoreManager.h"
 #include "BoxDestroyer.generated.h"
 
 UCLASS()
@@ -19,6 +20,10 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
+	// Kan agera som både inlämningsstation och soptunna
+	UPROPERTY(EditAnywhere)
+	bool IsTrashChute = false;
 
 public:	
 	// Called every frame
