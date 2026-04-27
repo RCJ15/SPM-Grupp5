@@ -102,7 +102,7 @@ void AItem::SetPoints()
 {
 	if (IsDangerous)
 	{
-		Points = 0;
+		Points = -15;
 		return;
 	}
 	
