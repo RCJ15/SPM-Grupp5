@@ -116,10 +116,15 @@ void ASpmG5Character::Pickup()
 		//Fult men vet inte hur man kan göra det på bättre sätt
 		HeldItem = Cast<AItem>(HitResultBox.GetActor());
 		HasItem = true;
+		if (HeldItem->Conveyor)
+		{
+			HeldItem->Conveyor->DropItem(HeldItem);
+			UE_LOG(LogTemp, Display, TEXT("Dropping item from conveyor"));
+		}
 		AttachPackage();			
 	}
-	else //KANSKE VILL ÄNDRA SÅ MAN KOLLAR PÅ ITEM ISTÄLLET FÖR SEGMENT			
-		InteractWithConveyor();	
+	//else //KANSKE VILL ÄNDRA SÅ MAN KOLLAR PÅ ITEM ISTÄLLET FÖR SEGMENT			
+		//InteractWithConveyor();	
 }
 
 void ASpmG5Character::AttachPackage()
@@ -148,9 +153,9 @@ void ASpmG5Character::InteractWithConveyor()
 				Segment = Belt->Conveyor[Segment->IndexInConveyorBelt-1];				
 			if (Belt->HasItemInSegment(Segment))
 			{
-				HeldItem = Belt->GetItemFromSegment(Segment);
-				Belt->DropItem(HeldItem);
-				AttachPackage();
+				//HeldItem = Belt->GetItemFromSegment(Segment);
+				//Belt->DropItem(HeldItem);
+				//AttachPackage();
 			}
 			else			
 				Belt->ReceiveItem(HeldItem,Segment);			
