@@ -78,6 +78,10 @@ void ARadio::Tick(float DeltaTime)
 	}
 }
 
+/*void ARadio::OnInteract(ASpmG5Character* InteractingPlayer)
+{
+}*/
+
 void ARadio::InitializeCopyArray()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Initialize Copy Array"));

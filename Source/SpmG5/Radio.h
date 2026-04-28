@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Interactable.h"
 #include "GameFramework/Actor.h"
 #include "Sound/AmbientSound.h"
 #include "Radio.generated.h"
@@ -15,6 +16,7 @@ class SPMG5_API ARadio : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ARadio();
+	UFUNCTION(BlueprintCallable)
 	void SwitchChannel();
 	void TurnOff();
 	void TurnOn();
@@ -32,6 +34,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	//void OnInteract(ASpmG5Character* InteractingPlayer);
 private:
 	UPROPERTY(EditAnywhere)
 	TArray<USoundWave*> SoundWave; //array with music that can be played
