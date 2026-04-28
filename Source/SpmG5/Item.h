@@ -74,6 +74,9 @@ public:
 			   const FHitResult& Hit);
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USceneComponent* BaseStaticMesh;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* BaseMesh;
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)

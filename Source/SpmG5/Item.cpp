@@ -12,10 +12,13 @@ AItem::AItem()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMesh"));
-	SetRootComponent(BaseMesh);
 
-	PrimComp = Cast<UPrimitiveComponent>(GetRootComponent());
+	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMesh"));
+	BaseStaticMesh = CreateDefaultSubobject<USceneComponent>("BaseStaticMesh");
+	SetRootComponent(BaseStaticMesh);
+	BaseMesh->SetupAttachment(BaseStaticMesh);
+
+	PrimComp = Cast<UPrimitiveComponent>(BaseMesh);
 }
 
 void AItem::AddImpulse(FVector Point, float Strength)
