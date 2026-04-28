@@ -28,6 +28,10 @@ void ARadio::SwitchChannel()
 	int32 Index = FMath::RandRange(0, Copy.Num() - 1);
 	
 	//sätt aktiv kanal till SoundWave[Index];
+	
+	//wchar_t* Name = SoundWave[Index]->GetName();
+	UE_LOG(LogTemp, Warning, TEXT("Index: %d and Song: %s"), Copy[Index], *SoundWave[Copy[Index]]->GetName());
+	
 	//AmbientSound->GetAudioComponent()->Sound=SoundWave[Index]; //det här ser så fel ut
 	//AmbientSound->Play();
 	
@@ -56,8 +60,8 @@ void ARadio::BeginPlay()
 	//gör så att AmbientSound loopar?
 	//AmbientSound->GetAudioComponent()->
 	InitializeCopyArray();
-	SwitchChannel();
-	TurnOn();
+	//SwitchChannel();
+	//TurnOn();
 	
 	//börja spela music
 }
@@ -76,11 +80,13 @@ void ARadio::Tick(float DeltaTime)
 
 void ARadio::InitializeCopyArray()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Initialize Copy Array"));
 	//initialize copy array with indexes of soundWave
 	for (int i = 0; i < SoundWave.Num(); i++)
 	{
 		Copy.Add(i);
 	}
+	UE_LOG(LogTemp, Warning, TEXT("Array Initialized with %d slots"), Copy.Num());
 }
 
 void ARadio::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
