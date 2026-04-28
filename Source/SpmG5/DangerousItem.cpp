@@ -49,5 +49,7 @@ void ADangerousItem::StartShake()
 
 void ADangerousItem::Shake()
 {
-	BaseMesh->SetRelativeLocation(FVector(FMath::RandRange(-ShakeIntensity,ShakeIntensity), FMath::RandRange(-ShakeIntensity,ShakeIntensity), 0.0f));
+	//BaseMesh->SetRelativeLocation(FVector(FMath::RandRange(-ShakeIntensity,ShakeIntensity), FMath::RandRange(-ShakeIntensity,ShakeIntensity), 0.0f));
+	FVector OldLoc = GetActorLocation();
+	SetActorLocation(FVector(OldLoc.X + FMath::RandRange(-ShakeIntensity,ShakeIntensity), OldLoc.Y + FMath::RandRange(-ShakeIntensity,ShakeIntensity), OldLoc.Z));
 }
