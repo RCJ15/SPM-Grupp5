@@ -103,7 +103,9 @@ void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
 		
 	GetWorld()->SweepSingleByChannel(HitResultBox,Location, End, Rotation, ECC_GameTraceChannel1,Box);
 	GetWorld()->SweepSingleByChannel(HitResultConvayer,Location, End, Rotation, ECC_GameTraceChannel2,Box);
-	
+		
+	UE_LOG(LogTemp, Error, TEXT("1"));
+
 	if (!HeldItem)//Pickup
 		Pickup();	
 	
@@ -115,6 +117,8 @@ void ASpmG5Character::Pickup()
 {
 	if (HitResultBox.GetActor() && HitResultBox.GetComponent() && Cast<AItem>(HitResultBox.GetActor()))
 	{
+		UE_LOG(LogTemp, Error, TEXT("2"));
+
 		//Fult men vet inte hur man kan göra det på bättre sätt
 		HeldItem = Cast<AItem>(HitResultBox.GetActor());
 		HasItem = true;
@@ -127,11 +131,12 @@ void ASpmG5Character::Pickup()
 	}
 	//else //KANSKE VILL ÄNDRA SÅ MAN KOLLAR PÅ ITEM ISTÄLLET FÖR SEGMENT			
 	
-	InteractWithConveyor();	
+	//InteractWithConveyor();	
 }
 
 void ASpmG5Character::AttachPackage()
 {
+	UE_LOG(LogTemp, Error, TEXT("3"));
 	HeldItem->SetPhysics(false);
 	HeldItem->ResetVelocity();
 	HeldItem->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());

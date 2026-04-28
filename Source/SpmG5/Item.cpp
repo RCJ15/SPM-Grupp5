@@ -14,10 +14,10 @@ AItem::AItem()
 	PrimaryActorTick.bCanEverTick = true;
 
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseMesh"));
-	BaseStaticMesh = CreateDefaultSubobject<USceneComponent>("BaseStaticMesh");
+	//BaseStaticMesh = CreateDefaultSubobject<USceneComponent>("BaseStaticMesh");
 	
-	SetRootComponent(BaseStaticMesh);
-	BaseMesh->SetupAttachment(BaseStaticMesh);
+	SetRootComponent(BaseMesh);
+	//BaseMesh->SetupAttachment(BaseStaticMesh);
 
 	PrimComp = Cast<UPrimitiveComponent>(BaseMesh);
 }
