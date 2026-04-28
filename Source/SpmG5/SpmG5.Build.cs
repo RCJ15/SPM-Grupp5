@@ -21,7 +21,7 @@ public class SpmG5 : ModuleRules
 			"Slate"
 		});
 
-		PrivateDependencyModuleNames.AddRange(new string[] { });
+		PrivateDependencyModuleNames.AddRange(new string[] { "FMODStudio" });
 
 		PublicIncludePaths.AddRange(new string[] {
 			"SpmG5",
