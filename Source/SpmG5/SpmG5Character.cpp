@@ -186,7 +186,7 @@ void ASpmG5Character::Throw(const FInputActionValue& Value)
 	HeldItem->SetPhysics(true);
 	HeldItem->AddVelocity(CurrentThrowForce);
 
-	CurrentThrowForce = StartingThrowForce;
+	CurrentThrowForce = StartingThrowForce * GetWorld()->DeltaTimeSeconds;
 	
 	//Resettar inför pickup
 	HeldItem = nullptr;

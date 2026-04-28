@@ -50,13 +50,13 @@ protected:
 	float RotateSpeedMult = 3.0f;
 	         
 	UPROPERTY(EditAnywhere)
-	float MaxThrowForce = 5000000.0f;
+	float MaxThrowForce = 500.0f;
 	UPROPERTY(EditAnywhere)
-	float ThrowForceIncrease = 50000.0f;
+	float ThrowForceIncrease = 500.0f;
 	UPROPERTY(EditAnywhere)
-	float StartingThrowForce = 500000.0f;
+	float StartingThrowForce = 300.0f;
 	
-	float CurrentThrowForce = 3000000.0f;
+	float CurrentThrowForce = 300.0f;
 	
 	bool HasItem = false;
 	bool Throwing = false;
