@@ -126,7 +126,8 @@ void ASpmG5Character::Pickup()
 		AttachPackage();			
 	}
 	//else //KANSKE VILL ÄNDRA SÅ MAN KOLLAR PÅ ITEM ISTÄLLET FÖR SEGMENT			
-		//InteractWithConveyor();	
+	
+	InteractWithConveyor();	
 }
 
 void ASpmG5Character::AttachPackage()

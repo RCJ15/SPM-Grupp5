@@ -26,5 +26,5 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void OnInteract(ASpmG5Character* InteractingPlayer);
 	
-	virtual void OnInteract_Implementation(ASpmG5Character* InteractingPlayer);
+	//virtual void OnInteract_Implementation(ASpmG5Character* InteractingPlayer);
 };
