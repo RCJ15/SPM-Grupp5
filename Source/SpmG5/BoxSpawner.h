@@ -55,7 +55,7 @@ public:
 	float FragileBoxSpawnRate = 10;
 	
 	UPROPERTY(EditAnywhere)
-	float DangerousBoxSpawnRate = 10;
+	float SuspiciousBoxSpawnRate = 10;
 	
 	static bool ShouldHappen(int percentage);
 };

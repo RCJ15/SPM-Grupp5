@@ -38,7 +38,7 @@ protected:
 	bool IsLarge;
 	
 	UPROPERTY(EditAnywhere)
-	bool IsDangerous;
+	bool IsSuspicious;
 	
 	UPROPERTY(EditAnywhere)
 	int32 SmallBoxPoints = 10;
@@ -83,7 +83,7 @@ public:
 	bool GetIsLarge();
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	bool GetIsDangerous();
+	bool GetIsSuspicious();
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	int32 GetPoints();
@@ -96,5 +96,5 @@ public:
 	
 	void SetIsLarge(bool SetTo);
 	void SetIsFragile(bool SetTo);
-	void SetIsDangerous(bool SetTo);
+	void SetIsSuspicious(bool SetTo);
 };

@@ -100,7 +100,7 @@ void AItem::Tick(float DeltaTime)
 
 void AItem::SetPoints()
 {
-	if (IsDangerous)
+	if (IsSuspicious)
 	{
 		Points = -15;
 		return;
@@ -176,9 +176,9 @@ bool AItem::GetIsLarge()
 	return IsLarge;
 }
 
-bool AItem::GetIsDangerous()
+bool AItem::GetIsSuspicious()
 {
-	return IsDangerous;
+	return IsSuspicious;
 }
 
 int32 AItem::GetPoints()
@@ -202,7 +202,7 @@ void AItem::SetIsFragile(bool SetTo)
 	IsFragile = SetTo;
 }
 
-void AItem::SetIsDangerous(bool SetTo)
+void AItem::SetIsSuspicious(bool SetTo)
 {
-	IsDangerous = SetTo;
+	IsSuspicious = SetTo;
 }

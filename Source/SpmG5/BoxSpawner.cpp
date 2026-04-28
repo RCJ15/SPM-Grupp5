@@ -38,7 +38,7 @@ AItem* ABoxSpawner::SpawnBox(int temp)
 		UE_LOG(LogTemp, Warning, TEXT("Spawning Box"));
 		Item->SetIsLarge(ShouldHappen(LargeBoxSpawnRate));
 		Item->SetIsFragile(ShouldHappen(FragileBoxSpawnRate));
-		Item->SetIsDangerous(ShouldHappen(DangerousBoxSpawnRate));
+		Item->SetIsSuspicious(ShouldHappen(SuspiciousBoxSpawnRate));
 	}
 
 	UGameplayStatics::FinishSpawningActor(NewActor, SpawnTransform);
@@ -56,7 +56,7 @@ void ABoxSpawner::SpawnBox()
 		UE_LOG(LogTemp, Warning, TEXT("Spawning Box"));
 		Item->SetIsLarge(ShouldHappen(LargeBoxSpawnRate));
 		Item->SetIsFragile(ShouldHappen(FragileBoxSpawnRate));
-		Item->SetIsDangerous(ShouldHappen(DangerousBoxSpawnRate));
+		Item->SetIsSuspicious(ShouldHappen(SuspiciousBoxSpawnRate));
 	}
 
 	UGameplayStatics::FinishSpawningActor(NewActor, SpawnTransform);
