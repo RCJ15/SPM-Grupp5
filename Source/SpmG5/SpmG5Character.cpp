@@ -17,6 +17,7 @@
 #include "SpmG5.h"
 #include "ConveyorSegment.h"
 #include "StateTreeTypes.h"
+#include "DynamicMesh/MeshTransforms.h"
 
 ASpmG5Character::ASpmG5Character()
 {
@@ -79,7 +80,8 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 		// Pickup and Drop
 		EnhancedInputComponent->BindAction(PickupOrDropAction, ETriggerEvent::Started, this, &ASpmG5Character::PickupAndDrop);
-		EnhancedInputComponent->BindAction(ThrowAction, ETriggerEvent::Started, this, &ASpmG5Character::Throw);
+		EnhancedInputComponent->BindAction(ThrowAction, ETriggerEvent::Triggered, this, &ASpmG5Character::ChargeUpThrow);		
+		EnhancedInputComponent->BindAction(ThrowAction, ETriggerEvent::Completed, this, &ASpmG5Character::Throw);
 		
 		//interact
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &ASpmG5Character::Interact);
@@ -160,11 +162,9 @@ void ASpmG5Character::InteractWithConveyor()
 
 AItem* ASpmG5Character::Drop()
 {
-	InteractWithConveyor();	
-	//Testar att sätta den innan och efter	
+	InteractWithConveyor();
 	HeldItem->ResetVelocity();
 	HeldItem->SetPhysics(true);
-	HeldItem->ResetVelocity();
 	
 	AItem* Item = HeldItem;
 	
@@ -175,17 +175,30 @@ AItem* ASpmG5Character::Drop()
 
 void ASpmG5Character::Throw(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Throw"))
 	if (!HeldItem)
 		return;
 	
-	//Testar att sätta den innan och efter
 	HeldItem->SetPhysics(true);
-	HeldItem->AddVelocity(ThrowForce);
+	HeldItem->AddVelocity(CurrentThrowForce);
+
+	CurrentThrowForce = StartingThrowForce;
 	
 	//Resettar inför pickup
 	HeldItem = nullptr;
 	HasItem = false;
+	Throwing = false;
+}
+
+void ASpmG5Character::ChargeUpThrow(const FInputActionValue& Value)
+{	
+	if (!HeldItem)
+		return;
+	Throwing = true;
+
+	//add arrow and charge up thing
+	
+	if (CurrentThrowForce < MaxThrowForce)
+		CurrentThrowForce += ThrowForceIncrease;
 }
 
 void ASpmG5Character::Tick(float DeltaTime)
@@ -199,12 +212,19 @@ void ASpmG5Character::Tick(float DeltaTime)
 }
 
 void ASpmG5Character::Move(const FInputActionValue& Value)
-{
+{	
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
+	if (Throwing)
+	{
+		FRotator R = FRotator(0,MovementVector.X * RotateSpeedMult, 0);
+		FQuat QuatRotation = FQuat(R);
+		AddActorLocalRotation(QuatRotation, false);	
+	}
+	else
+		DoMove(MovementVector.X, MovementVector.Y);	
 	// route the input
-	DoMove(MovementVector.X, MovementVector.Y);
 }
 
 /*void ASpmG5Character::Look(const FInputActionValue& Value)
@@ -229,7 +249,7 @@ void ASpmG5Character::DoMove(float Right, float Forward)
 		// get right vector 
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
-		// add movement 
+		// add movement
 		AddMovementInput(ForwardDirection, Forward);
 		AddMovementInput(RightDirection, Right);
 	}
