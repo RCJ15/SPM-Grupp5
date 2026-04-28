@@ -3,45 +3,47 @@
 
 #include "DangerousItem.h"
 
-
 void ADangerousItem::BeginPlay()
 {
 	Super::BeginPlay();
 	
 	GetWorld()->GetTimerManager().SetTimer(
-	BadTimer,
-	this,
-	&ADangerousItem::OnEndTimer,
-	Timer,
-	false
+		BadTimer,
+		this,
+		&ADangerousItem::OnEndTimer,
+		Timer,
+		false
 	);
+	
 	if (ShakeWhenTimerLow)
 	{
-		FTimerHandle ShakeWhenLowTimer;
+		FTimerHandle ShakeWhenLowCountdownTimer;
+		
 		GetWorld()->GetTimerManager().SetTimer(
-		ShakeWhenLowTimer,
-		this,
-		&ADangerousItem::StartShake,
-		Timer- StartShakeAt,
-		false
+			ShakeWhenLowCountdownTimer,
+			this,
+			&ADangerousItem::StartShake,
+			Timer- StartShakeAt,
+			false
 		);
 	}
-
 }
 
 void ADangerousItem::OnEndTimer_Implementation()
 {
+	
 }
 
 void ADangerousItem::StartShake()
 {
 	FTimerHandle ShakeWhenLowTimer;
+	
 	GetWorld()->GetTimerManager().SetTimer(
-	ShakeWhenLowTimer,
-	this,
-	&ADangerousItem::Shake,
-	ShakeRate,
-	true
+		ShakeWhenLowTimer,
+		this,
+		&ADangerousItem::Shake,
+		ShakeRate,
+		true
 	);
 }
 

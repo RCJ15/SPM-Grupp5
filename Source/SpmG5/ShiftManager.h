@@ -37,7 +37,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	int GetCurrentSec(){return CurrentSec;}
-
+	UFUNCTION()
 	void Timer();
 
 	void CountdownShift();

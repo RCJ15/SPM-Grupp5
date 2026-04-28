@@ -3,6 +3,7 @@
 
 #include "ShiftManager.h"
 
+
 void UShiftManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);

@@ -47,7 +47,6 @@ private:
 	void StartShake();
 	
 	void Shake();
-	
 };
 
 
