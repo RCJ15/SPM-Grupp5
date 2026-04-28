@@ -45,11 +45,21 @@ protected:
 	
 	UPROPERTY(EditAnywhere)
 	float Offset = 10.0f;
+
+	UPROPERTY(EditAnywhere)
+	float RotateSpeedMult = 3.0f;
 	         
 	UPROPERTY(EditAnywhere)
-	float ThrowForce = 5000000.0f;
+	float MaxThrowForce = 500.0f;
+	UPROPERTY(EditAnywhere)
+	float ThrowForceIncrease = 500.0f;
+	UPROPERTY(EditAnywhere)
+	float StartingThrowForce = 300.0f;
+	
+	float CurrentThrowForce = 300.0f;
 	
 	bool HasItem = false;
+	bool Throwing = false;
 
 	FHitResult HitResultBox;
 	FHitResult HitResultConvayer;
@@ -113,6 +123,8 @@ protected:
 	AItem* Drop();
 	
 	void Throw(const FInputActionValue& Value);
+	void ChargeUpThrow(const FInputActionValue& Value);
+	
 
 public:
 
