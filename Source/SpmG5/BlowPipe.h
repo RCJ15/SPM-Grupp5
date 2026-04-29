@@ -19,13 +19,24 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	FTimerHandle BlowLoopTimer;
+	
+	void Blow();
+	void BLowLoop(float LoopRate);
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(EditAnywhere)
+	FVector BlowBoxSize = FVector(120.0f, 50.0f, 50.0f);
+
+	UPROPERTY(EditAnywhere)
+	float BlowRate;
 	
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* SceneComponent;
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* BoxMesh;
 	
-
 };
