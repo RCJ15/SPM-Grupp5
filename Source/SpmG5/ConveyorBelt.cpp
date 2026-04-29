@@ -368,7 +368,7 @@ void AConveyorBelt::MoveRevolvingArraySplinePath()
 				//HERE YOU CAN TRIGGER SPAWNING THE NEXT ITEM!!!
 				//SpawnItem(nullptr);//JUST FOR FUN SHOULD NOT ACTUALLY BE HERE MAYBE??
 				
-				SpawnItem(BoxSpawner -> SpawnBox(1));
+				SpawnItem(BoxSpawner -> SpawnBox());
 				MovedDelta = 0;
 			}
 			/*if (CurrDistMoved >= DistBetweenItems)

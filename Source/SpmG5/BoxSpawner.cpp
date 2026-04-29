@@ -19,15 +19,11 @@ ABoxSpawner::ABoxSpawner()
 void ABoxSpawner::BeginPlay()
 {
 	Super::BeginPlay();
-	LoopSpawnBox(SpawnRate);
+	if (SpawnOnPoint)
+		LoopSpawnBox(SpawnRate);
 }
 
-void ABoxSpawner::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
-AItem* ABoxSpawner::SpawnBox(int temp)
+AItem* ABoxSpawner::SpawnItem()
 {
 	FTransform SpawnTransform = FTransform(FRotator::ZeroRotator, SpawnLocation->GetComponentLocation());
 	AActor* NewActor = GetWorld()->SpawnActorDeferred<AActor>(BoxToSpawn, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
@@ -45,21 +41,19 @@ AItem* ABoxSpawner::SpawnBox(int temp)
 	return Item;
 }
 
-void ABoxSpawner::SpawnBox()
+void ABoxSpawner::Tick(float DeltaTime)
 {
-	FTransform SpawnTransform = FTransform(FRotator::ZeroRotator, SpawnLocation->GetComponentLocation());
-	AActor* NewActor = GetWorld()->SpawnActorDeferred<AActor>(BoxToSpawn, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-	AItem* Item = Cast<AItem>(NewActor);
-	
-	if (Item)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Spawning Box"));
-		Item->SetIsLarge(ShouldHappen(LargeBoxSpawnRate));
-		Item->SetIsFragile(ShouldHappen(FragileBoxSpawnRate));
-		Item->SetIsDangerous(ShouldHappen(DangerousBoxSpawnRate));
-	}
+	Super::Tick(DeltaTime);
+}
 
-	UGameplayStatics::FinishSpawningActor(NewActor, SpawnTransform);
+AItem* ABoxSpawner::SpawnBox()
+{
+	return SpawnItem();
+}
+
+void ABoxSpawner::SpawnBoxOnPoint()
+{
+	SpawnItem();
 }
 
 void ABoxSpawner::LoopSpawnBox(float NewSpawnRate)
@@ -67,7 +61,7 @@ void ABoxSpawner::LoopSpawnBox(float NewSpawnRate)
 	GetWorld()->GetTimerManager().SetTimer(
 		SpawnRateTimer,
 		this,
-		&ABoxSpawner::SpawnBox,
+		&ABoxSpawner::SpawnBoxOnPoint,
 		NewSpawnRate,
 		true, -9
 		);
