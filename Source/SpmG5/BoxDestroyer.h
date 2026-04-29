@@ -40,6 +40,8 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* BaseMesh;
 	
-	UPROPERTY(VisibleAnywhere)
+	//UFUNCTION(BlueprintCallable)
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* LidMesh;
 };
