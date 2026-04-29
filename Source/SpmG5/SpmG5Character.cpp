@@ -181,9 +181,10 @@ void ASpmG5Character::InteractWithConveyor()
 
 AItem* ASpmG5Character::Drop()
 {
+	HeldItem->SetPhysics(true);
 	InteractWithConveyor();
 	HeldItem->ResetVelocity();
-	HeldItem->SetPhysics(true);
+	
 	
 	AItem* Item = HeldItem;
 	
