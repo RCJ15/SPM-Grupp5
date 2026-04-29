@@ -13,7 +13,9 @@
 #include "EnhancedInputSubsystems.h"
 #include "INodeAndChannelMappings.h"
 #include "InputActionValue.h"
+#if WITH_EDITOR
 #include "InteractiveToolActionSet.h"
+#endif
 #include "SpmG5.h"
 #include "ConveyorSegment.h"
 #include "StateTreeTypes.h"

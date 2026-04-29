@@ -3,9 +3,12 @@
 
 #include "ConveyorBelt.h"
 
+#if WITH_EDITOR
 #include "IDetailTreeNode.h"
 #include "MeshUtilitiesCommon.h"
 #include "SNegativeActionButton.h"
+#endif
+
 #include "Components/SplineComponent.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
 
