@@ -19,6 +19,7 @@ ABoxSpawner::ABoxSpawner()
 void ABoxSpawner::BeginPlay()
 {
 	Super::BeginPlay();
+	
 	if (SpawnOnPoint)
 		LoopSpawnBox(SpawnRate);
 }
@@ -35,6 +36,7 @@ AItem* ABoxSpawner::SpawnItem()
 		Item->SetIsLarge(ShouldHappen(LargeBoxSpawnRate));
 		Item->SetIsFragile(ShouldHappen(FragileBoxSpawnRate));
 		Item->SetIsDangerous(ShouldHappen(DangerousBoxSpawnRate));
+		Item->SetActorRotation(SpawnLocation->GetComponentRotation() + FRotator(0, FMath::RandRange(-15,15), 0));
 	}
 
 	UGameplayStatics::FinishSpawningActor(NewActor, SpawnTransform);
@@ -67,9 +69,9 @@ void ABoxSpawner::LoopSpawnBox(float NewSpawnRate)
 		);
 }
 
-bool ABoxSpawner::ShouldHappen(int percentage)
+bool ABoxSpawner::ShouldHappen(int Percentage)
 {
-	return (FMath::RandRange(1, 100/percentage) == 1 ? true : false);
+	return (FMath::RandRange(1, 100/Percentage) == 1 ? true : false);
 }
 
 /*void ABoxSpawner::RetRandomNumber(int32& Number)
