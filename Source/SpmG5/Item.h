@@ -40,6 +40,9 @@ protected:
 	bool IsSuspicious;
 	
 	UPROPERTY(EditAnywhere)
+	bool IsScanned = false;
+	
+	UPROPERTY(EditAnywhere)
 	int SmallBoxPoints = 10;
 	
 	UPROPERTY(EditAnywhere)
@@ -93,6 +96,9 @@ public:
 	bool GetIsSuspicious();
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool GetIsScanned();
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	int32 GetPoints();
 	
 	UFUNCTION(BlueprintCallable)
@@ -104,4 +110,8 @@ public:
 	void SetIsLarge(bool SetTo);
 	void SetIsFragile(bool SetTo);
 	void SetIsSuspicious(bool SetTo);
+	
+	UFUNCTION(BlueprintCallable)
+	void SetIsScanned(bool SetTo);
+
 };

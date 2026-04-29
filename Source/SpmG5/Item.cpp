@@ -144,6 +144,10 @@ bool AItem::GetIsSuspicious()
 {
 	return IsSuspicious;
 }
+bool AItem::GetIsScanned()
+{
+	return IsScanned;
+}
 
 int32 AItem::GetPoints()
 {
@@ -169,4 +173,8 @@ void AItem::SetIsFragile(bool SetTo)
 void AItem::SetIsSuspicious(bool SetTo)
 {
 	IsSuspicious = SetTo;
+}
+void AItem::SetIsScanned(bool SetTo)
+{
+	IsScanned = SetTo;
 }
