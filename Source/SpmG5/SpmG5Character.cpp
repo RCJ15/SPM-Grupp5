@@ -192,7 +192,7 @@ void ASpmG5Character::Throw(const FInputActionValue& Value)
 	HeldItem->SetPhysics(true);
 	HeldItem->AddVelocity(CurrentThrowForce);
 
-	CurrentThrowForce = StartingThrowForce * GetWorld()->DeltaTimeSeconds;
+	CurrentThrowForce = StartingThrowForce;
 	
 	//Resettar inför pickup
 	HeldItem = nullptr;
@@ -209,7 +209,7 @@ void ASpmG5Character::ChargeUpThrow(const FInputActionValue& Value)
 	//add arrow and charge up thing
 	
 	if (CurrentThrowForce < MaxThrowForce)
-		CurrentThrowForce += ThrowForceIncrease;
+		CurrentThrowForce += ThrowForceIncrease * GetWorld()->DeltaTimeSeconds;
 }
 
 void ASpmG5Character::Tick(float DeltaTime)
