@@ -13,10 +13,13 @@
 #include "EnhancedInputSubsystems.h"
 #include "INodeAndChannelMappings.h"
 #include "InputActionValue.h"
+#if WITH_EDITOR
 #include "InteractiveToolActionSet.h"
+#endif
 #include "SpmG5.h"
 #include "ConveyorSegment.h"
 #include "StateTreeTypes.h"
+#include "FMODBlueprintStatics.h"
 #include "DynamicMesh/MeshTransforms.h"
 
 ASpmG5Character::ASpmG5Character()
@@ -103,7 +106,9 @@ void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
 		
 	GetWorld()->SweepSingleByChannel(HitResultBox,Location, End, Rotation, ECC_GameTraceChannel1,Box);
 	GetWorld()->SweepSingleByChannel(HitResultConvayer,Location, End, Rotation, ECC_GameTraceChannel2,Box);
-	
+		
+	UE_LOG(LogTemp, Error, TEXT("1"));
+
 	if (!HeldItem)//Pickup
 		Pickup();	
 	
@@ -115,6 +120,8 @@ void ASpmG5Character::Pickup()
 {
 	if (HitResultBox.GetActor() && HitResultBox.GetComponent() && Cast<AItem>(HitResultBox.GetActor()))
 	{
+		UE_LOG(LogTemp, Error, TEXT("2"));
+
 		//Fult men vet inte hur man kan göra det på bättre sätt
 		HeldItem = Cast<AItem>(HitResultBox.GetActor());
 		HasItem = true;
@@ -123,14 +130,21 @@ void ASpmG5Character::Pickup()
 			HeldItem->Conveyor->DropItem(HeldItem);
 			UE_LOG(LogTemp, Display, TEXT("Dropping item from conveyor"));
 		}
-		AttachPackage();			
+		
+		AttachPackage();
+		
+		// Play Pickup SFX
+		FFMODEventInstance evt = UFMODBlueprintStatics::PlayEventAtLocation(this, PickupSFX, FTransform(GetActorLocation()), true);
+		UFMODBlueprintStatics::EventInstanceSetParameter(evt, "ItemType", HeldItem->GetAudioType());
 	}
 	//else //KANSKE VILL ÄNDRA SÅ MAN KOLLAR PÅ ITEM ISTÄLLET FÖR SEGMENT			
-		//InteractWithConveyor();	
+	
+	//InteractWithConveyor();	
 }
 
 void ASpmG5Character::AttachPackage()
 {
+	UE_LOG(LogTemp, Error, TEXT("3"));
 	HeldItem->SetPhysics(false);
 	HeldItem->ResetVelocity();
 	HeldItem->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());
@@ -173,6 +187,10 @@ AItem* ASpmG5Character::Drop()
 	
 	AItem* Item = HeldItem;
 	
+	// Play Drop SFX
+	FFMODEventInstance evt = UFMODBlueprintStatics::PlayEventAtLocation(this, DropSFX, FTransform(GetActorLocation()), true);
+	UFMODBlueprintStatics::EventInstanceSetParameter(evt, "ItemType", HeldItem->GetAudioType());
+	
 	HeldItem = nullptr;
 	HasItem = false;	
 	return Item;
@@ -185,8 +203,12 @@ void ASpmG5Character::Throw(const FInputActionValue& Value)
 	
 	HeldItem->SetPhysics(true);
 	HeldItem->AddVelocity(CurrentThrowForce);
+	
+	// Play Throw SFX
+	FFMODEventInstance evt = UFMODBlueprintStatics::PlayEventAtLocation(this, ThrowSFX, FTransform(GetActorLocation()), true);
+	UFMODBlueprintStatics::EventInstanceSetParameter(evt, "ItemType", HeldItem->GetAudioType());
 
-	CurrentThrowForce = StartingThrowForce * GetWorld()->DeltaTimeSeconds;
+	CurrentThrowForce = StartingThrowForce;
 	
 	//Resettar inför pickup
 	HeldItem = nullptr;
@@ -203,7 +225,7 @@ void ASpmG5Character::ChargeUpThrow(const FInputActionValue& Value)
 	//add arrow and charge up thing
 	
 	if (CurrentThrowForce < MaxThrowForce)
-		CurrentThrowForce += ThrowForceIncrease;
+		CurrentThrowForce += ThrowForceIncrease * GetWorld()->DeltaTimeSeconds;
 }
 
 void ASpmG5Character::Tick(float DeltaTime)

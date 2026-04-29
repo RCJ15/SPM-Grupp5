@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Components/StaticMeshComponent.h"
 //#include "BoxDestroyer.h"
+#include "AudioEnums.h"
 #include "Item.generated.h"
 
 class AConveyorBelt; // forward-declaration
@@ -21,15 +22,13 @@ public:
 	
 	UPROPERTY(VisibleAnywhere)
 	AConveyorBelt* Conveyor = nullptr; //pekar til conveyor om den är attatched
-	
-	UPROPERTY(EditAnywhere)
-	bool bDoExplode = false; //används för att testa explosion
-	void AddImpulse(FVector Point, float Strength);
-	void Explode();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
+	UPROPERTY(EditAnywhere, Category="Audio")
+	EAudioItemType AudioType;
 	
 	UPROPERTY(EditAnywhere)
 	bool IsFragile;
@@ -41,15 +40,15 @@ protected:
 	bool IsSuspicious;
 	
 	UPROPERTY(EditAnywhere)
-	int32 SmallBoxPoints = 10;
+	int SmallBoxPoints = 10;
 	
 	UPROPERTY(EditAnywhere)
-	int32 LargeBoxPoints = 20;
+	int LargeBoxPoints = 20;
 	
 	UPROPERTY(EditAnywhere)
-	int32 FragileBoxPoints = 5;
+	int FragileBoxPoints = 5;
 	
-	int32 Points;
+	int Points;
 	
 	UPrimitiveComponent* PrimComp;
 	AActor* MostRecentHolder;
@@ -63,7 +62,7 @@ public:
 	void SetPoints();
 	void SetPhysics(bool SetTo);
 	void ResetVelocity(){PrimComp->SetPhysicsLinearVelocity(FVector(0,0,0));}
-	void AddVelocity(int Force){PrimComp->AddForce(GetActorForwardVector() * Force);}
+	void AddVelocity(int Force){PrimComp->SetPhysicsLinearVelocity(GetActorForwardVector() * Force + GetActorUpVector() * Force/2);}
 	
 	UFUNCTION(BlueprintCallable)
 	virtual void Disintegrate();
@@ -73,8 +72,16 @@ public:
 			   FVector NormalImpulse,
 			   const FHitResult& Hit);
 	
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//USceneComponent* BaseStaticMesh;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* BaseMesh;
+	
+	void AddImpulse(FVector Point, float Strength);
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	int GetAudioType();
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool GetIsFragile();

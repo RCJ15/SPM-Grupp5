@@ -19,6 +19,9 @@ private:
 protected:
 	virtual void BeginPlay() override;
 
+	AItem* SpawnItem();
+	
+
 	UPROPERTY(EditAnywhere)
 	float SpawnRate = 1;
 	
@@ -31,14 +34,17 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	//UFUNCTION(BlueprintImplementableEvent)
-	AItem* SpawnBox(int temp);
-	void SpawnBox();
+	AItem* SpawnBox();
+	void SpawnBoxOnPoint();
 	
 	void LoopSpawnBox(float NewSpawnRate);
 	
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* BoxMesh;
 
+	UPROPERTY(EditAnywhere)
+	bool SpawnOnPoint;
+	
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* SpawnLocation;
 
