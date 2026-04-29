@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Components/StaticMeshComponent.h"
 //#include "BoxDestroyer.h"
+#include "AudioEnums.h"
 #include "Item.generated.h"
 
 class AConveyorBelt; // forward-declaration
@@ -26,6 +27,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
+	UPROPERTY(EditAnywhere, Category="Audio")
+	EAudioItemType AudioType;
+	
 	UPROPERTY(EditAnywhere)
 	bool IsFragile;
 
@@ -33,7 +37,10 @@ protected:
 	bool IsLarge;
 	
 	UPROPERTY(EditAnywhere)
-	bool IsDangerous;
+	bool IsSuspicious;
+	
+	UPROPERTY(EditAnywhere)
+	bool IsScanned = false;
 	
 	UPROPERTY(EditAnywhere)
 	int SmallBoxPoints = 10;
@@ -77,13 +84,19 @@ public:
 	void AddImpulse(FVector Point, float Strength);
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
+	int GetAudioType();
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool GetIsFragile();
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool GetIsLarge();
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	bool GetIsDangerous();
+	bool GetIsSuspicious();
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool GetIsScanned();
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	int32 GetPoints();
@@ -96,5 +109,9 @@ public:
 	
 	void SetIsLarge(bool SetTo);
 	void SetIsFragile(bool SetTo);
-	void SetIsDangerous(bool SetTo);
+	void SetIsSuspicious(bool SetTo);
+	
+	UFUNCTION(BlueprintCallable)
+	void SetIsScanned(bool SetTo);
+
 };

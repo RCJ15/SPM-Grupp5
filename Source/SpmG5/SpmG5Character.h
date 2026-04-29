@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "Item.h"
 #include "Logging/LogMacros.h"
+#include "FMODEvent.h"
 #include "SpmG5Character.generated.h"
 
 class USpringArmComponent;
@@ -90,6 +91,16 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* InteractAction;
+	
+	/* SFX */
+	UPROPERTY(EditAnywhere, Category="Audio")
+	UFMODEvent* PickupSFX;
+	
+	UPROPERTY(EditAnywhere, Category="Audio")
+	UFMODEvent* DropSFX;
+	
+	UPROPERTY(EditAnywhere, Category="Audio")
+	UFMODEvent* ThrowSFX;
 
 public:
 

@@ -3,9 +3,12 @@
 
 #include "ConveyorBelt.h"
 
+#if WITH_EDITOR
 #include "IDetailTreeNode.h"
 #include "MeshUtilitiesCommon.h"
 #include "SNegativeActionButton.h"
+#endif
+
 #include "Components/SplineComponent.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
 
@@ -328,6 +331,16 @@ void AConveyorBelt::MoveRevolvingArraySplinePath()
 		FVector NewLoc = Path->GetLocationAtSplineInputKey(SegmentIndex+MovedDelta,ESplineCoordinateSpace::World);
 		if (Item)
 			Item->SetActorLocation(NewLoc);
+		if (GetSegmentIndexFromItemIndex(i) == Conveyor.Num() - 1)
+		{
+			//Åk dubbelt så långt för pathen är hälfetn så lång 
+			NewLoc = Path->GetLocationAtSplineInputKey(SegmentIndex+MovedDelta*2,ESplineCoordinateSpace::World);
+			if (Item)
+				Item->SetActorLocation(NewLoc);
+			if (MovedDelta*2>=1)
+				DropItem(GetItemIndexFromSegmentIndex(Conveyor.Num()-1));
+		}
+		
 		//if (Item)
 			//Item->SetActorRotation(Path->GetRotationAtSplineInputKey(SegmentIndex+MovedDelta,ESplineCoordinateSpace::World));
 		
@@ -357,8 +370,7 @@ void AConveyorBelt::MoveRevolvingArraySplinePath()
 				
 				//UE_LOG(LogTemp, Warning, TEXT("Has passed Input Key Loc! key: %f  i: %d"), MovedDelta, SegmentIndex+1);
 				
-				DropItem(GetItemIndexFromSegmentIndex(Conveyor.Num()-1));//droppar item på last segment
-				//DropItem(GetLastIndex());
+				//DropItem(GetItemIndexFromSegmentIndex(Conveyor.Num()-1));//droppar item på last segment
 				UpdateCurrentFirstIndex();
 				
 				//CurrDistMoved = 0;
@@ -496,7 +508,7 @@ void AConveyorBelt::PopulateTravelPath()
 	Conveyor[0]->GetActorBounds(false, SegmentOrigin, SegmentBoxExtent);
 	FVector DirOffset = FVector(0,0,0) + (Conveyor[Conveyor.Num()-1] -> GetActorForwardVector() * (SegmentBoxExtent*2));
 	
-	Path->AddSplinePointAtIndex(Conveyor[Conveyor.Num()-1]->GetActorLocation() + DirOffset + PathOffset,Conveyor.Num(),ESplineCoordinateSpace::World);
+	Path->AddSplinePointAtIndex(Conveyor[Conveyor.Num()-1]->GetActorLocation() + DirOffset/2 + PathOffset,Conveyor.Num(),ESplineCoordinateSpace::World);
 	Path -> SetSplinePointType(Conveyor.Num(),ESplinePointType::Linear,true);
 	
 	

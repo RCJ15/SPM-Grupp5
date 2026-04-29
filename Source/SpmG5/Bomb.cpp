@@ -3,6 +3,13 @@
 
 #include "Bomb.h"
 #include "ConveyorBelt.h"
+#include "Kismet/GameplayStatics.h"
+
+void ABomb::BeginPlay()
+{
+	Super::BeginPlay();
+	ExampleDelegateVariable.AddUniqueDynamic(this, &ABomb::Explode); //subscribea på Explode metod
+}
 
 // Called every frame
 void ABomb::Tick(float DeltaTime)
@@ -11,7 +18,8 @@ void ABomb::Tick(float DeltaTime)
 	
 	if (bDoExplode)
 	{
-		Explode();
+		ExampleDelegateVariable.Broadcast(); //denna kallas för att trigga explosion
+		//Explode();
 		bDoExplode = false;
 	}
 }
@@ -46,7 +54,8 @@ void ABomb::Explode()
 			
 		}
 	}
-	
+	if (Shake != nullptr)
+		UGameplayStatics::PlayWorldCameraShake(this, Shake, GetActorLocation(),0,30000,1,false);
 	//spela partikel effekt vid GetActorLocation()
 	Disintegrate();
 }

@@ -40,7 +40,7 @@ void AItem::Tick(float DeltaTime)
 
 void AItem::SetPoints()
 {
-	if (IsDangerous)
+	if (IsSuspicious)
 	{
 		Points = -15;
 		return;
@@ -124,6 +124,12 @@ void AItem::AddImpulse(FVector Point, float Strength)
 	PrimComp->AddImpulse(Imp*30 * Strength * Impulse);
 }
 
+// For audio purposes - Ruben
+int AItem::GetAudioType()
+{
+	return static_cast<int>(AudioType);
+}
+
 bool AItem::GetIsFragile()
 {
 	return IsFragile;
@@ -134,9 +140,13 @@ bool AItem::GetIsLarge()
 	return IsLarge;
 }
 
-bool AItem::GetIsDangerous()
+bool AItem::GetIsSuspicious()
 {
-	return IsDangerous;
+	return IsSuspicious;
+}
+bool AItem::GetIsScanned()
+{
+	return IsScanned;
 }
 
 int32 AItem::GetPoints()
@@ -160,7 +170,11 @@ void AItem::SetIsFragile(bool SetTo)
 	IsFragile = SetTo;
 }
 
-void AItem::SetIsDangerous(bool SetTo)
+void AItem::SetIsSuspicious(bool SetTo)
 {
-	IsDangerous = SetTo;
+	IsSuspicious = SetTo;
+}
+void AItem::SetIsScanned(bool SetTo)
+{
+	IsScanned = SetTo;
 }

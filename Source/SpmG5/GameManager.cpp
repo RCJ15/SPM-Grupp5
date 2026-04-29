@@ -3,7 +3,10 @@
 
 #include "GameManager.h"
 
+#if WITH_EDITOR
 #include "ToolMenusEditor.h"
+#endif
+
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 

@@ -13,10 +13,13 @@
 #include "EnhancedInputSubsystems.h"
 #include "INodeAndChannelMappings.h"
 #include "InputActionValue.h"
+#if WITH_EDITOR
 #include "InteractiveToolActionSet.h"
+#endif
 #include "SpmG5.h"
 #include "ConveyorSegment.h"
 #include "StateTreeTypes.h"
+#include "FMODBlueprintStatics.h"
 #include "DynamicMesh/MeshTransforms.h"
 
 ASpmG5Character::ASpmG5Character()
@@ -127,7 +130,12 @@ void ASpmG5Character::Pickup()
 			HeldItem->Conveyor->DropItem(HeldItem);
 			UE_LOG(LogTemp, Display, TEXT("Dropping item from conveyor"));
 		}
-		AttachPackage();			
+		
+		AttachPackage();
+		
+		// Play Pickup SFX
+		FFMODEventInstance evt = UFMODBlueprintStatics::PlayEventAtLocation(this, PickupSFX, FTransform(GetActorLocation()), true);
+		UFMODBlueprintStatics::EventInstanceSetParameter(evt, "ItemType", HeldItem->GetAudioType());
 	}
 	//else //KANSKE VILL ÄNDRA SÅ MAN KOLLAR PÅ ITEM ISTÄLLET FÖR SEGMENT			
 	
@@ -173,11 +181,16 @@ void ASpmG5Character::InteractWithConveyor()
 
 AItem* ASpmG5Character::Drop()
 {
+	HeldItem->SetPhysics(true);
 	InteractWithConveyor();
 	HeldItem->ResetVelocity();
-	HeldItem->SetPhysics(true);
+	
 	
 	AItem* Item = HeldItem;
+	
+	// Play Drop SFX
+	FFMODEventInstance evt = UFMODBlueprintStatics::PlayEventAtLocation(this, DropSFX, FTransform(GetActorLocation()), true);
+	UFMODBlueprintStatics::EventInstanceSetParameter(evt, "ItemType", HeldItem->GetAudioType());
 	
 	HeldItem = nullptr;
 	HasItem = false;	
@@ -191,8 +204,12 @@ void ASpmG5Character::Throw(const FInputActionValue& Value)
 	
 	HeldItem->SetPhysics(true);
 	HeldItem->AddVelocity(CurrentThrowForce);
+	
+	// Play Throw SFX
+	FFMODEventInstance evt = UFMODBlueprintStatics::PlayEventAtLocation(this, ThrowSFX, FTransform(GetActorLocation()), true);
+	UFMODBlueprintStatics::EventInstanceSetParameter(evt, "ItemType", HeldItem->GetAudioType());
 
-	CurrentThrowForce = StartingThrowForce * GetWorld()->DeltaTimeSeconds;
+	CurrentThrowForce = StartingThrowForce;
 	
 	//Resettar inför pickup
 	HeldItem = nullptr;
@@ -209,7 +226,7 @@ void ASpmG5Character::ChargeUpThrow(const FInputActionValue& Value)
 	//add arrow and charge up thing
 	
 	if (CurrentThrowForce < MaxThrowForce)
-		CurrentThrowForce += ThrowForceIncrease;
+		CurrentThrowForce += ThrowForceIncrease * GetWorld()->DeltaTimeSeconds;
 }
 
 void ASpmG5Character::Tick(float DeltaTime)
