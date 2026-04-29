@@ -19,6 +19,7 @@
 #include "SpmG5.h"
 #include "ConveyorSegment.h"
 #include "StateTreeTypes.h"
+#include "FMODBlueprintStatics.h"
 #include "DynamicMesh/MeshTransforms.h"
 
 ASpmG5Character::ASpmG5Character()
@@ -129,7 +130,12 @@ void ASpmG5Character::Pickup()
 			HeldItem->Conveyor->DropItem(HeldItem);
 			UE_LOG(LogTemp, Display, TEXT("Dropping item from conveyor"));
 		}
-		AttachPackage();			
+		
+		AttachPackage();
+		
+		// Play Pickup SFX
+		FFMODEventInstance evt = UFMODBlueprintStatics::PlayEventAtLocation(this, PickupSFX, FTransform(GetActorLocation()), true);
+		UFMODBlueprintStatics::EventInstanceSetParameter(evt, "ItemType", HeldItem->GetAudioType());
 	}
 	//else //KANSKE VILL ÄNDRA SÅ MAN KOLLAR PÅ ITEM ISTÄLLET FÖR SEGMENT			
 	
@@ -181,6 +187,10 @@ AItem* ASpmG5Character::Drop()
 	
 	AItem* Item = HeldItem;
 	
+	// Play Drop SFX
+	FFMODEventInstance evt = UFMODBlueprintStatics::PlayEventAtLocation(this, DropSFX, FTransform(GetActorLocation()), true);
+	UFMODBlueprintStatics::EventInstanceSetParameter(evt, "ItemType", HeldItem->GetAudioType());
+	
 	HeldItem = nullptr;
 	HasItem = false;	
 	return Item;
@@ -193,6 +203,10 @@ void ASpmG5Character::Throw(const FInputActionValue& Value)
 	
 	HeldItem->SetPhysics(true);
 	HeldItem->AddVelocity(CurrentThrowForce);
+	
+	// Play Throw SFX
+	FFMODEventInstance evt = UFMODBlueprintStatics::PlayEventAtLocation(this, ThrowSFX, FTransform(GetActorLocation()), true);
+	UFMODBlueprintStatics::EventInstanceSetParameter(evt, "ItemType", HeldItem->GetAudioType());
 
 	CurrentThrowForce = StartingThrowForce;
 	

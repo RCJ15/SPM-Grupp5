@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Components/StaticMeshComponent.h"
 //#include "BoxDestroyer.h"
+#include "AudioEnums.h"
 #include "Item.generated.h"
 
 class AConveyorBelt; // forward-declaration
@@ -25,6 +26,9 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
+	UPROPERTY(EditAnywhere, Category="Audio")
+	EAudioItemType AudioType;
 	
 	UPROPERTY(EditAnywhere)
 	bool IsFragile;
@@ -75,6 +79,9 @@ public:
 	UStaticMeshComponent* BaseMesh;
 	
 	void AddImpulse(FVector Point, float Strength);
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	int GetAudioType();
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool GetIsFragile();

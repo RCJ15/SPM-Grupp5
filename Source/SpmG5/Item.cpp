@@ -124,6 +124,12 @@ void AItem::AddImpulse(FVector Point, float Strength)
 	PrimComp->AddImpulse(Imp*30 * Strength * Impulse);
 }
 
+// For audio purposes - Ruben
+int AItem::GetAudioType()
+{
+	return static_cast<int>(AudioType);
+}
+
 bool AItem::GetIsFragile()
 {
 	return IsFragile;

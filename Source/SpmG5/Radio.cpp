@@ -3,6 +3,7 @@
 
 #include "Radio.h"
 
+#include "FMODBlueprintStatics.h"
 #include "Components/AudioComponent.h"
 
 // Sets default values
@@ -17,6 +18,11 @@ ARadio::ARadio()
 //använde det här som källa https://forums.unrealengine.com/t/choosing-random-numbers-in-a-range-all-at-least-once/344734/2
 void ARadio::SwitchChannel()
 {
+	if (CurrentInstance)
+	{
+		CurrentInstance->Stop();
+	}
+	
 	UE_LOG(LogTemp, Warning, TEXT("Switch Channel"));
 	//när den kastas i marken ska den byta kanal
 	
@@ -30,11 +36,24 @@ void ARadio::SwitchChannel()
 	//sätt aktiv kanal till SoundWave[Index];
 	
 	//wchar_t* Name = SoundWave[Index]->GetName();
-	UE_LOG(LogTemp, Warning, TEXT("Index: %d and Song: %s"), Copy[Index], *SoundWave[Copy[Index]]->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("Index: %d and Song: %s"), Copy[Index], *Songs[Copy[Index]]->GetName());
 	
 	//AmbientSound->GetAudioComponent()->Sound=SoundWave[Index]; //det här ser så fel ut
 	//AmbientSound->Play();
 	
+	UFMODEvent* evt = Songs[Copy[Index]];
+	
+	CurrentInstance = UFMODBlueprintStatics::PlayEventAttached(
+		evt, //FMOD event asset
+		BaseMesh, //component to attach to
+		NAME_None, //optional socket name
+		FVector::ZeroVector, 
+		EAttachLocation::KeepRelativeOffset, 
+		true, 
+		true, 
+		true
+		);
+
 	Copy.RemoveAtSwap(Index);
 	
 }
@@ -44,12 +63,17 @@ void ARadio::TurnOff()
 {
 	//stop playing music
 	//AmbientSound->Stop();
+	
+	CurrentInstance->Stop();
+	CurrentInstance = nullptr;
 }
 
 void ARadio::TurnOn()
 {
 	//start playing music
 	//AmbientSound->Play();
+	
+	CurrentInstance->Play();
 }
 
 // Called when the game starts or when spawned
@@ -76,6 +100,11 @@ void ARadio::Tick(float DeltaTime)
 		SwitchChannel();
 		bSwitchChannel = false;
 	}
+	
+	if (!CurrentInstance || !CurrentInstance->IsPlaying())
+	{
+		SwitchChannel();
+	}
 }
 
 /*void ARadio::OnInteract(ASpmG5Character* InteractingPlayer)
@@ -85,8 +114,8 @@ void ARadio::Tick(float DeltaTime)
 void ARadio::InitializeCopyArray()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Initialize Copy Array"));
-	//initialize copy array with indexes of soundWave
-	for (int i = 0; i < SoundWave.Num(); i++)
+	//initialize copy array with indexes of songs
+	for (int i = 0; i < Songs.Num(); i++)
 	{
 		Copy.Add(i);
 	}

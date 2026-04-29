@@ -6,6 +6,8 @@
 #include "Interactable.h"
 #include "GameFramework/Actor.h"
 #include "Sound/AmbientSound.h"
+#include "FMODEvent.h"
+#include "FMODAudioComponent.h"
 #include "Radio.generated.h"
 
 UCLASS()
@@ -37,9 +39,9 @@ public:
 	//void OnInteract(ASpmG5Character* InteractingPlayer);
 private:
 	UPROPERTY(EditAnywhere)
-	TArray<USoundWave*> SoundWave; //array with music that can be played
+	TArray<UFMODEvent*> Songs; //array with all music for this level
 	TArray<int32> Copy; //used so all channels are played once before repeating
-	AAmbientSound* AmbientSound; //the music playing
+	UFMODAudioComponent* CurrentInstance; //current FMOD Event Instance playing
 	
 	void InitializeCopyArray(); //basically fylla på copy array med indexes
 	
