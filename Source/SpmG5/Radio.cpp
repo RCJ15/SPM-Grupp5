@@ -6,6 +6,8 @@
 #include "FMODBlueprintStatics.h"
 #include "Components/AudioComponent.h"
 
+int32 LastSongIndex;
+
 // Sets default values
 ARadio::ARadio()
 {
@@ -28,10 +30,18 @@ void ARadio::SwitchChannel()
 	
 	//ta en random kanal från 
 	
-	if (Copy.Num() == 0)
+	if (Copy.Num() == 0) {
 		InitializeCopyArray();
+	}
 	
 	int32 Index = FMath::RandRange(0, Copy.Num() - 1);
+	
+	if (Copy[Index] == LastSongIndex) {
+		Index++;
+		Index %= Copy.Num();
+	}
+	
+	LastSongIndex = Copy[Index];
 	
 	//sätt aktiv kanal till SoundWave[Index];
 	
@@ -41,10 +51,10 @@ void ARadio::SwitchChannel()
 	//AmbientSound->GetAudioComponent()->Sound=SoundWave[Index]; //det här ser så fel ut
 	//AmbientSound->Play();
 	
-	UFMODEvent* evt = Songs[Copy[Index]];
+	UFMODEvent* Evt = Songs[Copy[Index]];
 	
 	CurrentInstance = UFMODBlueprintStatics::PlayEventAttached(
-		evt, //FMOD event asset
+		Evt, //FMOD event asset
 		BaseMesh, //component to attach to
 		NAME_None, //optional socket name
 		FVector::ZeroVector, 
