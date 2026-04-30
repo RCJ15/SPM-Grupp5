@@ -35,8 +35,8 @@ AItem* ABoxSpawner::SpawnItem()
 		UE_LOG(LogTemp, Warning, TEXT("Spawning Box"));
 		Item->SetIsLarge(ShouldHappen(LargeBoxSpawnRate));
 		Item->SetIsFragile(ShouldHappen(FragileBoxSpawnRate));
-		Item->SetIsDangerous(ShouldHappen(DangerousBoxSpawnRate));
-		Item->SetActorRotation(SpawnLocation->GetComponentRotation() + FRotator(0, FMath::RandRange(-15,15), 0));
+		//Item->SetIsDangerous(ShouldHappen(DangerousBoxSpawnRate));
+		//Item->SetActorRotation(SpawnLocation->GetComponentRotation() + FRotator(0, FMath::RandRange(-15,15), 0));
 		Item->SetIsSuspicious(ShouldHappen(SuspiciousBoxSpawnRate));
 	}
 
