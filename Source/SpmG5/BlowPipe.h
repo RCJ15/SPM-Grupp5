@@ -20,8 +20,10 @@ protected:
 	virtual void BeginPlay() override;
 
 	FTimerHandle BlowLoopTimer;
+	bool Blowing = false;
 	
-	void Blow();
+	void ChangeBlowState();
+	void Blow(float DeltaTime);
 	void BLowLoop(float LoopRate);
 	
 public:	
@@ -32,7 +34,10 @@ public:
 	FVector BlowBoxSize = FVector(120.0f, 50.0f, 50.0f);
 
 	UPROPERTY(EditAnywhere)
-	float BlowRate;
+	float BlowRate = 0.01;
+	
+	UPROPERTY(EditAnywhere)
+	float ForceMultiplier = 500;
 	
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* SceneComponent;

@@ -37,7 +37,9 @@ class ASpmG5Character : public ACharacter
 	*/
 	
 protected:
-
+	
+	UPrimitiveComponent* PrimComp;	
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USceneComponent* HoldingLocation;
 	
@@ -138,6 +140,7 @@ protected:
 	
 
 public:
+	void AddVelocity(FVector Force){AddMovementInput(Force);}
 
 
 	/** Handles move inputs from either controls or UI interfaces */
