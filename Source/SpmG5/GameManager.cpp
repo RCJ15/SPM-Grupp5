@@ -3,29 +3,35 @@
 
 #include "GameManager.h"
 
-#if WITH_EDITOR
-#include "ToolMenusEditor.h"
-#endif
-
-#include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 
-void UGameManager::StartLevel(TSoftObjectPtr<UWorld> level)
+
+void UGameManager::LoadLevel(TSoftObjectPtr<UWorld> Level)
 {
-	UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), level);
-	
-	if (HUDClass && !HUDWidget)
+	if (!FirstTime)
 	{
-		HUDWidget = CreateWidget<UUserWidget>(GetWorld(), HUDClass);
+		PreviousLevel = CurrentLevel;
 	}
-	
-	if (HUDWidget && !HUDWidget->IsInViewport())
-	{
-		HUDWidget->AddToViewport();
-		
-		if (MenuClass && MenuWidget->IsInViewport())
-		{
-			MenuWidget->RemoveFromParent();
-		}
-	}
+	CurrentLevel = Level;
+	FLatentActionInfo LatentInfo;
+	LatentInfo.CallbackTarget = this;
+	LatentInfo.ExecutionFunction = FName("LevelLoaded");
+	LatentInfo.Linkage = 0;
+	UGameplayStatics::LoadStreamLevelBySoftObjectPtr(GetWorld(),Level, true, false, LatentInfo);
 }
+
+
+void UGameManager::LevelLoaded()
+{
+	if (FirstTime)
+	{
+		FirstTime = false;
+	}else
+	{
+		FLatentActionInfo LatentInfo;
+		UGameplayStatics::UnloadStreamLevelBySoftObjectPtr(GetWorld(), PreviousLevel, LatentInfo, false);
+	}
+	OnLevelLoadedInternal.Broadcast();
+}
+
+

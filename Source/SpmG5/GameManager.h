@@ -3,30 +3,34 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Subsystems/GameInstanceSubsystem.h"
 #include "GameManager.generated.h"
 
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLevelLoadedInternal);
 /**
  * 
  */
 UCLASS()
-class SPMG5_API UGameManager : public UGameInstanceSubsystem
+class SPMG5_API UGameManager : public UGameInstance
 {
 	GENERATED_BODY()
 	
 public:
-	UFUNCTION(BlueprintCallable)
-	void StartLevel(TSoftObjectPtr<UWorld> level);
 	
-	UPROPERTY(EditDefaultsOnly, Category = "HUD")
-	TSubclassOf<UUserWidget> HUDClass;
+	void LoadLevel(TSoftObjectPtr<UWorld> Level);
+
+	FName PendingLevelName;
 	
-	UPROPERTY()
-	UUserWidget* HUDWidget;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "HUD")
-	TSubclassOf<UUserWidget> MenuClass;
+	TSoftObjectPtr<UWorld> PreviousLevel;
+
+	TSoftObjectPtr<UWorld> CurrentLevel;
 	
 	UPROPERTY()
-	UUserWidget* MenuWidget;
+	FOnLevelLoadedInternal OnLevelLoadedInternal;
+
+private:
+	UFUNCTION()
+	void LevelLoaded();
+
+	bool FirstTime = true;
 };
