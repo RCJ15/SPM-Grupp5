@@ -19,12 +19,19 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	FTimerHandle BlowLoopTimer;
-	bool Blowing = false;
+	FTimerHandle IdleTimer;
+	FTimerHandle BlowingTimer;
+	FTimerHandle IndicatorTimer;
+	// bool Blowing = false;
+	float TimeBeforeBlowing = 0.0f;
+	float TimeLeftBlowing = 0.0f;
+	FRandomStream Stream = FRandomStream(0);
 	
-	void ChangeBlowState();
 	void Blow(float DeltaTime);
-	void BLowLoop(float LoopRate);
+	void StartBlowing();
+	void CallBlowMethod();
+	void BlowStateLoop(float LoopRate);
+	void ShowIndicator();
 	
 public:	
 	// Called every frame
@@ -34,10 +41,16 @@ public:
 	FVector BlowBoxSize = FVector(120.0f, 50.0f, 50.0f);
 
 	UPROPERTY(EditAnywhere)
-	FVector Offcset = FVector(10.0f, 0.0f, 0.0f);
+	FVector Offcset = FVector(0.0f, 100.0f, 0.0f);
 	
 	UPROPERTY(EditAnywhere)
-	float BlowRate = 0.01;
+	float BlowTime = 5;
+	
+	UPROPERTY(EditAnywhere)
+	float BlowIndicatorTime = 3;
+	
+	UPROPERTY(EditAnywhere)
+	FVector2f WaitTimeRange = FVector2f(5.0,10.0);
 	
 	UPROPERTY(EditAnywhere)
 	float ForceMultiplier = 500;
