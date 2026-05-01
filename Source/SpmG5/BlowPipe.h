@@ -34,6 +34,9 @@ public:
 	FVector BlowBoxSize = FVector(120.0f, 50.0f, 50.0f);
 
 	UPROPERTY(EditAnywhere)
+	FVector Offcset = FVector(10.0f, 0.0f, 0.0f);
+	
+	UPROPERTY(EditAnywhere)
 	float BlowRate = 0.01;
 	
 	UPROPERTY(EditAnywhere)

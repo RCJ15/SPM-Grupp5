@@ -36,19 +36,17 @@ void ABlowPipe::ChangeBlowState()
 void ABlowPipe::Blow(float DeltaTime)
 {
 	TArray<FHitResult> HitResult;
-	FVector Location = GetActorLocation();	
+	FVector Location = GetActorLocation() + Offcset;	
 	FVector End = Location * GetActorForwardVector() * 5;
 	FCollisionShape Box = FCollisionShape::MakeBox(BlowBoxSize);
 	FQuat Rotation = GetActorRotation().Quaternion();
 	GetWorld()->SweepMultiByChannel(HitResult,Location, End, Rotation, ECC_GameTraceChannel4,Box);
 
 	
-	DrawDebugBox(GetWorld(), GetActorLocation(), FVector(BlowBoxSize.Y, BlowBoxSize.X, BlowBoxSize.Z), FColor::Red, false, 1);
+	DrawDebugBox(GetWorld(), Location, FVector(BlowBoxSize.Y, BlowBoxSize.X, BlowBoxSize.Z), FColor::Red, false, 1);
 
 	for (FHitResult Result : HitResult)
-	{	//kolla om character, om character kalla på dens AddVelocity metod (inte implementerad)
-		
-		UE_LOG(LogTemp, Warning, TEXT("Blow"));
+	{
 		Result.GetComponent()->GetOwner()->SetActorLocation(Result.GetComponent()->GetOwner()->GetActorLocation() + GetActorForwardVector() * ForceMultiplier * DeltaTime);
 	}
 	
