@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "SpawnAI.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnValueChanged);
+
 UCLASS()
 class SPMG5_API ASpawnAI : public AActor
 {
@@ -19,23 +21,41 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
-	UPROPERTY(EditAnywhere)
+	FOnValueChanged OnValueChanged;
+	
+	
+	
+	UPROPERTY(EditAnywhere, Category = "Box Properities")
 	int AmountOfBoxesPerLevel = 150;
 	
-	UPROPERTY(EditAnywhere)
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
+	int SmallBoxesPercentage = 75;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
+	int LargeBoxesPercentage = 25;
+	
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
 	int FragileBoxesPercentage = 15;
 	
-	UPROPERTY(EditAnywhere)
-	int LargeBoxesPercentage = 10;
 	
-	UPROPERTY(EditAnywhere)
-	int BombBoxesPercentage = 5;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
+	int SuspiciousBoxesPercentage = 30;
 	
-	UPROPERTY(EditAnywhere)
-	int ToxicWasteBoxesPercentage = 5;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
+	int DangerousBoxesPercentage = 50;
 	
-	UPROPERTY(EditAnywhere)
-	int FlashBangBoxesPercentage = 5;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
+	int BombBoxesPercentage = 34;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
+	int ToxicWasteBoxesPercentage = 33;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
+	int FlashBangBoxesPercentage = 33;
+	
 	
 	int RemainingFragileBoxes;
 	int RemainingLargeBoxes;
