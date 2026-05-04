@@ -21,7 +21,6 @@ protected:
 
 	AItem* SpawnItem();
 	
-
 	UPROPERTY(EditAnywhere)
 	float SpawnRate = 1;
 	

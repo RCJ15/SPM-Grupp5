@@ -17,8 +17,10 @@ void UScoreManager::AddScore(int AddedScore)
 
 void UScoreManager::SetScore(int NewScore)
 {
+ 	
 }
 
 void UScoreManager::ResetScore()
 {
+ 	
 }

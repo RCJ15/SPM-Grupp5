@@ -23,8 +23,6 @@ protected:
 	
 	FOnValueChanged OnValueChanged;
 	
-	
-	
 	UPROPERTY(EditAnywhere, Category = "Box Properities")
 	int AmountOfBoxesPerLevel = 150;
 	
@@ -56,7 +54,6 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
 	int FlashBangBoxesPercentage = 33;
 	
-	
 	int RemainingFragileBoxes;
 	int RemainingLargeBoxes;
 	int RemainingBombBoxes;
@@ -69,5 +66,4 @@ public:
 	
 	void ConvertAllPercentageToBoxes();
 	void ConvertPercentageToBox(int& Percentage, int& TypeOfRemainingBoxes);
-
 };

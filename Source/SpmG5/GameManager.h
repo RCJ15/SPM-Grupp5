@@ -16,7 +16,6 @@ class SPMG5_API UGameManager : public UGameInstance
 	GENERATED_BODY()
 	
 public:
-	
 	void LoadLevel(TSoftObjectPtr<UWorld> Level);
 
 	FName PendingLevelName;

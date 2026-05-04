@@ -18,10 +18,10 @@ protected:
 	virtual void BeginPlay() override;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Timer = 30.0f;
+	float Lifetime = 30.0f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FTimerHandle BadTimer;
+	FTimerHandle BadBoxTimer;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool ShakeWhenTimerLow;
