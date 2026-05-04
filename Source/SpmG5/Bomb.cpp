@@ -9,7 +9,7 @@ void ABomb::BeginPlay()
 {
 	//Ändra möjliga värden innan man kör parent begin play 
 	//då den startar timern
-	Timer = 10; //sätter timer till något nytt
+	Lifetime = 10; //sätter lifetime till något nytt
 	StartShakeAt = 5;
 	Super::BeginPlay();
 	ExampleDelegateVariable.AddUniqueDynamic(this, &ABomb::Explode); //subscribea på Explode metod
