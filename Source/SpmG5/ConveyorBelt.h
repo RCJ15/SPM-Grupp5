@@ -65,8 +65,6 @@ public:
 	
 	UPROPERTY(EditAnywhere)
 	ABoxSpawner* BoxSpawner;
-	//UPROPERTY(EditAnywhere)
-	//UStaticMeshComponent* SpawnLocation;
 	UPROPERTY(EditAnywhere, Category="Function tests | Add")
 	bool AddItem = false;
 	UPROPERTY(EditAnywhere, Category="Function tests | Add")
@@ -76,8 +74,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	USplineComponent* Path;
 	
-	//UPROPERTY(EditAnywhere)
-	TArray<AItem*> Items;	//ah, istället för klassem måste jag nog ha blueprint som grejen?
+	TArray<AItem*> Items;
 
 	UPROPERTY(EditAnywhere, Category="Conveyor Settings")
 	TArray<AConveyorSegment*> Conveyor; //är alla segment i hela conveyorn
@@ -86,8 +83,8 @@ private:
 	void SpawnItem(AItem*);
 	
 	void DropItem(int);
-	void ReceiveItem(AItem*, int); //borde ha param på vad som ska läggas in
-	void Move();
+	void ReceiveItem(AItem*, int); 
+	void Move(); //version 1
 	void MoveRevolvingArray(); //versionen där jag försökte rotera arrayen
 	void MoveRevolvingArraySplinePath(); //-..- following a spline path instead
 	
@@ -95,7 +92,6 @@ private:
 	int GetSegmentIndexFromItemIndex(int Index); //räknar ut vilket segment som correspondar till ett specifikt index
 	int GetItemIndexFromSegmentIndex(int Index);
 	void ShouldTurnOff();
-	//should prolly be renamed to populate path
 	void PopulateTravelPath();
 	int GetItemIndexFromSegment(AConveyorSegment*);
 	int GetItemIndex(AItem*);
