@@ -94,6 +94,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* InteractAction;
 	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	bool IsInteracting = false;
+	
 	/* SFX */
 	UPROPERTY(EditAnywhere, Category="Audio")
 	UFMODEvent* PickupSFX;
@@ -129,8 +132,10 @@ protected:
 	void AttachPackage();
 	void InteractWithConveyor();
 	
-	UFUNCTION(BlueprintCallable, Category="Input")
 	void Pickup();
+	
+	UFUNCTION(BlueprintCallable)
+	void Pickup(AItem* Item);
 	
 	UFUNCTION(BlueprintCallable, Category="Input")
 	AItem* Drop();
