@@ -7,8 +7,13 @@
 
 void ABomb::BeginPlay()
 {
+	//Ändra möjliga värden innan man kör parent begin play 
+	//då den startar timern
+	Timer = 10; //sätter timer till något nytt
+	StartShakeAt = 5;
 	Super::BeginPlay();
 	ExampleDelegateVariable.AddUniqueDynamic(this, &ABomb::Explode); //subscribea på Explode metod
+	
 }
 
 // Called every frame
@@ -57,4 +62,10 @@ void ABomb::Explode()
 		UGameplayStatics::PlayWorldCameraShake(this, Shake, GetActorLocation(),0,30000,1,false);
 	//spela partikel effekt vid GetActorLocation()
 	Disintegrate();
+}
+
+void ABomb::OnEndTimer_Implementation()
+{
+	Super::OnEndTimer_Implementation();
+	ExampleDelegateVariable.Broadcast(); //denna kallas för att trigga explosion
 }

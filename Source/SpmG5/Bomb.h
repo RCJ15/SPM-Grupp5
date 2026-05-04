@@ -31,6 +31,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Explode();
 	
+	virtual void OnEndTimer_Implementation() override;
+	
 	UPROPERTY(Blueprintable, BlueprintReadWrite, BlueprintAssignable)
 	FExampleDelegate_OnSomething ExampleDelegateVariable;
 };

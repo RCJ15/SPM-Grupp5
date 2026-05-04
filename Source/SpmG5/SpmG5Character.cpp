@@ -20,6 +20,7 @@
 #include "ConveyorSegment.h"
 #include "StateTreeTypes.h"
 #include "FMODBlueprintStatics.h"
+#include "BaseGizmos/GizmoElementShared.h"
 #include "DynamicMesh/MeshTransforms.h"
 
 ASpmG5Character::ASpmG5Character()
@@ -99,6 +100,9 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
 {	
+	UE_LOG(LogTemp, Error, TEXT("Is interacting:   %d"), IsInteracting);
+	if(IsInteracting)
+		return;
 	float Distance = 5.0f;
 	FVector Location = HoldingLocation->GetComponentLocation();	
 	FVector End = Location + GetActorForwardVector() * Distance;
@@ -124,23 +128,24 @@ void ASpmG5Character::Pickup()
 		UE_LOG(LogTemp, Error, TEXT("2"));
 
 		//Fult men vet inte hur man kan göra det på bättre sätt
-		HeldItem = Cast<AItem>(HitResultBox.GetActor());
-		HasItem = true;
-		if (HeldItem->Conveyor)
-		{
-			HeldItem->Conveyor->DropItem(HeldItem);
-			UE_LOG(LogTemp, Display, TEXT("Dropping item from conveyor"));
-		}
 		
-		AttachPackage();
-		
-		// Play Pickup SFX
-		FFMODEventInstance evt = UFMODBlueprintStatics::PlayEventAtLocation(this, PickupSFX, FTransform(GetActorLocation()), true);
-		UFMODBlueprintStatics::EventInstanceSetParameter(evt, "ItemType", HeldItem->GetAudioType());
+		Pickup(Cast<AItem>(HitResultBox.GetActor()));
 	}
 	//else //KANSKE VILL ÄNDRA SÅ MAN KOLLAR PÅ ITEM ISTÄLLET FÖR SEGMENT			
 	
 	//InteractWithConveyor();	
+}
+
+void ASpmG5Character::Pickup(AItem* Item)
+{
+	HeldItem = Item;
+	HasItem = true;
+	if (HeldItem->Conveyor)
+	{
+		HeldItem->Conveyor->DropItem(HeldItem);
+		UE_LOG(LogTemp, Display, TEXT("Dropping item from conveyor"));
+	}
+	AttachPackage();
 }
 
 void ASpmG5Character::AttachPackage()
@@ -151,6 +156,10 @@ void ASpmG5Character::AttachPackage()
 	HeldItem->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());
 	HeldItem->SetActorRelativeRotation(FRotator(0,0,0));
 	HeldItem->SetMostRecentHolder(this);
+	
+	// Play Pickup SFX
+	FFMODEventInstance evt = UFMODBlueprintStatics::PlayEventAtLocation(this, PickupSFX, FTransform(GetActorLocation()), true);
+	UFMODBlueprintStatics::EventInstanceSetParameter(evt, "ItemType", HeldItem->GetAudioType());
 }
 
 void ASpmG5Character::InteractWithConveyor()
