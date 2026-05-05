@@ -64,7 +64,7 @@ void AItem::SetPoints()
 void AItem::SetPhysics(bool SetTo)
 {
 	if (SetTo)
-		PrimComp->SetCollisionProfileName("DefultItem");
+		PrimComp->SetCollisionProfileName("DefaultItem");
 	else 
 		PrimComp->SetCollisionProfileName("OnlyRaycast");
 	// SetActorEnableCollision(SetTo);
@@ -76,6 +76,7 @@ void AItem::CalculateIfBreakIfFragile()
 {
 	if (IsFragile)
 	{
+		// Checks with how much force fragile item hits something
 		int CurrentSpeed = GetVelocity().Size();
 		UE_LOG(LogTemp, Warning, TEXT("Current Speed: %d"), CurrentSpeed);
 		
@@ -95,6 +96,7 @@ void AItem::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimit
 {
 	if (OtherActor && OtherActor != this)
 	{
+		//MostRecentHolder excludes person who was holding item so it can't destroy item right after dropping it
 		if (MostRecentHolder)
 		{
 			if (OtherActor != MostRecentHolder)

@@ -21,7 +21,7 @@ public:
 	AItem();
 	
 	UPROPERTY(VisibleAnywhere)
-	AConveyorBelt* Conveyor = nullptr; //pekar til conveyor om den är attatched
+	AConveyorBelt* Conveyor = nullptr; //pekar til conveyor om den är attached
 
 protected:
 	// Called when the game starts or when spawned
@@ -113,5 +113,4 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void SetIsScanned(bool SetTo);
-
 };

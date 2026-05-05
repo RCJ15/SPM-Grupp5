@@ -30,5 +30,4 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void ResetScore();
-	
 };	

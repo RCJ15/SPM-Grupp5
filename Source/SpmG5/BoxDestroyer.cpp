@@ -18,15 +18,14 @@ ABoxDestroyer::ABoxDestroyer()
 	LidMesh->SetupAttachment(BaseMesh);
 }
 
-// Called when the game starts or when spawned
 void ABoxDestroyer::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// So far, box destruction is called when a box touches the lid of the mesh
 	LidMesh->OnComponentHit.AddDynamic(this, &ABoxDestroyer::OnHit);
 }
 
-// Called every frame
 void ABoxDestroyer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -34,8 +33,6 @@ void ABoxDestroyer::Tick(float DeltaTime)
 
 void ABoxDestroyer::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp, Warning, TEXT("SOMETHING HIT IT"));
-	
 	if (OtherActor && OtherActor != this)
 	{
 		AItem* Item = Cast<AItem>(OtherActor);
@@ -44,6 +41,7 @@ void ABoxDestroyer::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 		{
 			if (!IsTrashChute)
 			{
+				// Add box to be collected's score to score manager
 				GetWorld()->GetSubsystem<UScoreManager>()->AddScore(Item->GetPoints());
 				//UE_LOG(LogTemp, Warning, TEXT("Score: %d"), Item->GetPoints());
 			}

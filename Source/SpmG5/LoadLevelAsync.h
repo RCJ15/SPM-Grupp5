@@ -25,7 +25,6 @@ class SPMG5_API ULoadLevelAsync : public UBlueprintAsyncActionBase
 	virtual void Activate() override;
 
 private:
-
 	UPROPERTY()
 	UObject* WorldContextObject;
 

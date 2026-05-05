@@ -21,7 +21,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
-	// Kan agera som både inlämningsstation och soptunna
+	// Can act as both collecting station and trash chute
 	UPROPERTY(EditAnywhere)
 	bool IsTrashChute = false;
 
@@ -39,8 +39,6 @@ public:
 	
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* BaseMesh;
-	
-	//UFUNCTION(BlueprintCallable)
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* LidMesh;

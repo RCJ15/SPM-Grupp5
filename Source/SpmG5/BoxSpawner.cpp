@@ -27,6 +27,8 @@ void ABoxSpawner::BeginPlay()
 AItem* ABoxSpawner::SpawnItem()
 {
 	FTransform SpawnTransform = FTransform(FRotator::ZeroRotator, SpawnLocation->GetComponentLocation());
+	
+	// Sets all properties of an item before spawning it
 	AActor* NewActor = GetWorld()->SpawnActorDeferred<AActor>(BoxToSpawn, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	AItem* Item = Cast<AItem>(NewActor);
 	
@@ -40,6 +42,7 @@ AItem* ABoxSpawner::SpawnItem()
 		Item->SetIsSuspicious(ShouldHappen(SuspiciousBoxSpawnRate));
 	}
 
+	// Actually spawn item
 	UGameplayStatics::FinishSpawningActor(NewActor, SpawnTransform);
 	return Item;
 }
@@ -74,16 +77,3 @@ bool ABoxSpawner::ShouldHappen(int Percentage)
 {
 	return (FMath::RandRange(1, 100/Percentage) == 1 ? true : false);
 }
-
-/*void ABoxSpawner::RetRandomNumber(int32& Number)
-{
-	TArray<int32> Arr;
-	int32 RandomInt;
-	int32 ArrayGetItem;
-	
-	
-
-	RandomInt = UKismetMathLibrary::RandomIntegerInRange(0, 99);
-	FCustomThunkTemplates::Array_Get(Arr, RandomInt, ArrayGetItem);
-	Number = ArrayGetItem;
-}*/

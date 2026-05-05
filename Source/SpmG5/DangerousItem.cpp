@@ -7,11 +7,12 @@ void ADangerousItem::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// Decides what should happen when box's lifetime runs out
 	GetWorld()->GetTimerManager().SetTimer(
-		BadTimer,
+		BadBoxTimer,
 		this,
 		&ADangerousItem::OnEndTimer,
-		Timer,
+		Lifetime,
 		false
 	);
 	
@@ -19,11 +20,12 @@ void ADangerousItem::BeginPlay()
 	{
 		FTimerHandle ShakeWhenLowCountdownTimer;
 		
+		// Decides after how long a box should start shaking
 		GetWorld()->GetTimerManager().SetTimer(
 			ShakeWhenLowCountdownTimer,
 			this,
 			&ADangerousItem::StartShake,
-			Timer- StartShakeAt,
+			Lifetime - StartShakeAt,
 			false
 		);
 	}
@@ -31,13 +33,14 @@ void ADangerousItem::BeginPlay()
 
 void ADangerousItem::OnEndTimer_Implementation()
 {
-	
+	// Should be implemented by subclasses
 }
 
 void ADangerousItem::StartShake()
 {
 	FTimerHandle ShakeWhenLowTimer;
 	
+	// Decides how often a box should shake
 	GetWorld()->GetTimerManager().SetTimer(
 		ShakeWhenLowTimer,
 		this,

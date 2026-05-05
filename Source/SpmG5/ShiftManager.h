@@ -22,7 +22,7 @@ private:
 
 protected:
 	// Called when the game starts or when spawned
-	//virtual void BeginPlay();
+
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	
 public:
@@ -37,6 +37,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	int GetCurrentSec(){return CurrentSec;}
+	
 	UFUNCTION()
 	void Timer();
 

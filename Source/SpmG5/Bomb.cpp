@@ -9,7 +9,7 @@ void ABomb::BeginPlay()
 {
 	//Ändra möjliga värden innan man kör parent begin play 
 	//då den startar timern
-	Timer = 10; //sätter timer till något nytt
+	Lifetime = 10; //sätter lifetime till något nytt
 	StartShakeAt = 5;
 	Super::BeginPlay();
 	ExampleDelegateVariable.AddUniqueDynamic(this, &ABomb::Explode); //subscribea på Explode metod
@@ -38,8 +38,7 @@ void ABomb::Explode()
 	FQuat Rotation = GetActorRotation().Quaternion();
 		
 	GetWorld()->SweepMultiByChannel(Hit,GetActorLocation(), GetActorLocation(), Rotation, ECC_GameTraceChannel1, FCollisionShape::MakeSphere(Radius));
-	//DrawDebugSphere(GetWorld(),GetActorLocation(), Radius, 16, UE::StateTree::Colors::Red);
-	//DrawDebugSphere(GetWorld(), GetActorLocation(), Radius, 20, FColor::Red, false, 0.1);
+
 	//för varje item 
 	for (auto i : Hit)
 	{

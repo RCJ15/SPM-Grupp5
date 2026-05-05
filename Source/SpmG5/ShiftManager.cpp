@@ -20,7 +20,7 @@ void UShiftManager::CountdownShift()
 {
 	TimeRemaining -= TimeRate;
 
-	//Update timer on screen
+	// Update timer on screen
 	
 	if (TimeRemaining <= 0)
 	{
