@@ -14,7 +14,7 @@ class AConveyorBelt; // forward-declaration
 UENUM(BlueprintType)
 enum class BoxAddress : uint8
 {
-	CIRCLE = 1,
+	CIRCLE = 0,
 	SQUARE = 2,
 	TRIANGLE = 3
 };
