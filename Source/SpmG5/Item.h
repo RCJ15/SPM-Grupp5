@@ -11,6 +11,14 @@
 
 class AConveyorBelt; // forward-declaration
 
+UENUM(BlueprintType)
+enum class BoxAddress : uint8
+{
+	CIRCLE = 1,
+	SQUARE = 2,
+	TRIANGLE = 3
+};
+
 UCLASS()
 class AItem : public AActor
 {
@@ -29,6 +37,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category="Audio")
 	EAudioItemType AudioType;
+	
+	UPROPERTY(EditAnywhere)
+	BoxAddress Address = BoxAddress::SQUARE;
 	
 	UPROPERTY(EditAnywhere)
 	bool IsFragile;
@@ -101,11 +112,16 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	int32 GetPoints();
 	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	BoxAddress GetAddress();
+	
 	UFUNCTION(BlueprintCallable)
 	void SetMostRecentHolder(AActor* holder);
 	
 	UPROPERTY(EditAnywhere)
 	int MaxSpeedIfFragile = 500;
+	
+	void SetAddress(BoxAddress NewAddress);
 	
 	void SetIsLarge(bool SetTo);
 	void SetIsFragile(bool SetTo);
