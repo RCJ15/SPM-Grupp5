@@ -110,7 +110,7 @@ void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
 	FQuat Rotation = GetActorRotation().Quaternion();
 		
 	GetWorld()->SweepSingleByChannel(HitResultBox,Location, End, Rotation, ECC_GameTraceChannel1,Box);
-	GetWorld()->SweepSingleByChannel(HitResultConvayer,Location, End, Rotation, ECC_GameTraceChannel2,Box);
+	//GetWorld()->SweepSingleByChannel(HitResultConvayer,Location, End, Rotation, ECC_GameTraceChannel2,Box);
 		
 	UE_LOG(LogTemp, Error, TEXT("1"));
 
@@ -164,29 +164,43 @@ void ASpmG5Character::AttachPackage()
 
 void ASpmG5Character::InteractWithConveyor()
 {
-	if (HitResultConvayer.GetActor() && Cast<AConveyorSegment>(HitResultConvayer.GetActor()))
+	TArray<FHitResult> SearchForConveyor;
+	
+	float Distance = 5.0f;
+	FVector Location = HoldingLocation->GetComponentLocation();	
+	FVector End = Location + GetActorForwardVector() * Distance;
+	FCollisionShape Box = FCollisionShape::MakeBox(PickUpBoxSize);
+	FQuat Rotation = GetActorRotation().Quaternion();
+	
+	GetWorld()->SweepMultiByChannel(SearchForConveyor,Location, End, Rotation, ECC_GameTraceChannel2,Box);
+	
+	for (FHitResult& Hit : SearchForConveyor)
 	{
-		AConveyorSegment* Segment = Cast<AConveyorSegment>(HitResultConvayer.GetActor());
-		//kolla om segment är tomt
-		if (AConveyorBelt* Belt = Segment->Belt)
+		if (Hit.GetActor() != nullptr)
 		{
-			if (Segment->IndexInConveyorBelt == 0)
-				return;
-			//NOTE FÖR FRAMTIDEN ISTÄLLET FÖR ATT KOLLA OM DEN ÄR ÖVER 0.5 och byta
-			//KOLLA ATT DEN ÄR UNDER 0.25 på current segment, 
-			//eller över 0.75 på previous segment
-			if (Belt->MovedDelta > 0.5)				
-				Segment = Belt->Conveyor[Segment->IndexInConveyorBelt-1];				
-			if (Belt->HasItemInSegment(Segment))
+			if (AConveyorSegment* Segment = Cast<AConveyorSegment>(Hit.GetActor()))
 			{
-				//HeldItem = Belt->GetItemFromSegment(Segment);
-				//Belt->DropItem(HeldItem);
-				//AttachPackage();
+				//kolla om segment är tomt
+				if (AConveyorBelt* Belt = Segment->Belt)
+				{
+					if (Segment->IndexInConveyorBelt == 0)
+						return;
+					//NOTE FÖR FRAMTIDEN ISTÄLLET FÖR ATT KOLLA OM DEN ÄR ÖVER 0.5 och byta
+					//KOLLA ATT DEN ÄR UNDER 0.25 på current segment, 
+					//eller över 0.75 på previous segment
+					if (Belt->MovedDelta > 0.5)				
+						Segment = Belt->Conveyor[Segment->IndexInConveyorBelt-1];				
+					if (!Belt->HasItemInSegment(Segment))
+					{
+						Belt->ReceiveItem(HeldItem,Segment);	
+						break; //så den inte forstätter kolla igenom hit results
+					}
+				}
+				
 			}
-			else			
-				Belt->ReceiveItem(HeldItem,Segment);			
 		}
 	}
+
 }
 
 AItem* ASpmG5Character::Drop()
