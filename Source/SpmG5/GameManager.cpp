@@ -2,7 +2,6 @@
 
 
 #include "GameManager.h"
-
 #include "Kismet/GameplayStatics.h"
 
 
@@ -22,6 +21,11 @@ void UGameManager::LoadLevel(TSoftObjectPtr<UWorld> Level)
 	
 	// Loads additive level
 	UGameplayStatics::LoadStreamLevelBySoftObjectPtr(GetWorld(),Level, true, false, LatentInfo);
+}
+
+bool UGameManager::GetLevelStarted()
+{
+	return LevelStarted;
 }
 
 void UGameManager::LevelLoaded()

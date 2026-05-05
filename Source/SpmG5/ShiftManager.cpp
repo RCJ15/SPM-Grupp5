@@ -2,18 +2,34 @@
 
 
 #include "ShiftManager.h"
-
+#include "GameManager.h"
 
 void UShiftManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	Timer();
+	
+	UGameManager* GameManager = Cast<UGameManager>(GetWorld()->GetGameInstance());
+
+	/*if (GameManager)
+	{
+		if (GameManager->GetLevelStarted())
+		{
+			GameManager->OnLevelLoadedInternal.AddDynamic(this, &UShiftManager::StartTimer);
+		}
+	}*/
+	//Timer();
+	//OnTimeRunsOut.AddDynamic(this, &UShiftManager::TimeRunsOut);
 }
 
-void UShiftManager::Timer()
+void UShiftManager::StartTimer()
 {
+	GetWorld()->GetTimerManager().ClearTimer(ShiftTimer);
+	TimeRemaining = ShiftLengthInSeconds;
+	CurrentMin = ShiftLengthInSeconds / 60;
+	CurrentSec = ShiftLengthInSeconds % 60;
+	
 	GetWorld()->GetTimerManager().SetTimer(
-		ShiftTimer, this, &UShiftManager::CountdownShift, TimeRate, true, -9);
+		ShiftTimer, this, &UShiftManager::CountdownShift, TimeRate, true);
 }
 
 void UShiftManager::CountdownShift()
@@ -24,11 +40,16 @@ void UShiftManager::CountdownShift()
 	
 	if (TimeRemaining <= 0)
 	{
-		GetWorld()->GetTimerManager().PauseTimer(ShiftTimer);
+		//GetWorld()->GetTimerManager().PauseTimer(ShiftTimer);
+		GetWorld()->GetTimerManager().ClearTimer(ShiftTimer);
+		OnTimeRunsOut.Broadcast();
 	}
 
 	CurrentMin = TimeRemaining / 60;
 	CurrentSec = TimeRemaining % 60;
 }
 
-
+/*void UShiftManager::TimeRunsOut()
+{
+	
+}*/

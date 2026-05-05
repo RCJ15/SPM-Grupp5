@@ -33,7 +33,7 @@ void ULoadLevelAsync::Finish()
 {
 	UGameManager* GameManager = Cast<UGameManager>(WorldContextObject->GetWorld()->GetGameInstance());
 	
-	// Removes previous delegatesw if they still linger
+	// Removes previous delegates if they still linger
 	GameManager->OnLevelLoadedInternal.RemoveAll(this);
 	OnLevelLoaded.Broadcast();
 	SetReadyToDestroy();
