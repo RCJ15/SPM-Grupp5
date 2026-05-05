@@ -3,6 +3,7 @@
 
 #include "Bomb.h"
 #include "ConveyorBelt.h"
+#include "SpmG5Character.h"
 #include "Kismet/GameplayStatics.h"
 
 void ABomb::BeginPlay()
@@ -57,10 +58,17 @@ void ABomb::Explode()
 			OtherItem->AddImpulse(GetActorLocation(), 5); //5 temp test för strength
 			
 		}
+		if (i.GetActor() && i.GetComponent() && Cast<ASpmG5Character>(i.GetActor()))
+		{
+			ASpmG5Character* Character = Cast<ASpmG5Character>(i.GetActor());
+			//spelaren måste droppa item
+			Character->Drop();
+		}
 	}
 	if (Shake != nullptr)
 		UGameplayStatics::PlayWorldCameraShake(this, Shake, GetActorLocation(),0,30000,1,false);
 	//spela partikel effekt vid GetActorLocation()
+	
 	Disintegrate();
 }
 

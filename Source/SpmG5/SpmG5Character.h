@@ -137,9 +137,6 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void Pickup(AItem* Item);
 	
-	UFUNCTION(BlueprintCallable, Category="Input")
-	AItem* Drop();
-	
 	void Throw(const FInputActionValue& Value);
 	void ChargeUpThrow(const FInputActionValue& Value);
 	
@@ -172,6 +169,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Input")
 	AItem* GetItem();
+	
+	UFUNCTION(BlueprintCallable, Category="Input")
+	AItem* Drop();
 
 public:
 
