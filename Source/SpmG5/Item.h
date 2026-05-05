@@ -38,7 +38,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Audio")
 	EAudioItemType AudioType;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	BoxAddress Address = BoxAddress::SQUARE;
 	
 	UPROPERTY(EditAnywhere)
