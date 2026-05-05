@@ -156,10 +156,20 @@ int32 AItem::GetPoints()
 	return Points;
 }
 
+BoxAddress AItem::GetAddress()
+{
+	return Address;
+}
+
 void AItem::SetMostRecentHolder(AActor* Holder)
 {
 	MostRecentHolder = Holder;
 	//return (MostRecentHolder) ? MostRecentHolder : nullptr;
+}
+
+void AItem::SetAddress(BoxAddress NewAddress)
+{
+	Address = NewAddress;
 }
 
 void AItem::SetIsLarge(bool SetTo)
