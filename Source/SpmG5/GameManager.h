@@ -29,6 +29,12 @@ public:
 	
 	bool GetLevelStarted();
 	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	TSoftObjectPtr<UWorld> GetCurrentLevel();
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	TSoftObjectPtr<UWorld> GetPreviousLevel();
+	
 protected:
 	UPROPERTY(BlueprintReadWrite)
 	bool LevelStarted;

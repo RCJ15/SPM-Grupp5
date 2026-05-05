@@ -24,3 +24,13 @@ void UScoreManager::ResetScore()
 {
  	
 }
+
+void UScoreManager::SetCurrentLevel(TSoftObjectPtr<UWorld> Level)
+{
+ 	CurrentLevel = Level;
+}
+
+TSoftObjectPtr<UWorld> UScoreManager::GetCurrentLevel()
+{
+ 	return CurrentLevel;
+}

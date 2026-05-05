@@ -28,6 +28,16 @@ bool UGameManager::GetLevelStarted()
 	return LevelStarted;
 }
 
+TSoftObjectPtr<UWorld> UGameManager::GetCurrentLevel()
+{
+	return CurrentLevel;
+}
+
+TSoftObjectPtr<UWorld> UGameManager::GetPreviousLevel()
+{
+	return PreviousLevel;
+}
+
 void UGameManager::LevelLoaded()
 {
 	if (FirstTime)
@@ -39,6 +49,7 @@ void UGameManager::LevelLoaded()
 		FLatentActionInfo LatentInfo;
 		
 		// Deloads previous level
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *PreviousLevel.ToString());
 		UGameplayStatics::UnloadStreamLevelBySoftObjectPtr(GetWorld(), PreviousLevel, LatentInfo, false);
 	}
 	

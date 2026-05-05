@@ -18,6 +18,8 @@ class SPMG5_API UScoreManager : public UWorldSubsystem
 private:
 	int Score;
 	
+	TSoftObjectPtr<UWorld> CurrentLevel;
+	
 public:
 	UFUNCTION(BlueprintCallable)
 	int GetScore();
@@ -30,4 +32,10 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void ResetScore();
+	
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentLevel(TSoftObjectPtr<UWorld> Level);
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	TSoftObjectPtr<UWorld> GetCurrentLevel();
 };	
