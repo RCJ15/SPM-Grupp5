@@ -6,6 +6,7 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "ShiftManager.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTimeRunsOut);
 /**
  * 
  */
@@ -17,8 +18,8 @@ class SPMG5_API UShiftManager : public UWorldSubsystem
 private:
 	FTimerHandle ShiftTimer;
 
-	int CurrentMin = 0;
-	int CurrentSec = 0;
+	int CurrentMin = TimeRemaining / 60;
+	int CurrentSec = TimeRemaining % 60;
 
 protected:
 	// Called when the game starts or when spawned
@@ -26,7 +27,10 @@ protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	
 public:
-	int ShiftLengthInSeconds = 300;
+	UPROPERTY(BlueprintAssignable)
+	FOnTimeRunsOut OnTimeRunsOut;
+	
+	int ShiftLengthInSeconds = 15;
 
 	int TimeRemaining = ShiftLengthInSeconds;
 
@@ -38,8 +42,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int GetCurrentSec(){return CurrentSec;}
 	
-	UFUNCTION()
-	void Timer();
+	UFUNCTION(BlueprintCallable)
+	void StartTimer();
 
 	void CountdownShift();
+	
+	//UFUNCTION(BlueprintCallable, Blueprintable)
+	//void TimeRunsOut();
 };

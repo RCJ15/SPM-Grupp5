@@ -26,6 +26,12 @@ public:
 	
 	UPROPERTY()
 	FOnLevelLoadedInternal OnLevelLoadedInternal;
+	
+	bool GetLevelStarted();
+	
+protected:
+	UPROPERTY(BlueprintReadWrite)
+	bool LevelStarted;
 
 private:
 	UFUNCTION()
