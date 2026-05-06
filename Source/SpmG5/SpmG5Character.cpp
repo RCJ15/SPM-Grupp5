@@ -136,6 +136,12 @@ void ASpmG5Character::Pickup()
 	//InteractWithConveyor();	
 }
 
+void ASpmG5Character::Hold()
+{	
+	FVector HoldingLocationWorld = HoldingLocation->GetComponentLocation();
+	HeldItem->SetActorLocationAndRotation(HoldingLocationWorld, GetActorRotation());	
+}
+
 void ASpmG5Character::Pickup(AItem* Item)
 {
 	HeldItem = Item;
@@ -156,6 +162,8 @@ void ASpmG5Character::AttachPackage()
 	HeldItem->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());
 	HeldItem->SetActorRelativeRotation(FRotator(0,0,0));
 	HeldItem->SetMostRecentHolder(this);
+	
+	GetWorldTimerManager().SetTimer(HoldingTimer, this, &ASpmG5Character::Hold, 0.01f, true);
 	
 	// Play Pickup SFX
 	FFMODEventInstance evt = UFMODBlueprintStatics::PlayEventAtLocation(this, PickupSFX, FTransform(GetActorLocation()), true);
@@ -207,6 +215,8 @@ AItem* ASpmG5Character::Drop()
 {
 	if (!HeldItem)
 		return nullptr;
+		
+	GetWorldTimerManager().ClearTimer(HoldingTimer);
 	HeldItem->SetPhysics(true);
 	InteractWithConveyor();
 	HeldItem->ResetVelocity();
@@ -241,6 +251,7 @@ void ASpmG5Character::Throw(const FInputActionValue& Value)
 	HeldItem = nullptr;
 	HasItem = false;
 	Throwing = false;
+	GetWorldTimerManager().ClearTimer(HoldingTimer);
 }
 
 void ASpmG5Character::ChargeUpThrow(const FInputActionValue& Value)
@@ -259,9 +270,7 @@ void ASpmG5Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	if (HeldItem)
-	{
-		FVector HoldingLocationWorld = HoldingLocation->GetComponentLocation();
-		HeldItem->SetActorLocationAndRotation(HoldingLocationWorld, GetActorRotation());		
+	{	
 	}
 }
 
