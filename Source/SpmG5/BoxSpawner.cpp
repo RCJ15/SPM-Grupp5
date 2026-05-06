@@ -34,7 +34,7 @@ AItem* ABoxSpawner::SpawnItem()
 	
 	if (Item)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Spawning Box"));
+		//UE_LOG(LogTemp, Warning, TEXT("Spawning Box"));
 		Item->SetIsLarge(ShouldHappen(LargeBoxSpawnRate));
 		Item->SetIsFragile(ShouldHappen(FragileBoxSpawnRate));
 		//Item->SetIsDangerous(ShouldHappen(DangerousBoxSpawnRate));

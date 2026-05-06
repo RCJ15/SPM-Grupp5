@@ -13,13 +13,7 @@ UCLASS()
 class SPMG5_API UScoreManager : public UWorldSubsystem
 {
 	GENERATED_BODY()
-	
-	
-private:
-	int Score;
-	
-	TSoftObjectPtr<UWorld> CurrentLevel;
-	
+
 public:
 	UFUNCTION(BlueprintCallable)
 	int GetScore();
@@ -28,14 +22,14 @@ public:
 	void AddScore(int AddedScore);
 	
 	UFUNCTION(BlueprintCallable)
-	void SetScore(int NewScore);
-	
-	UFUNCTION(BlueprintCallable)
 	void ResetScore();
 	
 	UFUNCTION(BlueprintCallable)
-	void SetCurrentLevel(TSoftObjectPtr<UWorld> Level);
+	void SaveScore();
 	
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	TSoftObjectPtr<UWorld> GetCurrentLevel();
+	UPROPERTY(BlueprintReadOnly)
+	TMap<TSoftObjectPtr<UWorld>, int> ScoreMap;
+
+private:
+	int Score;
 };	

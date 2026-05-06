@@ -23,6 +23,7 @@ public:
 	int Direction = 1; //1 är fram, -1 är bakåt
 	int IndexInConveyorBelt = -1;
 	
+	UPROPERTY()
 	AConveyorBelt* Belt = nullptr;
 
 protected:
