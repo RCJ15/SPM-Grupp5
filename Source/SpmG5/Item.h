@@ -62,6 +62,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	int FragileBoxPoints = 5;
 	
+	UPROPERTY(EditAnywhere)
+	int WrongBoxPoints = -15;
+	
 	int Points;
 	
 	UPrimitiveComponent* PrimComp;
@@ -74,6 +77,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 	void SetPoints();
+	
+	UFUNCTION(BlueprintCallable)
+	void SetNegativePoints();
+	
 	void SetPhysics(bool SetTo);
 	void ResetVelocity(){PrimComp->SetPhysicsLinearVelocity(FVector(0,0,0));}
 	void AddVelocity(int Force){PrimComp->SetPhysicsLinearVelocity(GetActorForwardVector() * Force + GetActorUpVector() * Force/2);}
@@ -110,7 +117,7 @@ public:
 	bool GetIsScanned();
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	int32 GetPoints();
+	int GetPoints();
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	BoxAddress GetAddress();

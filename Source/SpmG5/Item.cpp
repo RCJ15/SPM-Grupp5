@@ -42,7 +42,7 @@ void AItem::SetPoints()
 {
 	if (IsSuspicious)
 	{
-		Points = -15;
+		SetNegativePoints();
 		return;
 	}
 	
@@ -59,6 +59,11 @@ void AItem::SetPoints()
 	{
 		Points += FragileBoxPoints;
 	}
+}
+
+void AItem::SetNegativePoints()
+{
+	Points = WrongBoxPoints;
 }
 
 void AItem::SetPhysics(bool SetTo)
@@ -151,7 +156,7 @@ bool AItem::GetIsScanned()
 	return IsScanned;
 }
 
-int32 AItem::GetPoints()
+int AItem::GetPoints()
 {
 	return Points;
 }
