@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "DangerousItem.h"
+#include "NiagaraSystem.h"
 #include "Bomb.generated.h"
 
 /**
@@ -25,6 +26,9 @@ public:
 	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UCameraShakeBase> Shake;
+	
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* ExplosionParticles;
 	
 	UPROPERTY(EditAnywhere)
 	bool bDoExplode = false; //används för att testa explosion
