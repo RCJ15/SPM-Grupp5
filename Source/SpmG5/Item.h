@@ -7,6 +7,7 @@
 #include "Components/StaticMeshComponent.h"
 //#include "BoxDestroyer.h"
 #include "AudioEnums.h"
+#include "NiagaraSystem.h"
 #include "Item.generated.h"
 
 class AConveyorBelt; // forward-declaration
@@ -127,6 +128,8 @@ public:
 	
 	UPROPERTY(EditAnywhere)
 	int MaxSpeedIfFragile = 500;
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* FragileBreakParticles;
 	
 	void SetAddress(BoxAddress NewAddress);
 	
