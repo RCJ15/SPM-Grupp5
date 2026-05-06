@@ -42,7 +42,7 @@ void AItem::SetPoints()
 {
 	if (IsSuspicious)
 	{
-		Points = -15;
+		SetNegativePoints();
 		return;
 	}
 	
@@ -59,6 +59,11 @@ void AItem::SetPoints()
 	{
 		Points += FragileBoxPoints;
 	}
+}
+
+void AItem::SetNegativePoints()
+{
+	Points = WrongBoxPoints;
 }
 
 void AItem::SetPhysics(bool SetTo)
@@ -151,15 +156,25 @@ bool AItem::GetIsScanned()
 	return IsScanned;
 }
 
-int32 AItem::GetPoints()
+int AItem::GetPoints()
 {
 	return Points;
+}
+
+BoxAddress AItem::GetAddress()
+{
+	return Address;
 }
 
 void AItem::SetMostRecentHolder(AActor* Holder)
 {
 	MostRecentHolder = Holder;
 	//return (MostRecentHolder) ? MostRecentHolder : nullptr;
+}
+
+void AItem::SetAddress(BoxAddress NewAddress)
+{
+	Address = NewAddress;
 }
 
 void AItem::SetIsLarge(bool SetTo)

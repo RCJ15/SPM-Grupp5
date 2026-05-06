@@ -42,6 +42,7 @@ void ABoxDestroyer::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 			if (!IsTrashChute)
 			{
 				// Add box to be collected's score to score manager
+				HandleBox(Item);
 				GetWorld()->GetSubsystem<UScoreManager>()->AddScore(Item->GetPoints());
 				//UE_LOG(LogTemp, Warning, TEXT("Score: %d"), Item->GetPoints());
 			}

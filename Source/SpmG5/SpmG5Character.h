@@ -38,6 +38,8 @@ class ASpmG5Character : public ACharacter
 	
 protected:
 	
+	FTimerHandle HoldingTimer;
+	
 	UPrimitiveComponent* PrimComp;	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -117,8 +119,6 @@ protected:
 	/** Initialize input action bindings */
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-protected:
-
 	virtual void Tick(float DeltaTime) override;
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
@@ -133,12 +133,10 @@ protected:
 	void InteractWithConveyor();
 	
 	void Pickup();
+	void Hold();
 	
 	UFUNCTION(BlueprintCallable)
 	void Pickup(AItem* Item);
-	
-	UFUNCTION(BlueprintCallable, Category="Input")
-	AItem* Drop();
 	
 	void Throw(const FInputActionValue& Value);
 	void ChargeUpThrow(const FInputActionValue& Value);
@@ -172,6 +170,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Input")
 	AItem* GetItem();
+	
+	UFUNCTION(BlueprintCallable, Category="Input")
+	AItem* Drop();
 
 public:
 

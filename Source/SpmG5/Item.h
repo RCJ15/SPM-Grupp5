@@ -11,6 +11,14 @@
 
 class AConveyorBelt; // forward-declaration
 
+UENUM(BlueprintType)
+enum class BoxAddress : uint8
+{
+	CIRCLE = 0,
+	SQUARE = 2,
+	TRIANGLE = 3
+};
+
 UCLASS()
 class AItem : public AActor
 {
@@ -29,6 +37,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category="Audio")
 	EAudioItemType AudioType;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	BoxAddress Address = BoxAddress::SQUARE;
 	
 	UPROPERTY(EditAnywhere)
 	bool IsFragile;
@@ -51,6 +62,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	int FragileBoxPoints = 5;
 	
+	UPROPERTY(EditAnywhere)
+	int WrongBoxPoints = -15;
+	
 	int Points;
 	
 	UPrimitiveComponent* PrimComp;
@@ -63,6 +77,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 	void SetPoints();
+	
+	UFUNCTION(BlueprintCallable)
+	void SetNegativePoints();
+	
 	void SetPhysics(bool SetTo);
 	void ResetVelocity(){PrimComp->SetPhysicsLinearVelocity(FVector(0,0,0));}
 	void AddVelocity(int Force){PrimComp->SetPhysicsLinearVelocity(GetActorForwardVector() * Force + GetActorUpVector() * Force/2);}
@@ -99,13 +117,18 @@ public:
 	bool GetIsScanned();
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	int32 GetPoints();
+	int GetPoints();
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	BoxAddress GetAddress();
 	
 	UFUNCTION(BlueprintCallable)
 	void SetMostRecentHolder(AActor* holder);
 	
 	UPROPERTY(EditAnywhere)
 	int MaxSpeedIfFragile = 500;
+	
+	void SetAddress(BoxAddress NewAddress);
 	
 	void SetIsLarge(bool SetTo);
 	void SetIsFragile(bool SetTo);

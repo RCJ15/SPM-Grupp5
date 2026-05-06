@@ -110,7 +110,7 @@ void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
 	FQuat Rotation = GetActorRotation().Quaternion();
 		
 	GetWorld()->SweepSingleByChannel(HitResultBox,Location, End, Rotation, ECC_GameTraceChannel1,Box);
-	GetWorld()->SweepSingleByChannel(HitResultConvayer,Location, End, Rotation, ECC_GameTraceChannel2,Box);
+	//GetWorld()->SweepSingleByChannel(HitResultConvayer,Location, End, Rotation, ECC_GameTraceChannel2,Box);
 		
 	UE_LOG(LogTemp, Error, TEXT("1"));
 
@@ -136,6 +136,12 @@ void ASpmG5Character::Pickup()
 	//InteractWithConveyor();	
 }
 
+void ASpmG5Character::Hold()
+{	
+	FVector HoldingLocationWorld = HoldingLocation->GetComponentLocation();
+	HeldItem->SetActorLocationAndRotation(HoldingLocationWorld, GetActorRotation());	
+}
+
 void ASpmG5Character::Pickup(AItem* Item)
 {
 	HeldItem = Item;
@@ -157,6 +163,8 @@ void ASpmG5Character::AttachPackage()
 	HeldItem->SetActorRelativeRotation(FRotator(0,0,0));
 	HeldItem->SetMostRecentHolder(this);
 	
+	GetWorldTimerManager().SetTimer(HoldingTimer, this, &ASpmG5Character::Hold, 0.01f, true);
+	
 	// Play Pickup SFX
 	FFMODEventInstance evt = UFMODBlueprintStatics::PlayEventAtLocation(this, PickupSFX, FTransform(GetActorLocation()), true);
 	UFMODBlueprintStatics::EventInstanceSetParameter(evt, "ItemType", HeldItem->GetAudioType());
@@ -164,35 +172,51 @@ void ASpmG5Character::AttachPackage()
 
 void ASpmG5Character::InteractWithConveyor()
 {
-	if (HitResultConvayer.GetActor() && Cast<AConveyorSegment>(HitResultConvayer.GetActor()))
+	TArray<FHitResult> SearchForConveyor;
+	
+	float Distance = 5.0f;
+	FVector Location = HoldingLocation->GetComponentLocation();	
+	FVector End = Location + GetActorForwardVector() * Distance;
+	FCollisionShape Box = FCollisionShape::MakeBox(PickUpBoxSize);
+	FQuat Rotation = GetActorRotation().Quaternion();
+	
+	GetWorld()->SweepMultiByChannel(SearchForConveyor,Location, End, Rotation, ECC_GameTraceChannel2,Box);
+	
+	for (FHitResult& Hit : SearchForConveyor)
 	{
-		AConveyorSegment* Segment = Cast<AConveyorSegment>(HitResultConvayer.GetActor());
-		//kolla om segment är tomt
-		if (AConveyorBelt* Belt = Segment->Belt)
+		if (Hit.GetActor() != nullptr)
 		{
-			if (Segment->IndexInConveyorBelt == 0)
-				return;
-			//NOTE FÖR FRAMTIDEN ISTÄLLET FÖR ATT KOLLA OM DEN ÄR ÖVER 0.5 och byta
-			//KOLLA ATT DEN ÄR UNDER 0.25 på current segment, 
-			//eller över 0.75 på previous segment
-			if (Belt->MovedDelta > 0.5)				
-				Segment = Belt->Conveyor[Segment->IndexInConveyorBelt-1];				
-			if (Belt->HasItemInSegment(Segment))
+			if (AConveyorSegment* Segment = Cast<AConveyorSegment>(Hit.GetActor()))
 			{
-				//HeldItem = Belt->GetItemFromSegment(Segment);
-				//Belt->DropItem(HeldItem);
-				//AttachPackage();
+				//kolla om segment är tomt
+				if (AConveyorBelt* Belt = Segment->Belt)
+				{
+					if (Segment->IndexInConveyorBelt == 0)
+						return;
+					//NOTE FÖR FRAMTIDEN ISTÄLLET FÖR ATT KOLLA OM DEN ÄR ÖVER 0.5 och byta
+					//KOLLA ATT DEN ÄR UNDER 0.25 på current segment, 
+					//eller över 0.75 på previous segment
+					if (Belt->MovedDelta > 0.5)				
+						Segment = Belt->Conveyor[Segment->IndexInConveyorBelt-1];				
+					if (!Belt->HasItemInSegment(Segment))
+					{
+						Belt->ReceiveItem(HeldItem,Segment);	
+						break; //så den inte forstätter kolla igenom hit results
+					}
+				}
+				
 			}
-			else			
-				Belt->ReceiveItem(HeldItem,Segment);			
 		}
 	}
+
 }
 
 AItem* ASpmG5Character::Drop()
 {
 	if (!HeldItem)
 		return nullptr;
+		
+	GetWorldTimerManager().ClearTimer(HoldingTimer);
 	HeldItem->SetPhysics(true);
 	InteractWithConveyor();
 	HeldItem->ResetVelocity();
@@ -227,6 +251,7 @@ void ASpmG5Character::Throw(const FInputActionValue& Value)
 	HeldItem = nullptr;
 	HasItem = false;
 	Throwing = false;
+	GetWorldTimerManager().ClearTimer(HoldingTimer);
 }
 
 void ASpmG5Character::ChargeUpThrow(const FInputActionValue& Value)
@@ -245,9 +270,7 @@ void ASpmG5Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	if (HeldItem)
-	{
-		FVector HoldingLocationWorld = HoldingLocation->GetComponentLocation();
-		HeldItem->SetActorLocationAndRotation(HoldingLocationWorld, GetActorRotation());		
+	{	
 	}
 }
 

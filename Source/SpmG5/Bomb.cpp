@@ -3,6 +3,8 @@
 
 #include "Bomb.h"
 #include "ConveyorBelt.h"
+#include "NiagaraFunctionLibrary.h"
+#include "SpmG5Character.h"
 #include "Kismet/GameplayStatics.h"
 
 void ABomb::BeginPlay()
@@ -42,6 +44,13 @@ void ABomb::Explode()
 	//för varje item 
 	for (auto i : Hit)
 	{
+		if (i.GetActor() && i.GetComponent() && Cast<ASpmG5Character>(i.GetActor()))
+		{
+			ASpmG5Character* Character = Cast<ASpmG5Character>(i.GetActor());
+			//spelaren måste droppa item
+			Character->Drop();
+		}
+		
 		if (i.GetActor() && i.GetComponent() && Cast<AItem>(i.GetActor()))
 		{
 			AItem* OtherItem = Cast<AItem>(i.GetActor());
@@ -55,12 +64,15 @@ void ABomb::Explode()
 			
 			//add impulse
 			OtherItem->AddImpulse(GetActorLocation(), 5); //5 temp test för strength
-			
+			if (OtherItem->GetIsFragile())
+				OtherItem->Disintegrate();
 		}
 	}
 	if (Shake != nullptr)
 		UGameplayStatics::PlayWorldCameraShake(this, Shake, GetActorLocation(),0,30000,1,false);
 	//spela partikel effekt vid GetActorLocation()
+	if (ExplosionParticles)
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),ExplosionParticles,GetActorLocation(),GetActorRotation());
 	Disintegrate();
 }
 

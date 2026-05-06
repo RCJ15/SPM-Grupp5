@@ -21,6 +21,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void HandleBox(AItem* Item, ASpmG5Character* Player = nullptr);
+	
 	// Can act as both collecting station and trash chute
 	UPROPERTY(EditAnywhere)
 	bool IsTrashChute = false;
