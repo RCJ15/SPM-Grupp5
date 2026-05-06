@@ -30,8 +30,8 @@ bool AchievementManager::UnlockAchievement(Achievement A)
 {
 	//kolla om redan unlocked, annars unlock
 	//borde finnas ett bättre sätt att göra detta som unsubscibear detta achievements metod
-	if (UnlockedAchievements.Contains(A))
-		return false;
+	//if (UnlockedAchievements.Contains(A))
+		//return false;
 	
 	UnlockedAchievements.Add(A);
 	return true;
