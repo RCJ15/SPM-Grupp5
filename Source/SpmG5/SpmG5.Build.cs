@@ -23,7 +23,7 @@ public class SpmG5 : ModuleRules
 
 		PrivateDependencyModuleNames.AddRange(new string[]
 		{
-			"FMODStudio"
+			"FMODStudio", "Niagara"
 		});
 
 		PublicIncludePaths.AddRange(new string[] {
