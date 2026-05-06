@@ -27,20 +27,7 @@ public class SpmG5 : ModuleRules
 		});
 
 		PublicIncludePaths.AddRange(new string[] {
-			"SpmG5",
-			"SpmG5/Variant_Platforming",
-			"SpmG5/Variant_Platforming/Animation",
-			"SpmG5/Variant_Combat",
-			"SpmG5/Variant_Combat/AI",
-			"SpmG5/Variant_Combat/Animation",
-			"SpmG5/Variant_Combat/Gameplay",
-			"SpmG5/Variant_Combat/Interfaces",
-			"SpmG5/Variant_Combat/UI",
-			"SpmG5/Variant_SideScrolling",
-			"SpmG5/Variant_SideScrolling/AI",
-			"SpmG5/Variant_SideScrolling/Gameplay",
-			"SpmG5/Variant_SideScrolling/Interfaces",
-			"SpmG5/Variant_SideScrolling/UI"
+			"SpmG5"
 		});
 
 		// Uncomment if you are using Slate UI
