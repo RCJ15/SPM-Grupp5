@@ -3,6 +3,7 @@
 
 #include "Item.h"
 #include "ConveyorBelt.h"
+#include "NiagaraFunctionLibrary.h"
 #include "StateTreeTypes.h"
 #include "DynamicMesh/DynamicMesh3.h"
 #include "GameFramework/PawnMovementComponent.h"
@@ -94,6 +95,9 @@ void AItem::CalculateIfBreakIfFragile()
 
 void AItem::Disintegrate()
 {
+	if (FragileBreakParticles)
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),FragileBreakParticles,GetActorLocation(),GetActorRotation());
+	
 	Destroy();
 }
 
