@@ -23,6 +23,7 @@ void UShiftManager::Initialize(FSubsystemCollectionBase& Collection)
 
 void UShiftManager::StartTimer()
 {
+	OnTimeRunsOut.RemoveAll(this);
 	GetWorld()->GetTimerManager().ClearTimer(ShiftTimer);
 	TimeRemaining = ShiftLengthInSeconds;
 	CurrentMin = ShiftLengthInSeconds / 60;

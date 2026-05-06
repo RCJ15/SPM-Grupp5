@@ -139,7 +139,10 @@ void ASpmG5Character::Pickup()
 void ASpmG5Character::Hold()
 {	
 	FVector HoldingLocationWorld = HoldingLocation->GetComponentLocation();
-	HeldItem->SetActorLocationAndRotation(HoldingLocationWorld, GetActorRotation());	
+	if (HeldItem)
+	{
+		HeldItem->SetActorLocationAndRotation(HoldingLocationWorld, GetActorRotation());	
+	}
 }
 
 void ASpmG5Character::Pickup(AItem* Item)

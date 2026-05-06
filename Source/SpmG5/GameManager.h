@@ -6,6 +6,7 @@
 #include "GameManager.generated.h"
 
 
+class UWidget;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLevelLoadedInternal);
 /**
  * 
@@ -28,6 +29,19 @@ public:
 	FOnLevelLoadedInternal OnLevelLoadedInternal;
 	
 	bool GetLevelStarted();
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	TSoftObjectPtr<UWorld> GetCurrentLevel();
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	TSoftObjectPtr<UWorld> GetPreviousLevel();
+	
+	
+	UPROPERTY(BlueprintReadWrite)
+	UUserWidget* HUDWidget;
+	
+	UPROPERTY(BlueprintReadWrite)
+	UUserWidget* MenuWidget;
 	
 protected:
 	UPROPERTY(BlueprintReadWrite)
