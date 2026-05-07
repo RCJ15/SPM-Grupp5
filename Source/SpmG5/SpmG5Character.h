@@ -8,6 +8,7 @@
 #include "Item.h"
 #include "Logging/LogMacros.h"
 #include "FMODEvent.h"
+#include "PhysicsEngine/PhysicsConstraintActor.h"
 #include "SpmG5Character.generated.h"
 
 class USpringArmComponent;
@@ -113,6 +114,20 @@ public:
 
 	/** Constructor */
 	ASpmG5Character();	
+	
+	
+	//LÄgger till saker här för testing ny pickup version
+	//UPROPERTY(EditAnywhere)
+	//APhysicsConstraintActor* PCA;
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 protected:
 

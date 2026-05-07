@@ -16,12 +16,15 @@
 #if WITH_EDITOR
 #include "InteractiveToolActionSet.h"
 #endif
+#include "AssetTypeCategories.h"
 #include "SpmG5.h"
 #include "ConveyorSegment.h"
 #include "StateTreeTypes.h"
 #include "FMODBlueprintStatics.h"
 #include "BaseGizmos/GizmoElementShared.h"
 #include "DynamicMesh/MeshTransforms.h"
+#include "PhysicsEngine/PhysicsConstraintActor.h"
+#include "UniversalObjectLocators/UniversalObjectLocatorUtils.h"
 
 ASpmG5Character::ASpmG5Character()
 {
@@ -112,13 +115,43 @@ void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
 	GetWorld()->SweepSingleByChannel(HitResultBox,Location, End, Rotation, ECC_GameTraceChannel1,Box);
 	//GetWorld()->SweepSingleByChannel(HitResultConvayer,Location, End, Rotation, ECC_GameTraceChannel2,Box);
 		
-	UE_LOG(LogTemp, Error, TEXT("1"));
+	//UE_LOG(LogTemp, Error, TEXT("1"));
 
+	
+	//JAG TAR TEMP ÖVER DEN HÄR FÖR ATT TESTA!!!
+	
+	
+	if (HitResultBox.GetActor() && HitResultBox.GetComponent())
+	{
+		if (AItem* A = Cast<AItem>(HitResultBox.GetActor()))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Triggering a pickup:"));
+			
+			//After the relevant traces, I spawn a Physics Constraint Actor at - a scene component within - my character,
+			//attach said Actor to - said scene component in - my character, 
+			//and then Set Constrained Components (1, the cube; 2, a primitive component within my character.)
+			
+			//PCA->AttachToActor(hand)
+			
+			
+			//UPrimitiveComponent comp;
+			
+			
+			
+			
+		}
+	}
+	
+	
+	
+	
+	
+	/*
 	if (!HeldItem)//Pickup
 		Pickup();	
 	
 	else //Drop				
-		Drop();	
+		Drop();	*/
 }
 
 void ASpmG5Character::Pickup()
