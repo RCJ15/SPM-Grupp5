@@ -63,4 +63,6 @@ public:
 	float SuspiciousBoxSpawnRate = 10;
 	
 	static bool ShouldHappen(int percentage);
+	
+	BoxAddress SetBoxAddress();
 };
