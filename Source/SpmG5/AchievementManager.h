@@ -6,13 +6,22 @@
 
 #include "CoreMinimal.h"
 //this class will unlock achievements
-/**
- * 
- */
-struct Achievement
+//USTRUCT(Blueprintable)
+struct FAchievement : public FTableRowBase
 {
-	std::string name;
+	//GENERATED_BODY()
+	
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int Index; // index i arrayen/tabellen, kanske inte neccessary
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	std::string Name;
 	//image icon
+	std::string Description; //beskrivning som kan komma upp när man visar detta possibly
+	bool bIsUnlocked = false;
+	int ToReachEventCount = 1;//håller reda på hur många gånger något ska ha hänt för att unlocka detta achievement
+	int CurrentEventCount = 0; //håller reda på hur många gånger detta faktiskt har hänt
+	
+	//Mesh CosmeticToUnlock //alternativt string till dens path
 };
 
 class SPMG5_API AchievementManager
@@ -21,15 +30,16 @@ public:
 	AchievementManager();
 	~AchievementManager();
 private:
-	bool UnlockAchievement(Achievement A);
+	TArray<FAchievement> Achievements;
+	
+	bool LoadAchievements();
+	bool SaveAchievements();
+	
+	void IncreaseAchievementCount(int AchievementIndex);
+	void UnlockAchievement(int AchievementIndex);
+	//En sådan här metod för varje achievement som kollar om allt uppfylls:
+	void CheckFulfillAchievement0();
 	void CheckFulfillAchievement1();
-	
-	
-	TArray<Achievement> UnlockedAchievements;
-	
-	//Achievements.. dessa bör väll sparas någon annan stans?
-	Achievement A1 = Achievement("Throw10");
-	
-	//sparad info
-	int SortedBoxes = 0;
+	void CheckFulfillAchievement2();
+	void CheckFulfillAchievement3();
 };
