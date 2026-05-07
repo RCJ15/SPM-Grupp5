@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/ArrowComponent.h"
 #include "GameFramework/Actor.h"
 #include "ConveyorSegment.generated.h"
 
@@ -19,7 +20,8 @@ private:
 public:	
 	// Sets default values for this actor's properties
 	AConveyorSegment();
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UArrowComponent* Arrow;
 	int Direction = 1; //1 är fram, -1 är bakåt
 	int IndexInConveyorBelt = -1;
 	
@@ -33,5 +35,6 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	FVector GetForward();
 
 };

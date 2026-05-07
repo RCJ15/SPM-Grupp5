@@ -50,7 +50,7 @@ void AConveyorBelt::BeginPlay()
 		FVector SegmentOrigin;
 		FVector SegmentBoxExtent;
 		Conveyor[0]->GetActorBounds(false, SegmentOrigin, SegmentBoxExtent);
-		DistBetweenItems = (2*SegmentBoxExtent.X)/ItemsPerSegment;
+		DistBetweenItems = (2*SegmentBoxExtent.Y)/ItemsPerSegment;
 		
 		UE_LOG(LogTemp, Warning, TEXT("MaxItems BEING SET "));
 	}
@@ -412,9 +412,17 @@ void AConveyorBelt::PopulateTravelPath()
 	FVector SegmentOrigin;
 	FVector SegmentBoxExtent;
 	Conveyor[0]->GetActorBounds(false, SegmentOrigin, SegmentBoxExtent);
-	FVector DirOffset = FVector(0,0,0) + (Conveyor[Conveyor.Num()-1] -> GetActorForwardVector() * (SegmentBoxExtent*2));
+	FVector OldForward = FVector(0,0,0) + (Conveyor[Conveyor.Num()-1] -> GetActorForwardVector());
+	FVector NewForward = FVector(0,0,0) + (Conveyor[Conveyor.Num()-1] -> GetForward());
+	FVector DirOffset1 = FVector(0,0,0) + (Conveyor[Conveyor.Num()-1] -> GetActorForwardVector() * (SegmentBoxExtent));
+	FVector DirOffset = FVector(0,0,0) + (Conveyor[Conveyor.Num()-1] -> GetForward() * (SegmentBoxExtent.X +SegmentBoxExtent.Y)/2);
 	
-	Path->AddSplinePointAtIndex(Conveyor[Conveyor.Num()-1]->GetActorLocation() + DirOffset/2 + PathOffset,Conveyor.Num(),ESplineCoordinateSpace::World);
+	UE_LOG(LogTemp, Warning, TEXT("Box extent X: %f Y:%f"), SegmentBoxExtent.X, SegmentBoxExtent.Y);
+	
+	UE_LOG(LogTemp, Warning, TEXT("Last segment dir 1: x:%f y:%f z:%f   2: x:%f y:%f z:%f"), OldForward.X, OldForward.Y, OldForward.Z, NewForward.X, NewForward.Y, NewForward.Z);
+	UE_LOG(LogTemp, Warning, TEXT("Last segment dir 1: x:%f y:%f z:%f   2: x:%f y:%f z:%f"), DirOffset1.X, DirOffset1.Y, DirOffset1.Z, DirOffset.X, DirOffset.Y, DirOffset.Z);
+	
+	Path->AddSplinePointAtIndex(Conveyor[Conveyor.Num()-1]->GetActorLocation() + DirOffset + PathOffset,Conveyor.Num(),ESplineCoordinateSpace::World);
 	Path -> SetSplinePointType(Conveyor.Num(),ESplinePointType::Linear,true);
 	
 	UE_LOG(LogTemp, Warning, TEXT("Path Created, coneyor num: %d"), Conveyor.Num());

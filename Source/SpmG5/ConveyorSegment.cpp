@@ -4,6 +4,7 @@
 #include "ConveyorSegment.h"
 
 #include "Components/StaticMeshComponent.h"
+#include "DSP/BufferDiagnostics.h"
 
 // Sets default values
 AConveyorSegment::AConveyorSegment()
@@ -26,5 +27,12 @@ void AConveyorSegment::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+FVector AConveyorSegment::GetForward()
+{
+	//returnar Arrowns riktning
+	
+	return Arrow->GetForwardVector();
 }
 
