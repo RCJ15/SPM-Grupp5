@@ -71,6 +71,7 @@ public:
 	int AddAtIndex = 0;
 	
 	FVector PathOffset = FVector(0,0,100);
+	int GuardRailLengthOffset = 10; //Detta är extra längden från guard rails som bör subtraheras
 	UPROPERTY(EditAnywhere)
 	USplineComponent* Path;
 	
