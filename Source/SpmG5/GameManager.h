@@ -37,11 +37,14 @@ public:
 	TSoftObjectPtr<UWorld> GetPreviousLevel();
 	
 	
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UUserWidget* HUDWidget;
 	
 	UPROPERTY(BlueprintReadWrite)
 	UUserWidget* MenuWidget;
+	
+	UPROPERTY(BlueprintReadWrite)
+	UUserWidget* InstructionWidget;
 	
 protected:
 	UPROPERTY(BlueprintReadWrite)
