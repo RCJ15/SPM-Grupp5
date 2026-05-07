@@ -3,6 +3,7 @@
 
 #include "Item.h"
 #include "ConveyorBelt.h"
+#include "FMODBlueprintStatics.h"
 #include "NiagaraFunctionLibrary.h"
 #include "StateTreeTypes.h"
 #include "DynamicMesh/DynamicMesh3.h"
@@ -98,6 +99,9 @@ void AItem::Disintegrate()
 	if (FragileBreakParticles)
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),FragileBreakParticles,GetActorLocation(),GetActorRotation());
 	
+	//Play SFX - Ruben
+	UFMODBlueprintStatics::PlayEventAtLocation(this, DestroySFX, FTransform(GetActorLocation()), true);
+	
 	Destroy();
 }
 
@@ -113,6 +117,25 @@ void AItem::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimit
 				MostRecentHolder = nullptr;
 				CalculateIfBreakIfFragile();
 			}
+		}
+		
+		//Play Collision SFX. Volume is based on how big the impact was - Ruben
+		float Magnitude = NormalImpulse.Size();
+		
+		if (Magnitude > SFXNormalImpulseMin)
+		{
+			float Volume = FMath::GetMappedRangeValueClamped(
+				FVector2D(SFXNormalImpulseMin, SFXNormalImpulseMax),
+				FVector2D(SFXCollisionVolumeMin, SFXCollisionVolumeMax),
+				Magnitude
+			);
+		
+			if (Volume <= 0) { return; }
+		
+			//UE_LOG(LogTemp, Warning, TEXT("Item was HIT with force of %f!!! Playing with a volume of %f"), Magnitude, Volume);
+		
+			FFMODEventInstance Evt = UFMODBlueprintStatics::PlayEventAtLocation(this, CollisionSFX, FTransform(Hit.ImpactPoint), true);
+			UFMODBlueprintStatics::EventInstanceSetVolume(Evt, Volume);	
 		}
 	}
 }

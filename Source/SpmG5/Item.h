@@ -7,6 +7,7 @@
 #include "Components/StaticMeshComponent.h"
 //#include "BoxDestroyer.h"
 #include "AudioEnums.h"
+#include "FMODEvent.h"
 #include "NiagaraSystem.h"
 #include "Item.generated.h"
 
@@ -39,6 +40,24 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category="Audio")
 	EAudioItemType AudioType;
+	
+	UPROPERTY(EditAnywhere, Category="Audio")
+	UFMODEvent* CollisionSFX;
+	
+	UPROPERTY(EditAnywhere, Category="Audio")
+	float SFXNormalImpulseMin = 50.0f;
+	
+	UPROPERTY(EditAnywhere, Category="Audio")
+	float SFXNormalImpulseMax = 1000.0f;
+	
+	UPROPERTY(EditAnywhere, Category="Audio")
+	float SFXCollisionVolumeMin = 0.0f;
+	
+	UPROPERTY(EditAnywhere, Category="Audio")
+	float SFXCollisionVolumeMax = 1.0f;
+	
+	UPROPERTY(EditAnywhere, Category="Audio")
+	UFMODEvent* DestroySFX;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	BoxAddress Address = BoxAddress::SQUARE;
