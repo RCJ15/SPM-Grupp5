@@ -15,9 +15,10 @@ class AConveyorBelt; // forward-declaration
 UENUM(BlueprintType)
 enum class BoxAddress : uint8
 {
-	CIRCLE = 0,
-	SQUARE = 2,
-	TRIANGLE = 3
+	CIRCLE,
+	SQUARE,
+	TRIANGLE,
+	TOTAL_COUNT = 3
 };
 
 UCLASS()
@@ -131,11 +132,10 @@ public:
 	UPROPERTY(EditAnywhere)
 	UNiagaraSystem* FragileBreakParticles;
 	
-	void SetAddress(BoxAddress NewAddress);
-	
 	void SetIsLarge(bool SetTo);
 	void SetIsFragile(bool SetTo);
 	void SetIsSuspicious(bool SetTo);
+	void SetAddress(BoxAddress NewAddress);
 	
 	UFUNCTION(BlueprintCallable)
 	void SetIsScanned(bool SetTo);

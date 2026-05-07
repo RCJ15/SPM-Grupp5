@@ -40,6 +40,7 @@ AItem* ABoxSpawner::SpawnItem()
 		//Item->SetIsDangerous(ShouldHappen(DangerousBoxSpawnRate));
 		//Item->SetActorRotation(SpawnLocation->GetComponentRotation() + FRotator(0, FMath::RandRange(-15,15), 0));
 		Item->SetIsSuspicious(ShouldHappen(SuspiciousBoxSpawnRate));
+		Item->SetAddress(SetBoxAddress());
 	}
 
 	// Actually spawn item
@@ -76,4 +77,25 @@ void ABoxSpawner::LoopSpawnBox(float NewSpawnRate)
 bool ABoxSpawner::ShouldHappen(int Percentage)
 {
 	return (FMath::RandRange(1, 100/Percentage) == 1 ? true : false);
+}
+
+// I hate this solution
+BoxAddress ABoxSpawner::SetBoxAddress()
+{
+	int number = FMath::RandRange(0, 3);
+	
+	switch (number)
+	{
+		case 0:
+			return BoxAddress::CIRCLE;
+		case 1:
+			return BoxAddress::SQUARE;
+		case 2:
+			return BoxAddress::TRIANGLE;
+		default:
+			return BoxAddress::SQUARE;
+	}
+	
+	//uint8 hks = FMath::RandHelper(BoxAddress::TOTAL_COUNT);
+	// return (FMath::RandRange(1, 100/Percentage) == 1 ? true : false)
 }

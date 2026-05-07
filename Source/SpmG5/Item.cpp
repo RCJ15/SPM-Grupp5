@@ -176,11 +176,6 @@ void AItem::SetMostRecentHolder(AActor* Holder)
 	//return (MostRecentHolder) ? MostRecentHolder : nullptr;
 }
 
-void AItem::SetAddress(BoxAddress NewAddress)
-{
-	Address = NewAddress;
-}
-
 void AItem::SetIsLarge(bool SetTo)
 {
 	IsLarge = SetTo;
@@ -195,6 +190,12 @@ void AItem::SetIsSuspicious(bool SetTo)
 {
 	IsSuspicious = SetTo;
 }
+
+void AItem::SetAddress(BoxAddress NewAddress)
+{
+	Address = NewAddress;
+}
+
 void AItem::SetIsScanned(bool SetTo)
 {
 	IsScanned = SetTo;
