@@ -82,7 +82,7 @@ bool ABoxSpawner::ShouldHappen(int Percentage)
 // I hate this solution
 BoxAddress ABoxSpawner::SetBoxAddress()
 {
-	int number = FMath::RandRange(0, 3);
+	int number = FMath::RandRange(0, 2);
 	
 	switch (number)
 	{
@@ -90,10 +90,10 @@ BoxAddress ABoxSpawner::SetBoxAddress()
 			return BoxAddress::CIRCLE;
 		case 1:
 			return BoxAddress::SQUARE;
-		case 2:
-			return BoxAddress::TRIANGLE;
+		// case 2:
+		// 	return BoxAddress::TRIANGLE;
 		default:
-			return BoxAddress::SQUARE;
+			return BoxAddress::CIRCLE;
 	}
 	
 	//uint8 hks = FMath::RandHelper(BoxAddress::TOTAL_COUNT);
