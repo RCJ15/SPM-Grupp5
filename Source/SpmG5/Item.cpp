@@ -100,7 +100,8 @@ void AItem::Disintegrate()
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),FragileBreakParticles,GetActorLocation(),GetActorRotation());
 	
 	//Play SFX - Ruben
-	UFMODBlueprintStatics::PlayEventAtLocation(this, DestroySFX, FTransform(GetActorLocation()), true);
+	if (PlaySound)//TA BORT EFTER SPELTEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		UFMODBlueprintStatics::PlayEventAtLocation(this, DestroySFX, FTransform(GetActorLocation()), true);
 	
 	Destroy();
 }
@@ -122,7 +123,7 @@ void AItem::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimit
 		//Play Collision SFX. Volume is based on how big the impact was - Ruben
 		float Magnitude = NormalImpulse.Size();
 		
-		if (Magnitude > SFXNormalImpulseMin)
+		if (Magnitude > SFXNormalImpulseMin && PlaySound)//FIXA EFTER SPLETEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		{
 			float Volume = FMath::GetMappedRangeValueClamped(
 				FVector2D(SFXNormalImpulseMin, SFXNormalImpulseMax),

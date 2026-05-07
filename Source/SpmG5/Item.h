@@ -158,4 +158,14 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void SetIsScanned(bool SetTo);
+	
+	
+	//FULT!!!!! TA BORT EFTER SPELTEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	
+	UPROPERTY(EditAnywhere)
+	bool PlaySound = true;
+	
+	void SetPlaySound(bool SetTo){PlaySound = SetTo;}
+	
+	
 };

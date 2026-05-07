@@ -41,6 +41,9 @@ AItem* ABoxSpawner::SpawnItem()
 		//Item->SetActorRotation(SpawnLocation->GetComponentRotation() + FRotator(0, FMath::RandRange(-15,15), 0));
 		Item->SetIsSuspicious(ShouldHappen(SuspiciousBoxSpawnRate));
 		Item->SetAddress(SetBoxAddress());
+		
+		Item->SetPlaySound(PlayBoxSound);
+		
 	}
 
 	// Actually spawn item

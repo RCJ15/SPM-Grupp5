@@ -65,4 +65,12 @@ public:
 	static bool ShouldHappen(int percentage);
 	
 	BoxAddress SetBoxAddress();
+	
+	
+	
+	//FULT!!!!! TA BORT EFTER SPELTEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	UPROPERTY(EditAnywhere)
+	bool PlayBoxSound = true;
+	
+	
 };
