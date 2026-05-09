@@ -34,7 +34,7 @@ void ABlowPipe::Blow(float DeltaTime)
 {
 	//Doing sweep
 	TArray<FHitResult> HitResult;
-	FVector Location = GetActorLocation() + Offcset;	
+	FVector Location = GetActorLocation() + Offcset * GetActorForwardVector();	
 	FVector End = Location * GetActorForwardVector() * 5;
 	FCollisionShape Box = FCollisionShape::MakeBox(BlowBoxSize);
 	FQuat Rotation = GetActorRotation().Quaternion();

@@ -64,6 +64,7 @@ protected:
 	float CurrentThrowForce = 300.0f;
 	
 	bool HasItem = false;
+	UPROPERTY(BlueprintReadWrite)
 	bool Throwing = false;
 
 	FHitResult HitResultBox;
