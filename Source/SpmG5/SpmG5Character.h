@@ -141,6 +141,7 @@ protected:
 	
 	void Throw(const FInputActionValue& Value);
 	void ChargeUpThrow(const FInputActionValue& Value);
+	FQuat Rotate(FVector2d Input);
 	
 
 public:

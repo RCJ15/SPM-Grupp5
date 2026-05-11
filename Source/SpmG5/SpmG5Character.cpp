@@ -20,6 +20,7 @@
 #include "ConveyorSegment.h"
 #include "StateTreeTypes.h"
 #include "FMODBlueprintStatics.h"
+#include "../../../../../../../Program Files/Epic Games/UE_5.7/Engine/Plugins/Animation/ACLPlugin/Source/ThirdParty/acl/external/rtm/includes/rtm/quatd.h"
 #include "BaseGizmos/GizmoElementShared.h"
 #include "DynamicMesh/MeshTransforms.h"
 
@@ -269,6 +270,23 @@ void ASpmG5Character::ChargeUpThrow(const FInputActionValue& Value)
 		CurrentThrowForce += ThrowForceIncrease * GetWorld()->DeltaTimeSeconds;
 }
 
+FQuat ASpmG5Character::Rotate(FVector2d Input)
+{
+	FRotator R = FRotator();
+	
+	if (Input.Y > 0)	
+		R.Yaw = 360;
+	if (Input.Y < 0)	
+		R.Yaw += 180;
+	if (Input.X > 0)	
+		R.Yaw += 90;
+	if (Input.X < 0)	
+		R.Yaw += 270;	
+	
+	UE_LOG(LogTemp, Warning, TEXT("Rotate: %f"), R.Yaw);
+	return FQuat(R);
+}
+
 void ASpmG5Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -284,9 +302,8 @@ void ASpmG5Character::Move(const FInputActionValue& Value)
 
 	if (Throwing)
 	{
-		FRotator R = FRotator(0,MovementVector.X * RotateSpeedMult, 0);
-		FQuat QuatRotation = FQuat(R);
-		AddActorLocalRotation(QuatRotation, false);	
+		//AddActorLocalRotation(QuatRotation);		
+		SetActorRotation(rtm::quat_lerp(GetActorRotation(), Rotate(MovementVector), , GetWorld()->GetDeltaSeconds()));	
 	}
 	else
 		DoMove(MovementVector.X, MovementVector.Y);	
