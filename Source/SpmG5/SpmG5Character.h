@@ -66,6 +66,9 @@ protected:
 	bool HasItem = false;
 	UPROPERTY(BlueprintReadWrite)
 	bool Throwing = false;
+	
+	UPROPERTY(EditAnywhere)
+	float StickDeadZone = 0.2f;
 
 	FHitResult HitResultBox;
 	FHitResult HitResultConvayer;

@@ -16,6 +16,7 @@
 #if WITH_EDITOR
 #include "InteractiveToolActionSet.h"
 #endif
+#include "AITypes.h"
 #include "SpmG5.h"
 #include "ConveyorSegment.h"
 #include "StateTreeTypes.h"
@@ -299,7 +300,18 @@ void ASpmG5Character::Move(const FInputActionValue& Value)
 {	
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
-
+	
+	//make sure controllers have some wiggleroom for stick drift
+	
+	if (MovementVector.X < StickDeadZone && MovementVector.X > -StickDeadZone)
+	{
+		MovementVector.X = 0;
+	}
+	if (MovementVector.Y < StickDeadZone && MovementVector.Y > -StickDeadZone)
+	{
+		MovementVector.Y = 0;
+	}
+	
 	if (Throwing)
 	{
 		//AddActorLocalRotation(QuatRotation);		
