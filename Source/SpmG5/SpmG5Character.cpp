@@ -21,7 +21,6 @@
 #include "ConveyorSegment.h"
 #include "StateTreeTypes.h"
 #include "FMODBlueprintStatics.h"
-#include "../../../../../../../Program Files/Epic Games/UE_5.7/Engine/Plugins/Animation/ACLPlugin/Source/ThirdParty/acl/external/rtm/includes/rtm/quatd.h"
 #include "BaseGizmos/GizmoElementShared.h"
 #include "DynamicMesh/MeshTransforms.h"
 
@@ -314,8 +313,10 @@ void ASpmG5Character::Move(const FInputActionValue& Value)
 	
 	if (Throwing)
 	{
+		//UE::Geometry::Lerp(GetActorRotation(), Rotate(MovementVector).Euler(), LerpTimer);
 		//AddActorLocalRotation(QuatRotation);		
-		SetActorRotation(rtm::quat_lerp(GetActorRotation(), Rotate(MovementVector), , GetWorld()->GetDeltaSeconds()));	
+		//SetActorRotation();
+		LerpTimer += 0.1f;
 	}
 	else
 		DoMove(MovementVector.X, MovementVector.Y);	

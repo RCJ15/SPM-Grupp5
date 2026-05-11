@@ -53,7 +53,9 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	float RotateSpeedMult = 3.0f;
-	         
+
+	float LerpTimer = 0;
+	          
 	UPROPERTY(EditAnywhere)
 	float MaxThrowForce = 500.0f;
 	UPROPERTY(EditAnywhere)
