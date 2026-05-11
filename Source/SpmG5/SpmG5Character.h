@@ -44,6 +44,7 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USceneComponent* HoldingLocation;
+
 	
 	UPROPERTY(EditAnywhere)
 	FVector PickUpBoxSize = FVector(80.0f, 50.0f, 120.0f);
@@ -56,19 +57,19 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	float TurningSpeed = 5;
-	          
-	UPROPERTY(EditAnywhere)
+	
+	UPROPERTY(BlueprintReadWrite)
+	bool Throwing = false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float MaxThrowForce = 500.0f;
 	UPROPERTY(EditAnywhere)
 	float ThrowForceIncrease = 500.0f;
 	UPROPERTY(EditAnywhere)
 	float StartingThrowForce = 300.0f;
-	
+	UPROPERTY(BlueprintReadOnly)
 	float CurrentThrowForce = 300.0f;
 	
 	bool HasItem = false;
-	UPROPERTY(BlueprintReadWrite)
-	bool Throwing = false;
 	
 	UPROPERTY(EditAnywhere)
 	float StickDeadZone = 0.2f;
@@ -116,6 +117,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Audio")
 	UFMODEvent* ThrowSFX;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void UpdateThrowBar();
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowOrHideThrowBar(bool SetTo);
+	
 public:
 
 	/** Constructor */
