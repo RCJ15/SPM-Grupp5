@@ -53,7 +53,10 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	float RotateSpeedMult = 3.0f;
-	         
+
+	UPROPERTY(EditAnywhere)
+	float TurningSpeed = 5;
+	          
 	UPROPERTY(EditAnywhere)
 	float MaxThrowForce = 500.0f;
 	UPROPERTY(EditAnywhere)
@@ -66,6 +69,9 @@ protected:
 	bool HasItem = false;
 	UPROPERTY(BlueprintReadWrite)
 	bool Throwing = false;
+	
+	UPROPERTY(EditAnywhere)
+	float StickDeadZone = 0.2f;
 
 	FHitResult HitResultBox;
 	FHitResult HitResultConvayer;
@@ -141,6 +147,7 @@ protected:
 	
 	void Throw(const FInputActionValue& Value);
 	void ChargeUpThrow(const FInputActionValue& Value);
+	FRotator Rotate(FVector2d Input);
 	
 
 public:
