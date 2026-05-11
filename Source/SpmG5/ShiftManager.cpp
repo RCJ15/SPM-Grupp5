@@ -21,6 +21,15 @@ void UShiftManager::Initialize(FSubsystemCollectionBase& Collection)
 	//OnTimeRunsOut.AddDynamic(this, &UShiftManager::TimeRunsOut);
 }
 
+void UShiftManager::SetShiftTime(int seconds)
+{
+	if (seconds <= 0)
+	{
+		seconds = BaseShiftLengthInSeconds;
+	}
+	ShiftLengthInSeconds = seconds;
+}
+
 void UShiftManager::StartTimer()
 {
 	OnTimeRunsOut.RemoveAll(this);

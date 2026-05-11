@@ -297,7 +297,6 @@ void ASpmG5Character::Move(const FInputActionValue& Value)
 	FVector2D MovementVector = Value.Get<FVector2D>();
 	
 	//make sure controllers have some wiggleroom for stick drift
-	
 	if (MovementVector.X < StickDeadZone && MovementVector.X > -StickDeadZone)
 	{
 		MovementVector.X = 0;
