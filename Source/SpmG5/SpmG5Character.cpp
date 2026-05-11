@@ -236,6 +236,7 @@ void ASpmG5Character::Throw(const FInputActionValue& Value)
 	if (!HeldItem)
 		return;
 	
+	ShowOrHideThrowBar(false);
 	HeldItem->SetPhysics(true);
 	HeldItem->AddVelocity(CurrentThrowForce);
 	
@@ -257,11 +258,12 @@ void ASpmG5Character::ChargeUpThrow(const FInputActionValue& Value)
 	if (!HeldItem)
 		return;
 	Throwing = true;
-
+	ShowOrHideThrowBar(true);
 	//add arrow and charge up thing
 	
 	if (CurrentThrowForce < MaxThrowForce)
 		CurrentThrowForce += ThrowForceIncrease * GetWorld()->DeltaTimeSeconds;
+	UpdateThrowBar();
 }
 
 FRotator ASpmG5Character::Rotate(FVector2d Input)
