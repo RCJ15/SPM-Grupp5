@@ -11,18 +11,12 @@
 #include "GameFramework/Controller.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "INodeAndChannelMappings.h"
 #include "InputActionValue.h"
 #if WITH_EDITOR
-#include "InteractiveToolActionSet.h"
 #endif
-#include "AITypes.h"
 #include "SpmG5.h"
 #include "ConveyorSegment.h"
-#include "StateTreeTypes.h"
 #include "FMODBlueprintStatics.h"
-#include "BaseGizmos/GizmoElementShared.h"
-#include "DynamicMesh/MeshTransforms.h"
 
 ASpmG5Character::ASpmG5Character()
 {
@@ -270,7 +264,7 @@ void ASpmG5Character::ChargeUpThrow(const FInputActionValue& Value)
 		CurrentThrowForce += ThrowForceIncrease * GetWorld()->DeltaTimeSeconds;
 }
 
-FQuat ASpmG5Character::Rotate(FVector2d Input)
+FRotator ASpmG5Character::Rotate(FVector2d Input)
 {
 	FRotator R = FRotator();
 	
@@ -284,7 +278,7 @@ FQuat ASpmG5Character::Rotate(FVector2d Input)
 		R.Yaw += 270;	
 	
 	UE_LOG(LogTemp, Warning, TEXT("Rotate: %f"), R.Yaw);
-	return FQuat(R);
+	return FRotator(R);
 }
 
 void ASpmG5Character::Tick(float DeltaTime)
@@ -312,11 +306,9 @@ void ASpmG5Character::Move(const FInputActionValue& Value)
 	}
 	
 	if (Throwing)
-	{
-		//UE::Geometry::Lerp(GetActorRotation(), Rotate(MovementVector).Euler(), LerpTimer);
-		//AddActorLocalRotation(QuatRotation);		
-		//SetActorRotation();
-		LerpTimer += 0.1f;
+	{		
+		FRotator R = FMath::Lerp(GetActorRotation(), Rotate(MovementVector), TurningSpeed/100);
+		SetActorRotation(FQuat(R));		
 	}
 	else
 		DoMove(MovementVector.X, MovementVector.Y);	

@@ -54,7 +54,8 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float RotateSpeedMult = 3.0f;
 
-	float LerpTimer = 0;
+	UPROPERTY(EditAnywhere)
+	float TurningSpeed = 5;
 	          
 	UPROPERTY(EditAnywhere)
 	float MaxThrowForce = 500.0f;
@@ -146,7 +147,7 @@ protected:
 	
 	void Throw(const FInputActionValue& Value);
 	void ChargeUpThrow(const FInputActionValue& Value);
-	FQuat Rotate(FVector2d Input);
+	FRotator Rotate(FVector2d Input);
 	
 
 public:
