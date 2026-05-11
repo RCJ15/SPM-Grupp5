@@ -11,17 +11,12 @@
 #include "GameFramework/Controller.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "INodeAndChannelMappings.h"
 #include "InputActionValue.h"
 #if WITH_EDITOR
-#include "InteractiveToolActionSet.h"
 #endif
 #include "SpmG5.h"
 #include "ConveyorSegment.h"
-#include "StateTreeTypes.h"
 #include "FMODBlueprintStatics.h"
-#include "BaseGizmos/GizmoElementShared.h"
-#include "DynamicMesh/MeshTransforms.h"
 
 ASpmG5Character::ASpmG5Character()
 {
@@ -269,6 +264,23 @@ void ASpmG5Character::ChargeUpThrow(const FInputActionValue& Value)
 		CurrentThrowForce += ThrowForceIncrease * GetWorld()->DeltaTimeSeconds;
 }
 
+FRotator ASpmG5Character::Rotate(FVector2d Input)
+{
+	FRotator R = FRotator();
+	
+	if (Input.Y > 0)	
+		R.Yaw = 360;
+	if (Input.Y < 0)	
+		R.Yaw += 180;
+	if (Input.X > 0)	
+		R.Yaw += 90;
+	if (Input.X < 0)	
+		R.Yaw += 270;	
+	
+	UE_LOG(LogTemp, Warning, TEXT("Rotate: %f"), R.Yaw);
+	return FRotator(R);
+}
+
 void ASpmG5Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -281,12 +293,22 @@ void ASpmG5Character::Move(const FInputActionValue& Value)
 {	
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
-
-	if (Throwing)
+	
+	//make sure controllers have some wiggleroom for stick drift
+	
+	if (MovementVector.X < StickDeadZone && MovementVector.X > -StickDeadZone)
 	{
-		FRotator R = FRotator(0,MovementVector.X * RotateSpeedMult, 0);
-		FQuat QuatRotation = FQuat(R);
-		AddActorLocalRotation(QuatRotation, false);	
+		MovementVector.X = 0;
+	}
+	if (MovementVector.Y < StickDeadZone && MovementVector.Y > -StickDeadZone)
+	{
+		MovementVector.Y = 0;
+	}
+	
+	if (Throwing)
+	{		
+		FRotator R = FMath::Lerp(GetActorRotation(), Rotate(MovementVector), TurningSpeed/100);
+		SetActorRotation(FQuat(R));		
 	}
 	else
 		DoMove(MovementVector.X, MovementVector.Y);	
