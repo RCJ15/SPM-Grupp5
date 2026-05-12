@@ -74,8 +74,8 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float StickDeadZone = 0.2f;
 
-	FHitResult HitResultBox;
-	FHitResult HitResultConvayer;
+	//FHitResult HitResultBox;
+	//FHitResult HitResultConvayer;
 	
 	AItem* HeldItem = nullptr;
 
@@ -141,6 +141,10 @@ protected:
 	void Look(const FInputActionValue& Value);
 	*/
 
+	//metod som sweepar för att hitta items & interactable
+	TArray<FHitResult> DoSweep();
+	void ChooseInteractOrPickup();
+	
 	void PickupAndDrop(const FInputActionValue& Value);
 	void AttachPackage();
 	void InteractWithConveyor();
@@ -177,7 +181,7 @@ public:
 	virtual void DoJumpEnd();
 	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="Input")
-	void Interact();
+	void Interact(const UObject* Station);
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Input")
 	bool GetHasItem();

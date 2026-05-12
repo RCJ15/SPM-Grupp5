@@ -17,6 +17,7 @@
 #include "SpmG5.h"
 #include "ConveyorSegment.h"
 #include "FMODBlueprintStatics.h"
+#include "Interactable.h"
 
 ASpmG5Character::ASpmG5Character()
 {
@@ -79,12 +80,12 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		//EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASpmG5Character::Look);
 
 		// Pickup and Drop
-		EnhancedInputComponent->BindAction(PickupOrDropAction, ETriggerEvent::Started, this, &ASpmG5Character::PickupAndDrop);
+		EnhancedInputComponent->BindAction(PickupOrDropAction, ETriggerEvent::Started, this, &ASpmG5Character::ChooseInteractOrPickup);//PickupAndDrop
 		EnhancedInputComponent->BindAction(ThrowAction, ETriggerEvent::Triggered, this, &ASpmG5Character::ChargeUpThrow);		
 		EnhancedInputComponent->BindAction(ThrowAction, ETriggerEvent::Completed, this, &ASpmG5Character::Throw);
 		
 		//interact
-		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &ASpmG5Character::Interact);
+		//EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &ASpmG5Character::Interact);
 	}
 	else
 	{
@@ -92,9 +93,96 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	}
 }
 
+TArray<FHitResult> ASpmG5Character::DoSweep()
+{
+    TArray<FHitResult> HitResults;
+    TArray<FHitResult> HitResultsItems;
+    TArray<FHitResult> HitResultsInteractable;
+
+    float Distance = 5.0f;
+    FVector Location = HoldingLocation->GetComponentLocation();
+    FVector End = Location + GetActorForwardVector() * Distance;
+    FCollisionShape Box = FCollisionShape::MakeBox(PickUpBoxSize);
+    FQuat Rotation = GetActorRotation().Quaternion();
+
+    GetWorld()->SweepMultiByChannel(HitResultsItems,Location, End, Rotation, ECC_GameTraceChannel1,Box);
+    GetWorld()->SweepMultiByChannel(HitResultsInteractable,Location, End, Rotation, ECC_GameTraceChannel3,Box);
+
+    //gör det till en array att returna, 
+    //bör kunnas tas bort om sweep kan göras på 2 channels sammtidigt
+    for (FHitResult HitResult : HitResultsItems)
+        HitResults.Add(HitResult);
+    for (FHitResult HitResult : HitResultsInteractable)
+        HitResults.Add(HitResult);
+
+    return HitResults;
+}
+
+void ASpmG5Character::ChooseInteractOrPickup()
+{
+    //Choosing between interact or pickup...
+    bool bHitItem = false;
+    AItem* ItemHit = nullptr;
+    bool bHitStation = false;
+    UObject* StationHit = nullptr;
+
+    //Kolla igenom items och interactables in range
+    for (FHitResult HitResult : DoSweep())
+    {
+        if (HitResult.GetActor() && HitResult.GetComponent())
+        {
+            if (!ItemHit)
+            {
+                if (AItem* A = Cast<AItem>(HitResult.GetActor()))
+                {
+                    ItemHit = A;
+                    bHitItem = true;
+                    continue;
+                }
+            }
+
+            if (HitResult.GetActor()->Implements<UInteractable>())
+            {
+                StationHit = Cast<UObject>(HitResult.GetActor());
+                bHitStation = true;
+            }
+        }
+    }
+
+    //bestämm vad som ska göras
+    if (bHitItem && bHitStation && !ItemHit->bIsInStation)
+    {
+        if (!HasItem && !HeldItem)
+        {
+            Pickup(ItemHit);
+        }
+        else
+        {
+            IsInteracting = true;
+            Interact(StationHit);
+        }
+    }
+    else if (bHitStation)
+    {
+        Interact(StationHit);
+    }
+    else if (bHitItem)
+    {
+        if (!HasItem)
+        {
+            Pickup(ItemHit);
+        }
+        else
+        {
+            Drop();
+        }
+    }
+
+}
+
 
 void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
-{	
+{	/*
 	UE_LOG(LogTemp, Error, TEXT("Is interacting:   %d"), IsInteracting);
 	if(IsInteracting)
 		return;
@@ -113,11 +201,12 @@ void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
 		Pickup();	
 	
 	else //Drop				
-		Drop();	
+		Drop();	*/
 }
 
 void ASpmG5Character::Pickup()
 {
+	/*
 	if (HitResultBox.GetActor() && HitResultBox.GetComponent() && Cast<AItem>(HitResultBox.GetActor()))
 	{
 		UE_LOG(LogTemp, Error, TEXT("2"));
@@ -128,20 +217,15 @@ void ASpmG5Character::Pickup()
 	}
 	//else //KANSKE VILL ÄNDRA SÅ MAN KOLLAR PÅ ITEM ISTÄLLET FÖR SEGMENT			
 	
-	//InteractWithConveyor();	
+	//InteractWithConveyor();	*/
 }
 
-void ASpmG5Character::Hold()
-{	
-	FVector HoldingLocationWorld = HoldingLocation->GetComponentLocation();
-	if (HeldItem)
-	{
-		HeldItem->SetActorLocationAndRotation(HoldingLocationWorld, GetActorRotation());	
-	}
-}
+
 
 void ASpmG5Character::Pickup(AItem* Item)
 {
+	if (!Item)
+		return;
 	HeldItem = Item;
 	HasItem = true;
 	if (HeldItem->Conveyor)
@@ -166,6 +250,15 @@ void ASpmG5Character::AttachPackage()
 	// Play Pickup SFX
 	FFMODEventInstance evt = UFMODBlueprintStatics::PlayEventAtLocation(this, PickupSFX, FTransform(GetActorLocation()), true);
 	UFMODBlueprintStatics::EventInstanceSetParameter(evt, "ItemType", HeldItem->GetAudioType());
+}
+
+void ASpmG5Character::Hold()
+{	
+	FVector HoldingLocationWorld = HoldingLocation->GetComponentLocation();
+	if (HeldItem)
+	{
+		HeldItem->SetActorLocationAndRotation(HoldingLocationWorld, GetActorRotation());	
+	}
 }
 
 void ASpmG5Character::InteractWithConveyor()
