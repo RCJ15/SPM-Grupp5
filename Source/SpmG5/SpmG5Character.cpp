@@ -319,6 +319,11 @@ void ASpmG5Character::ChargeUpThrow(const FInputActionValue& Value)
 
 FRotator ASpmG5Character::Rotate(FVector2d Input)
 {	
+	if (Input.X < StickDeadZone)
+	{
+		return FRotator::ZeroRotator;
+	}
+	
 	float AngleRadians = FMath::Atan2(Input.X, Input.Y);
 	float AngleDegrees = FMath::RadiansToDegrees(AngleRadians);
 	UE_LOG(LogTemp, Warning, TEXT("Degrees: %f"), AngleDegrees);
