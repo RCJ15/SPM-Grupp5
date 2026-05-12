@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "DangerousItem.h"
+#include "FMODAudioComponent.h"
 #include "NiagaraSystem.h"
 #include "Bomb.generated.h"
 
@@ -39,4 +40,13 @@ public:
 	
 	UPROPERTY(Blueprintable, BlueprintReadWrite, BlueprintAssignable)
 	FExampleDelegate_OnSomething ExampleDelegateVariable;
+private:
+	/* SFX */
+	UPROPERTY(EditAnywhere, Category="Audio")
+	UFMODEvent* FuseSFX;
+	UFMODAudioComponent* FuseSFXInstance;
+	float FuseSFXTimer = 0;
+	
+	UPROPERTY(EditAnywhere, Category="Audio")
+	UFMODEvent* ExplodeSFX;
 };
