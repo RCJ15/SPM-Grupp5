@@ -42,7 +42,9 @@ void AItem::Tick(float DeltaTime)
 
 void AItem::SetPoints()
 {
-	if (IsSuspicious)
+	Points = 0;
+	
+	if (IsDangerous)
 	{
 		SetNegativePoints();
 		return;
@@ -60,6 +62,16 @@ void AItem::SetPoints()
 	if (IsFragile)
 	{
 		Points += FragileBoxPoints;
+	}
+	
+	if (IsScanned)
+	{
+		Points += ScannedBoxPoints;
+	}
+	
+	if (IsInspected)
+	{
+		Points += InspectedBoxPoints;
 	}
 }
 
