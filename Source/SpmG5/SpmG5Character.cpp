@@ -127,7 +127,7 @@ void ASpmG5Character::ChooseInteractOrPickup()
     UObject* StationHit = nullptr;
 
     //Kolla igenom items och interactables in range
-    for (FHitResult HitResult : DoSweep())
+    for (FHitResult HitResult : DoSweep()) //Borde flyttas till hjälpmetod
     {
         if (HitResult.GetActor() && HitResult.GetComponent())
         {
@@ -179,48 +179,6 @@ void ASpmG5Character::ChooseInteractOrPickup()
     }
 
 }
-
-
-void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
-{	/*
-	UE_LOG(LogTemp, Error, TEXT("Is interacting:   %d"), IsInteracting);
-	if(IsInteracting)
-		return;
-	float Distance = 5.0f;
-	FVector Location = HoldingLocation->GetComponentLocation();	
-	FVector End = Location + GetActorForwardVector() * Distance;
-	FCollisionShape Box = FCollisionShape::MakeBox(PickUpBoxSize);
-	FQuat Rotation = GetActorRotation().Quaternion();
-		
-	GetWorld()->SweepSingleByChannel(HitResultBox,Location, End, Rotation, ECC_GameTraceChannel1,Box);
-	//GetWorld()->SweepSingleByChannel(HitResultConvayer,Location, End, Rotation, ECC_GameTraceChannel2,Box);
-		
-	UE_LOG(LogTemp, Error, TEXT("1"));
-
-	if (!HeldItem)//Pickup
-		Pickup();	
-	
-	else //Drop				
-		Drop();	*/
-}
-
-void ASpmG5Character::Pickup()
-{
-	/*
-	if (HitResultBox.GetActor() && HitResultBox.GetComponent() && Cast<AItem>(HitResultBox.GetActor()))
-	{
-		UE_LOG(LogTemp, Error, TEXT("2"));
-
-		//Fult men vet inte hur man kan göra det på bättre sätt
-		
-		Pickup(Cast<AItem>(HitResultBox.GetActor()));
-	}
-	//else //KANSKE VILL ÄNDRA SÅ MAN KOLLAR PÅ ITEM ISTÄLLET FÖR SEGMENT			
-	
-	//InteractWithConveyor();	*/
-}
-
-
 
 void ASpmG5Character::Pickup(AItem* Item)
 {
@@ -360,28 +318,17 @@ void ASpmG5Character::ChargeUpThrow(const FInputActionValue& Value)
 }
 
 FRotator ASpmG5Character::Rotate(FVector2d Input)
-{
-	FRotator R = FRotator();
-	
-	if (Input.Y > 0)	
-		R.Yaw = 360;
-	if (Input.Y < 0)	
-		R.Yaw += 180;
-	if (Input.X > 0)	
-		R.Yaw += 90;
-	if (Input.X < 0)	
-		R.Yaw += 270;	
-	
-	UE_LOG(LogTemp, Warning, TEXT("Rotate: %f"), R.Yaw);
-	return FRotator(R);
+{	
+	float AngleRadians = FMath::Atan2(Input.X, Input.Y);
+	float AngleDegrees = FMath::RadiansToDegrees(AngleRadians);
+	UE_LOG(LogTemp, Warning, TEXT("Degrees: %f"), AngleDegrees);
+		
+	return FRotator(0.0f, AngleDegrees, 0.0f);
 }
 
 void ASpmG5Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (HeldItem)
-	{	
-	}
 }
 
 void ASpmG5Character::Move(const FInputActionValue& Value)
