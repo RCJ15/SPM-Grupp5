@@ -1,5 +1,6 @@
 #include "BoxSpawner.h"
 
+#include "Bomb.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -24,12 +25,32 @@ void ABoxSpawner::BeginPlay()
 		LoopSpawnBox(SpawnRate);
 }
 
+void ABoxSpawner::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+}
+
 AItem* ABoxSpawner::SpawnItem()
 {
 	FTransform SpawnTransform = FTransform(FRotator::ZeroRotator, SpawnLocation->GetComponentLocation());
 	
+	TSubclassOf<AActor> ItemToSpawn = BoxToSpawn;
+	bool IsSuspicious = ShouldHappen(SuspiciousBoxSpawnRate);
+	bool IsDangerous = false;
+	
+	if (IsSuspicious)
+	{
+		IsDangerous = ShouldHappen(DangerousBoxSpawnRate);
+		
+		if (IsDangerous)
+		{
+			ItemToSpawn = BombToSpawn;
+			UE_LOG(LogTemp, Warning, TEXT("Dangerous box should spawn!!!!"));
+		}
+	}
+	
 	// Sets all properties of an item before spawning it
-	AActor* NewActor = GetWorld()->SpawnActorDeferred<AActor>(BoxToSpawn, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+	AActor* NewActor = GetWorld()->SpawnActorDeferred<AActor>(ItemToSpawn, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	AItem* Item = Cast<AItem>(NewActor);
 	
 	if (Item)
@@ -39,21 +60,16 @@ AItem* ABoxSpawner::SpawnItem()
 		Item->SetIsFragile(ShouldHappen(FragileBoxSpawnRate));
 		//Item->SetIsDangerous(ShouldHappen(DangerousBoxSpawnRate));
 		//Item->SetActorRotation(SpawnLocation->GetComponentRotation() + FRotator(0, FMath::RandRange(-15,15), 0));
-		Item->SetIsSuspicious(ShouldHappen(SuspiciousBoxSpawnRate));
+		Item->SetIsSuspicious(IsSuspicious);
+		Item->SetIsDangerous(IsDangerous);
 		Item->SetAddress(SetBoxAddress());
 		
 		Item->SetPlaySound(PlayBoxSound);
-		
 	}
 
 	// Actually spawn item
-	UGameplayStatics::FinishSpawningActor(NewActor, SpawnTransform);
+	UGameplayStatics::FinishSpawningActor(Item, SpawnTransform);
 	return Item;
-}
-
-void ABoxSpawner::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 
 AItem* ABoxSpawner::SpawnBox()
@@ -73,12 +89,16 @@ void ABoxSpawner::LoopSpawnBox(float NewSpawnRate)
 		this,
 		&ABoxSpawner::SpawnBoxOnPoint,
 		NewSpawnRate,
-		true, -9
+		true
 		);
 }
 
 bool ABoxSpawner::ShouldHappen(int Percentage)
 {
+	if (Percentage <= 0)
+	{
+		return false;
+	}
 	return (FMath::RandRange(1, 100/Percentage) == 1 ? true : false);
 }
 
