@@ -265,11 +265,11 @@ AItem* ASpmG5Character::Drop()
 	if (!HeldItem)
 		return nullptr;
 		
+	//Resetting Box
 	GetWorldTimerManager().ClearTimer(HoldingTimer);
 	HeldItem->SetPhysics(true);
 	InteractWithConveyor();
-	HeldItem->ResetVelocity();
-	
+	HeldItem->ResetVelocity();	
 	
 	AItem* Item = HeldItem;
 	
@@ -277,8 +277,12 @@ AItem* ASpmG5Character::Drop()
 	FFMODEventInstance evt = UFMODBlueprintStatics::PlayEventAtLocation(this, DropSFX, FTransform(GetActorLocation()), true);
 	UFMODBlueprintStatics::EventInstanceSetParameter(evt, "ItemType", HeldItem->GetAudioType());
 	
+	//Reset Player
+	ShowOrHideThrowBar(false);
+	CurrentThrowForce = StartingThrowForce;
 	HeldItem = nullptr;
-	HasItem = false;	
+	HasItem = false;
+	Throwing = false;	
 	return Item;
 }
 
@@ -306,9 +310,11 @@ void ASpmG5Character::Throw(const FInputActionValue& Value)
 
 void ASpmG5Character::ChargeUpThrow(const FInputActionValue& Value)
 {	
-	if (!HeldItem)
-		return;
-	Throwing = true;
+	if (!HeldItem)	
+		return;			
+	if (!Throwing)
+		Throwing = true;
+	
 	ShowOrHideThrowBar(true);
 	//add arrow and charge up thing
 	
