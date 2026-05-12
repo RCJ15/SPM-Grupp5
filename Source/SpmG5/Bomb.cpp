@@ -3,6 +3,7 @@
 
 #include "Bomb.h"
 #include "ConveyorBelt.h"
+#include "FMODBlueprintStatics.h"
 #include "NiagaraFunctionLibrary.h"
 #include "SpmG5Character.h"
 #include "Kismet/GameplayStatics.h"
@@ -16,12 +17,25 @@ void ABomb::BeginPlay()
 	Super::BeginPlay();
 	ExampleDelegateVariable.AddUniqueDynamic(this, &ABomb::Explode); //subscribea på Explode metod
 	
-}
+	FuseSFXInstance = UFMODBlueprintStatics::PlayEventAttached(
+		FuseSFX, //FMOD event asset
+		BaseMesh, //component to attach to
+		NAME_None, //optional socket name
+		FVector::ZeroVector, 
+		EAttachLocation::KeepRelativeOffset, 
+		true, 
+		true, 
+		true
+		);}
 
 // Called every frame
 void ABomb::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+	//set SFX Progress for dynamic pitch increase as the timer goes - Ruben
+	FuseSFXTimer += DeltaTime;
+	FuseSFXInstance->SetParameter("Progress", FuseSFXTimer / Lifetime);
 	
 	if (bDoExplode)
 	{
@@ -70,6 +84,11 @@ void ABomb::Explode()
 	}
 	if (Shake != nullptr)
 		UGameplayStatics::PlayWorldCameraShake(this, Shake, GetActorLocation(),0,30000,1,false);
+	
+	//EXPLODE SFX - Ruben
+	UFMODBlueprintStatics::PlayEventAtLocation(this, ExplodeSFX, FTransform(GetActorLocation()), true);
+	FuseSFXInstance->Stop();
+	
 	//spela partikel effekt vid GetActorLocation()
 	if (ExplosionParticles)
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),ExplosionParticles,GetActorLocation(),GetActorRotation());
