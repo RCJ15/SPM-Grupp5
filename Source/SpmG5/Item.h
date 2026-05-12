@@ -19,7 +19,6 @@ enum class BoxAddress : uint8
 	CIRCLE,
 	SQUARE,
 	TRIANGLE,
-	TOTAL_COUNT = 3
 };
 
 UCLASS()
@@ -138,30 +137,6 @@ public:
 	
 	void AddImpulse(FVector Point, float Strength);
 	
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	int GetAudioType();
-	
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	bool GetIsFragile();
-	
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	bool GetIsLarge();
-	
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	bool GetIsSuspicious();
-	
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	bool GetIsScanned();
-	
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	int GetPoints();
-	
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	BoxAddress GetAddress();
-	
-	UFUNCTION(BlueprintCallable)
-	void SetMostRecentHolder(AActor* holder);
-	
 	UPROPERTY(EditAnywhere)
 	int MaxSpeedIfFragile = 300;
 	
@@ -171,14 +146,41 @@ public:
 	UPROPERTY(EditAnywhere)
 	UNiagaraSystem* TrashBreakParticles;
 	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	int GetAudioType();
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool GetIsFragile(){return IsFragile;}
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool GetIsLarge(){return IsLarge;}
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool GetIsSuspicious(){return IsSuspicious;}
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool GetIsDangerous(){return IsDangerous;}
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool GetIsScanned(){return IsScanned;}
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	int GetPoints(){return Points;}
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	BoxAddress GetAddress(){return Address;}
+	
+	UFUNCTION(BlueprintCallable)
+	void SetMostRecentHolder(AActor* holder);
+	
 	void SetIsLarge(bool SetTo);
 	void SetIsFragile(bool SetTo);
 	void SetIsSuspicious(bool SetTo);
+	void SetIsDangerous(bool SetTo);
 	void SetAddress(BoxAddress NewAddress);
 	
 	UFUNCTION(BlueprintCallable)
 	void SetIsScanned(bool SetTo);
-	
 	
 	//FULT!!!!! TA BORT EFTER SPELTEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	
