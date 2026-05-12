@@ -8,6 +8,7 @@
 #include "Item.h"
 #include "Logging/LogMacros.h"
 #include "FMODEvent.h"
+#include "GameManager.h"
 #include "SpmG5Character.generated.h"
 
 class USpringArmComponent;
@@ -104,6 +105,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* InteractAction;
 	
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* PauseAction;
+	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	bool IsInteracting = false;
 	
@@ -191,7 +195,10 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category="Input")
 	AItem* Drop();
-
+	
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void Pause();
+	
 public:
 
 	/** Returns CameraBoom subobject **/

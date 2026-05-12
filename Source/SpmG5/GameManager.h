@@ -46,6 +46,18 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	UUserWidget* InstructionWidget;
 	
+	UPROPERTY(BlueprintReadWrite)
+	UUserWidget* PauseWidget;
+		
+	UPROPERTY(BlueprintReadWrite)
+	UUserWidget* SettingsWidget;
+	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void ActivatePauseWidget();
+	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void DeactivatePauseWidget();
+	
 protected:
 	UPROPERTY(BlueprintReadWrite)
 	bool LevelStarted;

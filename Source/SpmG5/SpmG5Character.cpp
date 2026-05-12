@@ -18,6 +18,7 @@
 #include "ConveyorSegment.h"
 #include "FMODBlueprintStatics.h"
 #include "Interactable.h"
+#include "Kismet/GameplayStatics.h"
 
 ASpmG5Character::ASpmG5Character()
 {
@@ -84,6 +85,8 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		EnhancedInputComponent->BindAction(ThrowAction, ETriggerEvent::Triggered, this, &ASpmG5Character::ChargeUpThrow);		
 		EnhancedInputComponent->BindAction(ThrowAction, ETriggerEvent::Completed, this, &ASpmG5Character::Throw);
 		
+		// Pause menu navigation
+		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &ASpmG5Character::Pause);
 		//interact
 		//EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &ASpmG5Character::Interact);
 	}
@@ -282,6 +285,22 @@ AItem* ASpmG5Character::Drop()
 	return Item;
 }
 
+void ASpmG5Character::Pause()
+{
+	UGameManager* GameManager = Cast<UGameManager>(WorldContextObject->GetWorld()->GetGameInstance());
+
+	if (UGameplayStatics::IsGamePaused(this))
+	{
+		UGameManager::DeactivatePauseWidget();
+		UGameplayStatics::SetGamePaused(this, false);
+	}
+	else
+	{
+		UGameManager::ActivatePauseWidget();
+		UGameplayStatics::SetGamePaused(this ,true);
+	}
+}
+
 void ASpmG5Character::Throw(const FInputActionValue& Value)
 {
 	if (!HeldItem)
@@ -414,3 +433,4 @@ AItem* ASpmG5Character::GetItem()
 {
 	return HeldItem;
 }
+
