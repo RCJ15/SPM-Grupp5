@@ -101,15 +101,29 @@ void AItem::CalculateIfBreakIfFragile()
 		
 		if (CurrentSpeed > MaxSpeedIfFragile)
 		{
-			Disintegrate();
+			Disintegrate(false);
 		}
 	}
 }
 
-void AItem::Disintegrate()
+void AItem::Disintegrate(bool bThrownInTrash)
 {
-	if (FragileBreakParticles)
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),FragileBreakParticles,GetActorLocation(),GetActorRotation());
+	if (bThrownInTrash)
+	{
+		// Box is thrown in incinerator
+		if (TrashBreakParticles)
+		{
+			UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), TrashBreakParticles, GetActorLocation(), GetActorRotation());
+		}
+	}
+	else
+	{
+		// Box breaks (it's fragile)
+		if (FragileBreakParticles)
+		{
+			UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), FragileBreakParticles, GetActorLocation(), GetActorRotation());
+		}
+	}
 	
 	//Play SFX - Ruben
 	if (PlaySound)//TA BORT EFTER SPELTEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

@@ -79,7 +79,7 @@ void ABomb::Explode()
 			//add impulse
 			OtherItem->AddImpulse(GetActorLocation(), 5); //5 temp test för strength
 			if (OtherItem->GetIsFragile())
-				OtherItem->Disintegrate();
+				OtherItem->Disintegrate(false);
 		}
 	}
 	if (Shake != nullptr)
@@ -92,7 +92,8 @@ void ABomb::Explode()
 	//spela partikel effekt vid GetActorLocation()
 	if (ExplosionParticles)
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),ExplosionParticles,GetActorLocation(),GetActorRotation());
-	Disintegrate();
+	
+	Disintegrate(false);
 }
 
 void ABomb::OnEndTimer_Implementation()

@@ -123,7 +123,7 @@ public:
 	void AddVelocity(int Force){PrimComp->SetPhysicsLinearVelocity(GetActorForwardVector() * Force + GetActorUpVector() * Force/2);}
 	
 	UFUNCTION(BlueprintCallable)
-	virtual void Disintegrate();
+	virtual void Disintegrate(bool bThrownInTrash);
 	
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
@@ -168,6 +168,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	UNiagaraSystem* FragileBreakParticles;
 	
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* TrashBreakParticles;
+	
 	void SetIsLarge(bool SetTo);
 	void SetIsFragile(bool SetTo);
 	void SetIsSuspicious(bool SetTo);
@@ -183,6 +186,4 @@ public:
 	bool PlaySound = true;
 	
 	void SetPlaySound(bool SetTo){PlaySound = SetTo;}
-	
-	
 };
