@@ -319,11 +319,6 @@ void ASpmG5Character::ChargeUpThrow(const FInputActionValue& Value)
 
 FRotator ASpmG5Character::Rotate(FVector2d Input)
 {	
-	if (Input.X < StickDeadZone)
-	{
-		return FRotator::ZeroRotator;
-	}
-	
 	float AngleRadians = FMath::Atan2(Input.X, Input.Y);
 	float AngleDegrees = FMath::RadiansToDegrees(AngleRadians);
 	UE_LOG(LogTemp, Warning, TEXT("Degrees: %f"), AngleDegrees);
@@ -351,13 +346,16 @@ void ASpmG5Character::Move(const FInputActionValue& Value)
 		MovementVector.Y = 0;
 	}
 	
-	if (Throwing)
-	{		
+	UE_LOG(LogTemp, Warning, TEXT("Moving %s"), *MovementVector.ToString());
+	
+	if (!Throwing)
+		DoMove(MovementVector.X, MovementVector.Y);	
+	else if (Throwing && (MovementVector.X != 0 || MovementVector.Y != 0)) {		
 		FRotator R = FMath::Lerp(GetActorRotation(), Rotate(MovementVector), TurningSpeed/100);
+		UE_LOG(LogTemp, Warning, TEXT("Rotating"));
 		SetActorRotation(FQuat(R));		
 	}
-	else
-		DoMove(MovementVector.X, MovementVector.Y);	
+		
 	// route the input
 }
 
