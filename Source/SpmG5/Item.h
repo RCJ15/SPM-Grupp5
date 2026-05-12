@@ -34,6 +34,9 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	AConveyorBelt* Conveyor = nullptr; //pekar til conveyor om den är attached
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bIsInStation = false;
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

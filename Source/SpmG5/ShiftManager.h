@@ -30,6 +30,10 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnTimeRunsOut OnTimeRunsOut;
 	
+	UFUNCTION(BlueprintCallable)
+	void SetShiftTime(int seconds);
+	
+	int BaseShiftLengthInSeconds = 50;
 	int ShiftLengthInSeconds = 300;
 
 	int TimeRemaining = ShiftLengthInSeconds;

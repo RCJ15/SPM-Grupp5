@@ -44,6 +44,7 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USceneComponent* HoldingLocation;
+
 	
 	UPROPERTY(EditAnywhere)
 	FVector PickUpBoxSize = FVector(80.0f, 50.0f, 120.0f);
@@ -53,25 +54,28 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	float RotateSpeedMult = 3.0f;
-	         
+
 	UPROPERTY(EditAnywhere)
+	float TurningSpeed = 5;
+	
+	UPROPERTY(BlueprintReadWrite)
+	bool Throwing = false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float MaxThrowForce = 500.0f;
 	UPROPERTY(EditAnywhere)
 	float ThrowForceIncrease = 500.0f;
 	UPROPERTY(EditAnywhere)
 	float StartingThrowForce = 300.0f;
-	
+	UPROPERTY(BlueprintReadOnly)
 	float CurrentThrowForce = 300.0f;
 	
 	bool HasItem = false;
-	UPROPERTY(BlueprintReadWrite)
-	bool Throwing = false;
 	
 	UPROPERTY(EditAnywhere)
 	float StickDeadZone = 0.2f;
 
-	FHitResult HitResultBox;
-	FHitResult HitResultConvayer;
+	//FHitResult HitResultBox;
+	//FHitResult HitResultConvayer;
 	
 	AItem* HeldItem = nullptr;
 
@@ -113,6 +117,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Audio")
 	UFMODEvent* ThrowSFX;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void UpdateThrowBar();
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowOrHideThrowBar(bool SetTo);
+	
 public:
 
 	/** Constructor */
@@ -132,6 +141,10 @@ protected:
 	void Look(const FInputActionValue& Value);
 	*/
 
+	//metod som sweepar för att hitta items & interactable
+	TArray<FHitResult> DoSweep();
+	void ChooseInteractOrPickup();
+	
 	void PickupAndDrop(const FInputActionValue& Value);
 	void AttachPackage();
 	void InteractWithConveyor();
@@ -144,6 +157,7 @@ protected:
 	
 	void Throw(const FInputActionValue& Value);
 	void ChargeUpThrow(const FInputActionValue& Value);
+	FRotator Rotate(FVector2d Input);
 	
 
 public:
@@ -167,7 +181,7 @@ public:
 	virtual void DoJumpEnd();
 	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="Input")
-	void Interact();
+	void Interact(const UObject* Station);
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Input")
 	bool GetHasItem();

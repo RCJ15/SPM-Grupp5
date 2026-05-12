@@ -11,18 +11,13 @@
 #include "GameFramework/Controller.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "INodeAndChannelMappings.h"
 #include "InputActionValue.h"
 #if WITH_EDITOR
-#include "InteractiveToolActionSet.h"
 #endif
-#include "AITypes.h"
 #include "SpmG5.h"
 #include "ConveyorSegment.h"
-#include "StateTreeTypes.h"
 #include "FMODBlueprintStatics.h"
-#include "BaseGizmos/GizmoElementShared.h"
-#include "DynamicMesh/MeshTransforms.h"
+#include "Interactable.h"
 
 ASpmG5Character::ASpmG5Character()
 {
@@ -85,12 +80,12 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		//EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASpmG5Character::Look);
 
 		// Pickup and Drop
-		EnhancedInputComponent->BindAction(PickupOrDropAction, ETriggerEvent::Started, this, &ASpmG5Character::PickupAndDrop);
+		EnhancedInputComponent->BindAction(PickupOrDropAction, ETriggerEvent::Started, this, &ASpmG5Character::ChooseInteractOrPickup);//PickupAndDrop
 		EnhancedInputComponent->BindAction(ThrowAction, ETriggerEvent::Triggered, this, &ASpmG5Character::ChargeUpThrow);		
 		EnhancedInputComponent->BindAction(ThrowAction, ETriggerEvent::Completed, this, &ASpmG5Character::Throw);
 		
 		//interact
-		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &ASpmG5Character::Interact);
+		//EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &ASpmG5Character::Interact);
 	}
 	else
 	{
@@ -98,9 +93,96 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	}
 }
 
+TArray<FHitResult> ASpmG5Character::DoSweep()
+{
+    TArray<FHitResult> HitResults;
+    TArray<FHitResult> HitResultsItems;
+    TArray<FHitResult> HitResultsInteractable;
+
+    float Distance = 5.0f;
+    FVector Location = HoldingLocation->GetComponentLocation();
+    FVector End = Location + GetActorForwardVector() * Distance;
+    FCollisionShape Box = FCollisionShape::MakeBox(PickUpBoxSize);
+    FQuat Rotation = GetActorRotation().Quaternion();
+
+    GetWorld()->SweepMultiByChannel(HitResultsItems,Location, End, Rotation, ECC_GameTraceChannel1,Box);
+    GetWorld()->SweepMultiByChannel(HitResultsInteractable,Location, End, Rotation, ECC_GameTraceChannel3,Box);
+
+    //gör det till en array att returna, 
+    //bör kunnas tas bort om sweep kan göras på 2 channels sammtidigt
+    for (FHitResult HitResult : HitResultsItems)
+        HitResults.Add(HitResult);
+    for (FHitResult HitResult : HitResultsInteractable)
+        HitResults.Add(HitResult);
+
+    return HitResults;
+}
+
+void ASpmG5Character::ChooseInteractOrPickup()
+{
+    //Choosing between interact or pickup...
+    bool bHitItem = false;
+    AItem* ItemHit = nullptr;
+    bool bHitStation = false;
+    UObject* StationHit = nullptr;
+
+    //Kolla igenom items och interactables in range
+    for (FHitResult HitResult : DoSweep())
+    {
+        if (HitResult.GetActor() && HitResult.GetComponent())
+        {
+            if (!ItemHit)
+            {
+                if (AItem* A = Cast<AItem>(HitResult.GetActor()))
+                {
+                    ItemHit = A;
+                    bHitItem = true;
+                    continue;
+                }
+            }
+
+            if (HitResult.GetActor()->Implements<UInteractable>())
+            {
+                StationHit = Cast<UObject>(HitResult.GetActor());
+                bHitStation = true;
+            }
+        }
+    }
+
+    //bestämm vad som ska göras
+    if (bHitItem && bHitStation && !ItemHit->bIsInStation)
+    {
+        if (!HasItem && !HeldItem)
+        {
+            Pickup(ItemHit);
+        }
+        else
+        {
+            IsInteracting = true;
+            Interact(StationHit);
+        }
+    }
+    else if (bHitStation)
+    {
+        Interact(StationHit);
+    }
+    else if (bHitItem)
+    {
+        if (!HasItem)
+        {
+            Pickup(ItemHit);
+        }
+        else
+        {
+            Drop();
+        }
+    }
+
+}
+
 
 void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
-{	
+{	/*
 	UE_LOG(LogTemp, Error, TEXT("Is interacting:   %d"), IsInteracting);
 	if(IsInteracting)
 		return;
@@ -119,11 +201,12 @@ void ASpmG5Character::PickupAndDrop(const FInputActionValue& Value)
 		Pickup();	
 	
 	else //Drop				
-		Drop();	
+		Drop();	*/
 }
 
 void ASpmG5Character::Pickup()
 {
+	/*
 	if (HitResultBox.GetActor() && HitResultBox.GetComponent() && Cast<AItem>(HitResultBox.GetActor()))
 	{
 		UE_LOG(LogTemp, Error, TEXT("2"));
@@ -134,20 +217,15 @@ void ASpmG5Character::Pickup()
 	}
 	//else //KANSKE VILL ÄNDRA SÅ MAN KOLLAR PÅ ITEM ISTÄLLET FÖR SEGMENT			
 	
-	//InteractWithConveyor();	
+	//InteractWithConveyor();	*/
 }
 
-void ASpmG5Character::Hold()
-{	
-	FVector HoldingLocationWorld = HoldingLocation->GetComponentLocation();
-	if (HeldItem)
-	{
-		HeldItem->SetActorLocationAndRotation(HoldingLocationWorld, GetActorRotation());	
-	}
-}
+
 
 void ASpmG5Character::Pickup(AItem* Item)
 {
+	if (!Item)
+		return;
 	HeldItem = Item;
 	HasItem = true;
 	if (HeldItem->Conveyor)
@@ -172,6 +250,15 @@ void ASpmG5Character::AttachPackage()
 	// Play Pickup SFX
 	FFMODEventInstance evt = UFMODBlueprintStatics::PlayEventAtLocation(this, PickupSFX, FTransform(GetActorLocation()), true);
 	UFMODBlueprintStatics::EventInstanceSetParameter(evt, "ItemType", HeldItem->GetAudioType());
+}
+
+void ASpmG5Character::Hold()
+{	
+	FVector HoldingLocationWorld = HoldingLocation->GetComponentLocation();
+	if (HeldItem)
+	{
+		HeldItem->SetActorLocationAndRotation(HoldingLocationWorld, GetActorRotation());	
+	}
 }
 
 void ASpmG5Character::InteractWithConveyor()
@@ -242,6 +329,7 @@ void ASpmG5Character::Throw(const FInputActionValue& Value)
 	if (!HeldItem)
 		return;
 	
+	ShowOrHideThrowBar(false);
 	HeldItem->SetPhysics(true);
 	HeldItem->AddVelocity(CurrentThrowForce);
 	
@@ -263,11 +351,29 @@ void ASpmG5Character::ChargeUpThrow(const FInputActionValue& Value)
 	if (!HeldItem)
 		return;
 	Throwing = true;
-
+	ShowOrHideThrowBar(true);
 	//add arrow and charge up thing
 	
 	if (CurrentThrowForce < MaxThrowForce)
 		CurrentThrowForce += ThrowForceIncrease * GetWorld()->DeltaTimeSeconds;
+	UpdateThrowBar();
+}
+
+FRotator ASpmG5Character::Rotate(FVector2d Input)
+{
+	FRotator R = FRotator();
+	
+	if (Input.Y > 0)	
+		R.Yaw = 360;
+	if (Input.Y < 0)	
+		R.Yaw += 180;
+	if (Input.X > 0)	
+		R.Yaw += 90;
+	if (Input.X < 0)	
+		R.Yaw += 270;	
+	
+	UE_LOG(LogTemp, Warning, TEXT("Rotate: %f"), R.Yaw);
+	return FRotator(R);
 }
 
 void ASpmG5Character::Tick(float DeltaTime)
@@ -284,7 +390,6 @@ void ASpmG5Character::Move(const FInputActionValue& Value)
 	FVector2D MovementVector = Value.Get<FVector2D>();
 	
 	//make sure controllers have some wiggleroom for stick drift
-	
 	if (MovementVector.X < StickDeadZone && MovementVector.X > -StickDeadZone)
 	{
 		MovementVector.X = 0;
@@ -295,10 +400,9 @@ void ASpmG5Character::Move(const FInputActionValue& Value)
 	}
 	
 	if (Throwing)
-	{
-		FRotator R = FRotator(0,MovementVector.X * RotateSpeedMult, 0);
-		FQuat QuatRotation = FQuat(R);
-		AddActorLocalRotation(QuatRotation, false);	
+	{		
+		FRotator R = FMath::Lerp(GetActorRotation(), Rotate(MovementVector), TurningSpeed/100);
+		SetActorRotation(FQuat(R));		
 	}
 	else
 		DoMove(MovementVector.X, MovementVector.Y);	
