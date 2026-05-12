@@ -75,16 +75,28 @@ protected:
 	bool IsSuspicious;
 	
 	UPROPERTY(EditAnywhere)
+	bool IsDangerous;
+	
+	UPROPERTY(EditAnywhere)
 	bool IsScanned = false;
 	
 	UPROPERTY(EditAnywhere)
-	int SmallBoxPoints = 10;
+	bool IsInspected = false;
 	
 	UPROPERTY(EditAnywhere)
-	int LargeBoxPoints = 20;
+	int SmallBoxPoints = 5;
+	
+	UPROPERTY(EditAnywhere)
+	int LargeBoxPoints = 10;
 	
 	UPROPERTY(EditAnywhere)
 	int FragileBoxPoints = 5;
+	
+	UPROPERTY(EditAnywhere)
+	int ScannedBoxPoints = 5;
+	
+	UPROPERTY(EditAnywhere)
+	int InspectedBoxPoints = 5;
 	
 	UPROPERTY(EditAnywhere)
 	int WrongBoxPoints = -15;
@@ -100,6 +112,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
+	UFUNCTION(BlueprintCallable)
 	void SetPoints();
 	
 	UFUNCTION(BlueprintCallable)
@@ -150,7 +163,8 @@ public:
 	void SetMostRecentHolder(AActor* holder);
 	
 	UPROPERTY(EditAnywhere)
-	int MaxSpeedIfFragile = 500;
+	int MaxSpeedIfFragile = 300;
+	
 	UPROPERTY(EditAnywhere)
 	UNiagaraSystem* FragileBreakParticles;
 	
