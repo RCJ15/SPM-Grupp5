@@ -191,35 +191,6 @@ int AItem::GetAudioType()
 	return static_cast<int>(AudioType);
 }
 
-bool AItem::GetIsFragile()
-{
-	return IsFragile;
-}
-
-bool AItem::GetIsLarge()
-{
-	return IsLarge;
-}
-
-bool AItem::GetIsSuspicious()
-{
-	return IsSuspicious;
-}
-bool AItem::GetIsScanned()
-{
-	return IsScanned;
-}
-
-int AItem::GetPoints()
-{
-	return Points;
-}
-
-BoxAddress AItem::GetAddress()
-{
-	return Address;
-}
-
 void AItem::SetMostRecentHolder(AActor* Holder)
 {
 	MostRecentHolder = Holder;
@@ -239,6 +210,11 @@ void AItem::SetIsFragile(bool SetTo)
 void AItem::SetIsSuspicious(bool SetTo)
 {
 	IsSuspicious = SetTo;
+}
+
+void AItem::SetIsDangerous(bool SetTo)
+{
+	IsDangerous = SetTo;
 }
 
 void AItem::SetAddress(BoxAddress NewAddress)

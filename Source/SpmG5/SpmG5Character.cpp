@@ -196,7 +196,6 @@ void ASpmG5Character::Pickup(AItem* Item)
 
 void ASpmG5Character::AttachPackage()
 {
-	UE_LOG(LogTemp, Error, TEXT("3"));
 	HeldItem->SetPhysics(false);
 	HeldItem->ResetVelocity();
 	HeldItem->SetActorRelativeLocation(HoldingLocation->GetComponentLocation());
