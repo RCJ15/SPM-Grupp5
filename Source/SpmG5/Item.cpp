@@ -99,6 +99,11 @@ void AItem::CalculateIfBreakIfFragile()
 		int CurrentSpeed = GetVelocity().Size();
 		UE_LOG(LogTemp, Warning, TEXT("Current Speed: %d"), CurrentSpeed);
 		
+		if (ShouldBreakOnImpact)
+		{
+			Disintegrate(false);
+		}
+		
 		if (CurrentSpeed > MaxSpeedIfFragile)
 		{
 			Disintegrate(false);

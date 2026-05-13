@@ -294,6 +294,16 @@ void ASpmG5Character::Throw(const FInputActionValue& Value)
 	HeldItem->SetPhysics(true);
 	HeldItem->AddVelocity(CurrentThrowForce);
 	
+	float HalfThrowForce = StartingThrowForce + ((MaxThrowForce - StartingThrowForce) * 0.66);
+	
+	if (HeldItem->GetIsFragile())
+	{
+		if (CurrentThrowForce >= HalfThrowForce)
+		{
+			HeldItem->ShouldBreakOnImpact = true;
+		}
+	}
+	
 	// Play Throw SFX
 	FFMODEventInstance evt = UFMODBlueprintStatics::PlayEventAtLocation(this, ThrowSFX, FTransform(GetActorLocation()), true);
 	UFMODBlueprintStatics::EventInstanceSetParameter(evt, "ItemType", HeldItem->GetAudioType());

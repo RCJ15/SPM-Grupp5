@@ -138,7 +138,10 @@ public:
 	void AddImpulse(FVector Point, float Strength);
 	
 	UPROPERTY(EditAnywhere)
-	int MaxSpeedIfFragile = 300;
+	int MaxSpeedIfFragile = 400;
+	
+	UPROPERTY(EditAnywhere)
+	bool ShouldBreakOnImpact = false;
 	
 	UPROPERTY(EditAnywhere)
 	UNiagaraSystem* FragileBreakParticles;
