@@ -8,5 +8,10 @@
 
 void ASpawnPoint::BeginPlay()
 {
-	UGameplayStatics::GetPlayerPawn(GetWorld(), PlayerIndex)->SetActorLocation(GetActorLocation());
+	APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), PlayerIndex);
+
+	if (IsValid(PlayerPawn))
+	{
+		PlayerPawn->SetActorLocation(GetActorLocation());
+	}
 }
