@@ -231,3 +231,8 @@ void AItem::SetIsScanned(bool SetTo)
 {
 	IsScanned = SetTo;
 }
+
+void AItem::SetIsInspected(bool SetTo)
+{
+	IsInspected = SetTo;
+}

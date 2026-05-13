@@ -168,6 +168,9 @@ public:
 	bool GetIsScanned(){return IsScanned;}
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool GetIsInspected(){return IsInspected;}
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	int GetPoints(){return Points;}
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
@@ -184,6 +187,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void SetIsScanned(bool SetTo);
+	
+	UFUNCTION(BlueprintCallable)
+	void SetIsInspected(bool SetTo);
 	
 	//FULT!!!!! TA BORT EFTER SPELTEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	
