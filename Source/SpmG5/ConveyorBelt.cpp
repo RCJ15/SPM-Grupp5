@@ -290,19 +290,19 @@ void AConveyorBelt::MoveRevolvingArraySplinePath()
 		//AConveyorSegment* Segment = Conveyor[0];
 		int SegmentIndex = GetSegmentIndexFromItemIndex(i);
 		//if (SegmentIndex < Conveyor.Num())
-			//Segment = Conveyor[SegmentIndex];
+		//Segment = Conveyor[SegmentIndex];
 		
 		AItem* Item = Items[i];
 		
 		FVector NewLoc = Path->GetLocationAtSplineInputKey(SegmentIndex+MovedDelta,ESplineCoordinateSpace::World);
-		if (Item)
+		if (IsValid(Item))
 			Item->SetActorLocation(NewLoc);
 		
 		if (GetSegmentIndexFromItemIndex(i) == Conveyor.Num() - 1)
 		{
 			//Åk dubbelt så långt för pathen är hälfetn så lång 
 			NewLoc = Path->GetLocationAtSplineInputKey(SegmentIndex+MovedDelta*2,ESplineCoordinateSpace::World);
-			if (Item)
+			if (IsValid(Item))
 				Item->SetActorLocation(NewLoc);
 			if (MovedDelta*2>=1)
 				DropItem(GetItemIndexFromSegmentIndex(Conveyor.Num()-1));
@@ -310,7 +310,7 @@ void AConveyorBelt::MoveRevolvingArraySplinePath()
 		
 		//Rotera objekten?
 		//if (Item)
-			//Item->SetActorRotation(Path->GetRotationAtSplineInputKey(SegmentIndex+MovedDelta,ESplineCoordinateSpace::World));
+		//Item->SetActorRotation(Path->GetRotationAtSplineInputKey(SegmentIndex+MovedDelta,ESplineCoordinateSpace::World));
 		
 		//håll koll på dist moved (valt att kolla på en fast position)
 		if (i == CurrentFirstIndex)

@@ -212,6 +212,13 @@ void ASpmG5Character::AttachPackage()
 void ASpmG5Character::Hold()
 {	
 	FVector HoldingLocationWorld = HoldingLocation->GetComponentLocation();
+	
+	if (!IsValid(HoldingLocation) || !IsValid(HeldItem))
+	{
+		HeldItem = nullptr;
+		return;
+	}
+	
 	if (HeldItem)
 	{
 		HeldItem->SetActorLocationAndRotation(HoldingLocationWorld, GetActorRotation());	
