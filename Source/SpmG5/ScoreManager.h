@@ -27,6 +27,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SaveScore();
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int ScoreToPassTutorial = 70;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int ScoreToPassLevels = 250;
+	
 	UPROPERTY(BlueprintReadOnly)
 	TMap<TSoftObjectPtr<UWorld>, int> ScoreMap;
 
