@@ -46,6 +46,12 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	UUserWidget* InstructionWidget;
 	
+	UPROPERTY(BlueprintReadWrite)
+	UUserWidget* ControllerWidget;
+	
+	UPROPERTY(BlueprintReadWrite)
+	UUserWidget* WinOrLoseWidget;
+	
 protected:
 	UPROPERTY(BlueprintReadWrite)
 	bool LevelStarted;
