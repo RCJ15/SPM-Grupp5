@@ -3,12 +3,14 @@
 #pragma once
 
 #include "Item.h"
-#include "ConveyorSegment.h"
+//#include "ConveyorSegment.h"
 #include "CoreMinimal.h"
 #include "Components/SplineComponent.h"
 #include "GameFramework/Actor.h"
 #include "BoxSpawner.h"
 #include "ConveyorBelt.generated.h"
+
+class AConveyorSegment;
 
 UCLASS()
 class SPMG5_API AConveyorBelt : public AActor
