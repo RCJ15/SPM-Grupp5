@@ -225,6 +225,8 @@ void ASpmG5Character::Hold()
 	}
 }
 
+
+//OBS DEN HÄR BÖR KUNNAS TA BORT!!!!!!!!
 void ASpmG5Character::InteractWithConveyor()
 {
 	TArray<FHitResult> SearchForConveyor;
@@ -274,7 +276,7 @@ AItem* ASpmG5Character::Drop()
 	//Resetting Box
 	GetWorldTimerManager().ClearTimer(HoldingTimer);
 	HeldItem->SetPhysics(true);
-	InteractWithConveyor();
+	//InteractWithConveyor();
 	HeldItem->ResetVelocity();	
 	
 	AItem* Item = HeldItem;

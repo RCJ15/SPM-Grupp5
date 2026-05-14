@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ConveyorBelt.h"
 #include "Components/ArrowComponent.h"
 #include "GameFramework/Actor.h"
 #include "ConveyorSegment.generated.h"
 
-class AConveyorBelt;
+//class AConveyorBelt;
 
 UCLASS()
 class SPMG5_API AConveyorSegment : public AActor
@@ -36,5 +37,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	FVector GetForward();
+	
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+			   FVector NormalImpulse,
+			   const FHitResult& Hit);
 
 };
