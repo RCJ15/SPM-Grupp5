@@ -1,11 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ConveyorSegment.h"
+#include "ConveyorBelt.h"
 
 #include "Item.h"
 #include "Components/StaticMeshComponent.h"
 #include "DSP/BufferDiagnostics.h"
+
 
 // Sets default values
 AConveyorSegment::AConveyorSegment()
