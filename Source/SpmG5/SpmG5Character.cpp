@@ -8,6 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 //#include "GameFramework/SpringArmComponent.h"
 #include "ConveyorBelt.h"
+#include "ConveyorBeltUpgraded.h"
 #include "GameFramework/Controller.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -191,6 +192,11 @@ void ASpmG5Character::Pickup(AItem* Item)
 	if (HeldItem->Conveyor)
 	{
 		HeldItem->Conveyor->DropItem(HeldItem);
+		UE_LOG(LogTemp, Display, TEXT("Dropping item from conveyor"));
+	}
+	if (HeldItem->ConveyorUpgraded)
+	{
+		HeldItem->ConveyorUpgraded->RemoveFromBelt(HeldItem);
 		UE_LOG(LogTemp, Display, TEXT("Dropping item from conveyor"));
 	}
 	AttachPackage();
