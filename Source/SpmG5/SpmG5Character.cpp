@@ -298,9 +298,10 @@ AItem* ASpmG5Character::Drop()
 
 void ASpmG5Character::Pause()
 {
-	//UGameManager* GameManager = Cast<UGameManager>(WorldContextObject->GetWorld()->GetGameInstance());
+	UGameManager* GameManager = Cast<UGameManager>(GetWorld()->GetGameInstance());
 
-	if (UGameplayStatics::IsGamePaused(this))
+	GameManager->PauseGame();
+	/*if (UGameplayStatics::IsGamePaused(this))
 	{
 		//UGameManager::DeactivatePauseWidget();
 		UGameplayStatics::SetGamePaused(this, false);
@@ -309,7 +310,7 @@ void ASpmG5Character::Pause()
 	{
 		//UGameManager::ActivatePauseWidget();
 		UGameplayStatics::SetGamePaused(this ,true);
-	}
+	}*/
 }
 
 void ASpmG5Character::Throw(const FInputActionValue& Value)

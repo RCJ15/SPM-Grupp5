@@ -25,6 +25,9 @@ public:
 
 	TSoftObjectPtr<UWorld> CurrentLevel;
 	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void PauseGame();
+	
 	UPROPERTY()
 	FOnLevelLoadedInternal OnLevelLoadedInternal;
 	
@@ -51,6 +54,12 @@ public:
 	
 	UPROPERTY(BlueprintReadWrite)
 	UUserWidget* WinOrLoseWidget;
+	
+	UPROPERTY(BlueprintReadWrite)
+	UUserWidget* PauseWidget;
+	
+	UPROPERTY(BlueprintReadWrite)
+	UUserWidget* SettingsWidget;
 	
 protected:
 	UPROPERTY(BlueprintReadWrite)
