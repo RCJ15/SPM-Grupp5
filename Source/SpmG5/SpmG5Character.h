@@ -8,6 +8,7 @@
 #include "Item.h"
 #include "Logging/LogMacros.h"
 #include "FMODEvent.h"
+#include "GameManager.h"
 #include "SpmG5Character.generated.h"
 
 class USpringArmComponent;
@@ -40,6 +41,7 @@ protected:
 	
 	FTimerHandle HoldingTimer;
 	
+	UPROPERTY()
 	UPrimitiveComponent* PrimComp;	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -69,6 +71,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	float CurrentThrowForce = 300.0f;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool HasItem = false;
 	
 	UPROPERTY(EditAnywhere)
@@ -77,6 +80,7 @@ protected:
 	//FHitResult HitResultBox;
 	//FHitResult HitResultConvayer;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AItem* HeldItem = nullptr;
 
 	/** Jump Input Action */
@@ -103,6 +107,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* InteractAction;
+	
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* PauseAction;
 	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	bool IsInteracting = false;
@@ -191,7 +198,10 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category="Input")
 	AItem* Drop();
-
+	
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void Pause();
+	
 public:
 
 	/** Returns CameraBoom subobject **/
