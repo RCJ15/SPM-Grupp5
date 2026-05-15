@@ -85,7 +85,7 @@ void AItem::SetPhysics(bool SetTo)
 	if (SetTo)
 		PrimComp->SetCollisionProfileName("DefaultItem");
 	else 
-		PrimComp->SetCollisionProfileName("OnlyRaycast");
+		PrimComp->SetCollisionProfileName("OnConveyor");//OnlyRaycast
 	// SetActorEnableCollision(SetTo);
 	PrimComp->SetEnableGravity(SetTo);
 	PrimComp->SetSimulatePhysics(SetTo);

@@ -37,11 +37,20 @@ void AConveyorBelt::BeginPlay()
 	}
 	UE_LOG(LogTemp, Display, TEXT("MaxItems: %d  "), MaxItems);
 	
+
 	for (int i = 0; i < Conveyor.Num(); i++)
 	{
+		if (!Conveyor[i])
+		{
+			On = false;
+			UE_LOG(LogTemp, Error, TEXT("Can't create Belt. YOU ARE MISSING A SEGMENT IN THE CONVEYOR BELT: %s at index: %d"), *this->GetActorNameOrLabel(), i);
+			return;
+		}
 		Conveyor[i]->Belt = this;
 		Conveyor[i]->IndexInConveyorBelt=i;
 	}
+
+
 	
 	//sätter DistBetweenItems till längden av ett conveyor belt segment 
 	//delat på hur många items som ska få plats där
