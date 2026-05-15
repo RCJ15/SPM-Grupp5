@@ -41,6 +41,7 @@ protected:
 	
 	FTimerHandle HoldingTimer;
 	
+	UPROPERTY()
 	UPrimitiveComponent* PrimComp;	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -70,6 +71,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	float CurrentThrowForce = 300.0f;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool HasItem = false;
 	
 	UPROPERTY(EditAnywhere)
@@ -78,6 +80,7 @@ protected:
 	//FHitResult HitResultBox;
 	//FHitResult HitResultConvayer;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AItem* HeldItem = nullptr;
 
 	/** Jump Input Action */
