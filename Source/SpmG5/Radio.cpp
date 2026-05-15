@@ -17,6 +17,22 @@ ARadio::ARadio()
 	SetRootComponent(BaseMesh);
 }
 
+// Called when the game starts or when spawned
+void ARadio::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	BaseMesh->OnComponentHit.AddDynamic(this, &ARadio::OnHit);
+	
+	//gör så att AmbientSound loopar?
+	//AmbientSound->GetAudioComponent()->
+	InitializeCopyArray();
+	//SwitchChannel();
+	//TurnOn();
+	
+	//börja spela music
+}
+
 //använde det här som källa https://forums.unrealengine.com/t/choosing-random-numbers-in-a-range-all-at-least-once/344734/2
 void ARadio::SwitchChannel()
 {
@@ -86,19 +102,6 @@ void ARadio::TurnOn()
 	CurrentInstance->Play();
 }
 
-// Called when the game starts or when spawned
-void ARadio::BeginPlay()
-{
-	Super::BeginPlay();
-	
-	//gör så att AmbientSound loopar?
-	//AmbientSound->GetAudioComponent()->
-	InitializeCopyArray();
-	//SwitchChannel();
-	//TurnOn();
-	
-	//börja spela music
-}
 
 // Called every frame
 void ARadio::Tick(float DeltaTime)
@@ -135,6 +138,9 @@ void ARadio::InitializeCopyArray()
 void ARadio::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
+	//om man kastar radion så byter man kanal
+	//FAST DÅ MÅSTE MAN KUNNA TA UPP RADIOIN!!!!
+	/*
 	int CurrentSpeed = GetVelocity().Size();
 	UE_LOG(LogTemp, Warning, TEXT("RADIO Current Speed: %d"), CurrentSpeed);
 	if (OtherActor && OtherActor != this)
@@ -146,6 +152,6 @@ void ARadio::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimi
 		{
 			SwitchChannel();
 		}
-	}
+	}*/
 }
 
