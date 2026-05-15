@@ -18,9 +18,10 @@ UCLASS(BlueprintType, Blueprintable)
 class SPMG5_API ABomb : public ADangerousItem
 {
 	GENERATED_BODY()
-	
+
 protected:
 	virtual void BeginPlay() override;
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

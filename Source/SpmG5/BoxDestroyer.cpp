@@ -44,10 +44,13 @@ void ABoxDestroyer::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 				// Add box to be collected's score to score manager
 				HandleBox(Item);
 				GetWorld()->GetSubsystem<UScoreManager>()->AddScore(Item->GetPoints());
+				Item->Destroy();
 				//UE_LOG(LogTemp, Warning, TEXT("Score: %d"), Item->GetPoints());
 			}
-			
-			Item->Disintegrate();
+			else
+			{
+				Item->Disintegrate(true);
+			}
 		}
 	}
 }

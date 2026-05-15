@@ -42,7 +42,9 @@ void AItem::Tick(float DeltaTime)
 
 void AItem::SetPoints()
 {
-	if (IsSuspicious)
+	Points = 0;
+	
+	if (IsDangerous)
 	{
 		SetNegativePoints();
 		return;
@@ -60,6 +62,16 @@ void AItem::SetPoints()
 	if (IsFragile)
 	{
 		Points += FragileBoxPoints;
+	}
+	
+	if (IsScanned)
+	{
+		Points += ScannedBoxPoints;
+	}
+	
+	if (IsInspected)
+	{
+		Points += InspectedBoxPoints;
 	}
 }
 
@@ -87,17 +99,36 @@ void AItem::CalculateIfBreakIfFragile()
 		int CurrentSpeed = GetVelocity().Size();
 		UE_LOG(LogTemp, Warning, TEXT("Current Speed: %d"), CurrentSpeed);
 		
+		if (ShouldBreakOnImpact)
+		{
+			Disintegrate(false);
+		}
+		
 		if (CurrentSpeed > MaxSpeedIfFragile)
 		{
-			Disintegrate();
+			Disintegrate(false);
 		}
 	}
 }
 
-void AItem::Disintegrate()
+void AItem::Disintegrate(bool bThrownInTrash)
 {
-	if (FragileBreakParticles)
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),FragileBreakParticles,GetActorLocation(),GetActorRotation());
+	if (bThrownInTrash)
+	{
+		// Box is thrown in incinerator
+		if (TrashBreakParticles)
+		{
+			UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), TrashBreakParticles, GetActorLocation(), GetActorRotation());
+		}
+	}
+	else
+	{
+		// Box breaks (it's fragile)
+		if (FragileBreakParticles)
+		{
+			UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), FragileBreakParticles, GetActorLocation(), GetActorRotation());
+		}
+	}
 	
 	//Play SFX - Ruben
 	if (PlaySound)//TA BORT EFTER SPELTEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -165,35 +196,6 @@ int AItem::GetAudioType()
 	return static_cast<int>(AudioType);
 }
 
-bool AItem::GetIsFragile()
-{
-	return IsFragile;
-}
-
-bool AItem::GetIsLarge()
-{
-	return IsLarge;
-}
-
-bool AItem::GetIsSuspicious()
-{
-	return IsSuspicious;
-}
-bool AItem::GetIsScanned()
-{
-	return IsScanned;
-}
-
-int AItem::GetPoints()
-{
-	return Points;
-}
-
-BoxAddress AItem::GetAddress()
-{
-	return Address;
-}
-
 void AItem::SetMostRecentHolder(AActor* Holder)
 {
 	MostRecentHolder = Holder;
@@ -215,6 +217,11 @@ void AItem::SetIsSuspicious(bool SetTo)
 	IsSuspicious = SetTo;
 }
 
+void AItem::SetIsDangerous(bool SetTo)
+{
+	IsDangerous = SetTo;
+}
+
 void AItem::SetAddress(BoxAddress NewAddress)
 {
 	Address = NewAddress;
@@ -223,4 +230,9 @@ void AItem::SetAddress(BoxAddress NewAddress)
 void AItem::SetIsScanned(bool SetTo)
 {
 	IsScanned = SetTo;
+}
+
+void AItem::SetIsInspected(bool SetTo)
+{
+	IsInspected = SetTo;
 }

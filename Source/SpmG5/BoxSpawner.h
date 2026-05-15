@@ -50,6 +50,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> BoxToSpawn;
 	
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> BombToSpawn;
+	
 	// UPROPERTY(EditAnywhere)
 	// AActor* ItemToSpawn;
 
@@ -60,7 +63,10 @@ public:
 	float FragileBoxSpawnRate = 10;
 	
 	UPROPERTY(EditAnywhere)
-	float SuspiciousBoxSpawnRate = 10;
+	float SuspiciousBoxSpawnRate = 50;
+	
+	UPROPERTY(EditAnywhere)
+	float DangerousBoxSpawnRate = 50;
 	
 	static bool ShouldHappen(int percentage);
 	

@@ -12,7 +12,6 @@ void ABomb::BeginPlay()
 {
 	//Ändra möjliga värden innan man kör parent begin play 
 	//då den startar timern
-	Lifetime = 10; //sätter lifetime till något nytt
 	StartShakeAt = 5;
 	Super::BeginPlay();
 	ExampleDelegateVariable.AddUniqueDynamic(this, &ABomb::Explode); //subscribea på Explode metod
@@ -79,7 +78,7 @@ void ABomb::Explode()
 			//add impulse
 			OtherItem->AddImpulse(GetActorLocation(), 5); //5 temp test för strength
 			if (OtherItem->GetIsFragile())
-				OtherItem->Disintegrate();
+				OtherItem->Disintegrate(false);
 		}
 	}
 	if (Shake != nullptr)
@@ -92,7 +91,14 @@ void ABomb::Explode()
 	//spela partikel effekt vid GetActorLocation()
 	if (ExplosionParticles)
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),ExplosionParticles,GetActorLocation(),GetActorRotation());
-	Disintegrate();
+	
+	if (MostRecentHolder)
+	{
+		ASpmG5Character* HoldingPlayer = Cast<ASpmG5Character>(MostRecentHolder);
+		HoldingPlayer->Drop();
+	}
+	
+	Disintegrate(false);
 }
 
 void ABomb::OnEndTimer_Implementation()

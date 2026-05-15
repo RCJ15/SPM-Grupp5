@@ -282,56 +282,64 @@ void AConveyorBelt::MoveRevolvingArray()
 //V3 CURRENTLY USED MOVE METHOD!
 void AConveyorBelt::MoveRevolvingArraySplinePath()
 {
-	//stäng av om det inte finns några items
-	ShouldTurnOff();
-	
-	for (int i = 0; i < Items.Num(); i++)
+	try
 	{
-		//AConveyorSegment* Segment = Conveyor[0];
-		int SegmentIndex = GetSegmentIndexFromItemIndex(i);
-		//if (SegmentIndex < Conveyor.Num())
+		//stäng av om det inte finns några items
+		ShouldTurnOff();
+	
+		for (int i = 0; i < Items.Num(); i++)
+		{
+			//AConveyorSegment* Segment = Conveyor[0];
+			int SegmentIndex = GetSegmentIndexFromItemIndex(i);
+			//if (SegmentIndex < Conveyor.Num())
 			//Segment = Conveyor[SegmentIndex];
 		
-		AItem* Item = Items[i];
+			AItem* Item = Items[i];
 		
-		FVector NewLoc = Path->GetLocationAtSplineInputKey(SegmentIndex+MovedDelta,ESplineCoordinateSpace::World);
-		if (Item)
-			Item->SetActorLocation(NewLoc);
-		
-		if (GetSegmentIndexFromItemIndex(i) == Conveyor.Num() - 1)
-		{
-			//Åk dubbelt så långt för pathen är hälfetn så lång 
-			NewLoc = Path->GetLocationAtSplineInputKey(SegmentIndex+MovedDelta*2,ESplineCoordinateSpace::World);
-			if (Item)
+			FVector NewLoc = Path->GetLocationAtSplineInputKey(SegmentIndex+MovedDelta,ESplineCoordinateSpace::World);
+			if (IsValid(Item))
 				Item->SetActorLocation(NewLoc);
-			if (MovedDelta*2>=1)
-				DropItem(GetItemIndexFromSegmentIndex(Conveyor.Num()-1));
-		}
 		
-		//Rotera objekten?
-		//if (Item)
+			if (GetSegmentIndexFromItemIndex(i) == Conveyor.Num() - 1)
+			{
+				//Åk dubbelt så långt för pathen är hälfetn så lång 
+				NewLoc = Path->GetLocationAtSplineInputKey(SegmentIndex+MovedDelta*2,ESplineCoordinateSpace::World);
+				if (IsValid(Item))
+					Item->SetActorLocation(NewLoc);
+				if (MovedDelta*2>=1)
+					DropItem(GetItemIndexFromSegmentIndex(Conveyor.Num()-1));
+			}
+		
+			//Rotera objekten?
+			//if (Item)
 			//Item->SetActorRotation(Path->GetRotationAtSplineInputKey(SegmentIndex+MovedDelta,ESplineCoordinateSpace::World));
 		
-		//håll koll på dist moved (valt att kolla på en fast position)
-		if (i == CurrentFirstIndex)
-		{
-			MovedDelta += Speed * GetWorld()->GetDeltaSeconds();
-			
-			if (MovedDelta>=1 )
+			//håll koll på dist moved (valt att kolla på en fast position)
+			if (i == CurrentFirstIndex)
 			{
-				//DropItem(GetItemIndexFromSegmentIndex(Conveyor.Num()-1));//droppar item på last segment
-				UpdateCurrentFirstIndex();
+				MovedDelta += Speed * GetWorld()->GetDeltaSeconds();
+			
+				if (MovedDelta>=1 )
+				{
+					//DropItem(GetItemIndexFromSegmentIndex(Conveyor.Num()-1));//droppar item på last segment
+					UpdateCurrentFirstIndex();
 				
-				//CurrDistMoved = 0;
-				UpdateCurrentSegment();
-				AItem* ItemToSpawm = BoxSpawner->SpawnBox();
-				//HERE YOU CAN TRIGGER SPAWNING THE NEXT ITEM!!!
-				SpawnItem(ItemToSpawm);
+					//CurrDistMoved = 0;
+					UpdateCurrentSegment();
+					AItem* ItemToSpawm = BoxSpawner->SpawnBox();
+					//HERE YOU CAN TRIGGER SPAWNING THE NEXT ITEM!!!
+					SpawnItem(ItemToSpawm);
 				
-				MovedDelta = 0;
+					MovedDelta = 0;
+				}
 			}
 		}
 	}
+	catch(...)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Try Catch in ConveyorBelt.cpp MoveRevolvingArraySplinePath() FAILED!"));
+	}
+	
 }
 
 int AConveyorBelt::GetSegmentIndexFromItemIndex(int Index) 

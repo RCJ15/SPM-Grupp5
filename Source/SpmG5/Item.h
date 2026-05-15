@@ -19,7 +19,6 @@ enum class BoxAddress : uint8
 	CIRCLE,
 	SQUARE,
 	TRIANGLE,
-	TOTAL_COUNT = 3
 };
 
 UCLASS()
@@ -75,16 +74,28 @@ protected:
 	bool IsSuspicious;
 	
 	UPROPERTY(EditAnywhere)
+	bool IsDangerous;
+	
+	UPROPERTY(EditAnywhere)
 	bool IsScanned = false;
 	
 	UPROPERTY(EditAnywhere)
-	int SmallBoxPoints = 10;
+	bool IsInspected = false;
 	
 	UPROPERTY(EditAnywhere)
-	int LargeBoxPoints = 20;
+	int SmallBoxPoints = 5;
+	
+	UPROPERTY(EditAnywhere)
+	int LargeBoxPoints = 10;
 	
 	UPROPERTY(EditAnywhere)
 	int FragileBoxPoints = 5;
+	
+	UPROPERTY(EditAnywhere)
+	int ScannedBoxPoints = 5;
+	
+	UPROPERTY(EditAnywhere)
+	int InspectedBoxPoints = 5;
 	
 	UPROPERTY(EditAnywhere)
 	int WrongBoxPoints = -15;
@@ -100,6 +111,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
+	UFUNCTION(BlueprintCallable)
 	void SetPoints();
 	
 	UFUNCTION(BlueprintCallable)
@@ -110,7 +122,7 @@ public:
 	void AddVelocity(int Force){PrimComp->SetPhysicsLinearVelocity(GetActorForwardVector() * Force + GetActorUpVector() * Force/2);}
 	
 	UFUNCTION(BlueprintCallable)
-	virtual void Disintegrate();
+	virtual void Disintegrate(bool bThrownInTrash);
 	
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
@@ -125,43 +137,59 @@ public:
 	
 	void AddImpulse(FVector Point, float Strength);
 	
+	UPROPERTY(EditAnywhere)
+	int MaxSpeedIfFragile = 400;
+	
+	UPROPERTY(EditAnywhere)
+	bool ShouldBreakOnImpact = false;
+	
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* FragileBreakParticles;
+	
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* TrashBreakParticles;
+	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	int GetAudioType();
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	bool GetIsFragile();
+	bool GetIsFragile(){return IsFragile;}
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	bool GetIsLarge();
+	bool GetIsLarge(){return IsLarge;}
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	bool GetIsSuspicious();
+	bool GetIsSuspicious(){return IsSuspicious;}
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	bool GetIsScanned();
+	bool GetIsDangerous(){return IsDangerous;}
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	int GetPoints();
+	bool GetIsScanned(){return IsScanned;}
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	BoxAddress GetAddress();
+	bool GetIsInspected(){return IsInspected;}
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	int GetPoints(){return Points;}
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	BoxAddress GetAddress(){return Address;}
 	
 	UFUNCTION(BlueprintCallable)
 	void SetMostRecentHolder(AActor* holder);
 	
-	UPROPERTY(EditAnywhere)
-	int MaxSpeedIfFragile = 500;
-	UPROPERTY(EditAnywhere)
-	UNiagaraSystem* FragileBreakParticles;
-	
 	void SetIsLarge(bool SetTo);
 	void SetIsFragile(bool SetTo);
 	void SetIsSuspicious(bool SetTo);
+	void SetIsDangerous(bool SetTo);
 	void SetAddress(BoxAddress NewAddress);
 	
 	UFUNCTION(BlueprintCallable)
 	void SetIsScanned(bool SetTo);
 	
+	UFUNCTION(BlueprintCallable)
+	void SetIsInspected(bool SetTo);
 	
 	//FULT!!!!! TA BORT EFTER SPELTEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	
@@ -169,6 +197,4 @@ public:
 	bool PlaySound = true;
 	
 	void SetPlaySound(bool SetTo){PlaySound = SetTo;}
-	
-	
 };

@@ -47,16 +47,10 @@ public:
 	UUserWidget* InstructionWidget;
 	
 	UPROPERTY(BlueprintReadWrite)
-	UUserWidget* PauseWidget;
-		
+	UUserWidget* ControllerWidget;
+	
 	UPROPERTY(BlueprintReadWrite)
-	UUserWidget* SettingsWidget;
-	
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	void ActivatePauseWidget();
-	
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	void DeactivatePauseWidget();
+	UUserWidget* WinOrLoseWidget;
 	
 protected:
 	UPROPERTY(BlueprintReadWrite)
