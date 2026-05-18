@@ -70,6 +70,9 @@ protected:
 	float StartingThrowForce = 300.0f;
 	UPROPERTY(BlueprintReadOnly)
 	float CurrentThrowForce = 300.0f;
+	UPROPERTY(EditAnywhere)
+	float MovementDebufMult = 8.0f;
+	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool HasItem = false;
