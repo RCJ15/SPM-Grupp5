@@ -188,7 +188,7 @@ public:
 	void SetIsDangerous(bool SetTo);
 	void SetAddress(BoxAddress NewAddress);
 
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, Blueprintable)
 	void ActivateOvelay(bool SetTo);
 	
 	UFUNCTION(BlueprintCallable)
