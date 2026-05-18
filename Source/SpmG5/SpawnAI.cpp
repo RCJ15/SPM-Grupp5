@@ -64,21 +64,28 @@ void ASpawnAI::ConvertAllPercentageToBoxes()
 	SetUpSpawnRate(FragileBoxesSpawnRate, RemainingFragileBoxes);
 }
 
-void ASpawnAI::ConvertPercentageToBox(float& Percentage, int& TypeOfRemainingBoxes, int DependencyFromAmount)
+void ASpawnAI::ConvertPercentageToBox(double& Percentage, int& TypeOfRemainingBoxes, int DependencyFromAmount)
 {
-	float TempPercentage = Percentage;
-	Percentage = DependencyFromAmount * (TempPercentage / 100);
+	UE_LOG(LogTemp, Warning, TEXT("Percentage: %f"), Percentage);
+	double TempPercentage = Percentage;
+	
+	UE_LOG(LogTemp, Warning, TEXT("Temp Percentage: %f"), TempPercentage);
+	Percentage = RoundToClosestInt(Percentage);
+	
+	UE_LOG(LogTemp, Warning, TEXT("			after Temp Percentage: %f"), TempPercentage);
+	Percentage = DependencyFromAmount * (TempPercentage / 100.f);
+	//Percentage = FMath::RoundHalfFromZero(static_cast<double>(DependencyFromAmount) * (TempPercentage / 100.f));
 	TypeOfRemainingBoxes = Percentage;
 }
 
-void ASpawnAI::ConvertWeightToBox(float& Weight, int& TypeOfRemainingBoxes, int DependencyFromAmount)
+void ASpawnAI::ConvertWeightToBox(double& Weight, int& TypeOfRemainingBoxes, int DependencyFromAmount)
 {
-	float TotalWeight = BombBoxesWeight + ToxicWasteBoxesWeight + FlashBangBoxesWeight;
+	double TotalWeight = BombBoxesWeight + ToxicWasteBoxesWeight + FlashBangBoxesWeight;
 	TArray BadBoxes = {BombBoxesWeight, ToxicWasteBoxesWeight, FlashBangBoxesWeight};
 	
 	for (int i = 0; i < BadBoxes.Num(); i++)
 	{
-		Weight = BadBoxes[i]/TotalWeight * 100;
+		Weight = BadBoxes[i]/TotalWeight * 100.0;
 	}
 	
 	ConvertPercentageToBox(Weight, TypeOfRemainingBoxes, DependencyFromAmount);
@@ -86,5 +93,17 @@ void ASpawnAI::ConvertWeightToBox(float& Weight, int& TypeOfRemainingBoxes, int 
 
 void ASpawnAI::SetUpSpawnRate(int& SpawnRate, int BoxType)
 {
+}
+
+int ASpawnAI::RoundToClosestInt(float Value)
+{
+	float NoDec = FMath::Floor(Value);
+	double LeftOver = (Value - NoDec) * 10;
 	
+	if (LeftOver < 5)
+	{
+		return FMath::Floor(Value);
+	}
+	
+	return FMath::CeilToInt(Value);
 }
