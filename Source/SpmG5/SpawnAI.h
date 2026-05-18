@@ -24,46 +24,59 @@ protected:
 	FOnValueChanged OnValueChanged;
 	
 	UPROPERTY(EditAnywhere, Category = "Box Properities")
-	int AmountOfBoxesPerLevel = 150;
+	int AmountOfBoxesPerLevel = 100;
 	
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
-	int SmallBoxesPercentage = 75;
+	float SmallBoxesPercentage = 75;
 	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
-	int LargeBoxesPercentage = 25;
-	
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
-	int FragileBoxesPercentage = 15;
+	float LargeBoxesPercentage = 25;
 	
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
-	int SuspiciousBoxesPercentage = 30;
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
-	int DangerousBoxesPercentage = 50;
+	float FragileBoxesPercentage = 15;
 	
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
-	int BombBoxesPercentage = 34;
+	float SuspiciousBoxesPercentage = 40;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
-	int ToxicWasteBoxesPercentage = 33;
+	float DangerousBoxesPercentage = 50;
 	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
-	int FlashBangBoxesPercentage = 33;
 	
-	int RemainingFragileBoxes;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities") //, meta=(UIMin = "0.0", UIMax = "100.0"))
+	float BombBoxesWeight = 1.f;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities") //, meta=(UIMin = "0.0", UIMax = "100.0"))
+	float ToxicWasteBoxesWeight = 2.f;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities") //, meta=(UIMin = "0.0", UIMax = "100.0"))
+	float FlashBangBoxesWeight = 3.f;
+	
+	int RemainingSmallBoxes;
 	int RemainingLargeBoxes;
+	int RemainingFragileBoxes;
+	int RemainingSuspiciousBoxes;
+	int RemainingDangerousBoxes;
 	int RemainingBombBoxes;
 	int RemainingToxicWasteBoxes;
 	int RemainingFlashBangBoxes;
+	
+	int SmallBoxesSpawnRate;
+	int LargeBoxesSpawnRate;
+	int FragileBoxesSpawnRate;
+	int SuspiciousBoxesSpawnRate;
+	int DangerousBoxesSpawnRate;
+	int BombBoxesSpawnRate;
+	int ToxicWasteBoxesSpawnRate;
+	int FlashBangBoxesSpawnRate;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
 	void ConvertAllPercentageToBoxes();
-	void ConvertPercentageToBox(int& Percentage, int& TypeOfRemainingBoxes);
+	void ConvertPercentageToBox(float& Percentage, int& TypeOfRemainingBoxes, int DependencyFromAmount);
+	void ConvertWeightToBox(float& Weight, int& TypeOfRemainingBoxes, int DependencyFromAmount);
+	void SetUpSpawnRate(int& SpawnRate, int BoxType);
 };
