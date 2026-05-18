@@ -28,14 +28,14 @@ void AConveyorBelt::BeginPlay()
 	Super::BeginPlay();
 	MaxItems = Conveyor.Num(); 
 	Items.SetNum(MaxItems) ;
-	UE_LOG(LogTemp, Display, TEXT("Distance Between Items shall be: %f  "), DistBetweenItems);
+	//UE_LOG(LogTemp, Display, TEXT("Distance Between Items shall be: %f  "), DistBetweenItems);
 	
 	//fyller Items array med nullpointers
 	for( int32 i = 0; i <MaxItems; i++ )
 	{
 		Items[i] = nullptr;
 	}
-	UE_LOG(LogTemp, Display, TEXT("MaxItems: %d  "), MaxItems);
+	//UE_LOG(LogTemp, Display, TEXT("MaxItems: %d  "), MaxItems);
 	
 
 	for (int i = 0; i < Conveyor.Num(); i++)
@@ -50,6 +50,10 @@ void AConveyorBelt::BeginPlay()
 		Conveyor[i]->IndexInConveyorBelt=i;
 	}
 
+	if (!BoxSpawner)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Conveyor belt is missing a BoxSpawner. YOU HAVE FORGOTTEN TO PUT A BOXSPAWNER ON CONVEYOR BELT: %s "), *this->GetActorNameOrLabel());
+	}
 
 	
 	//sätter DistBetweenItems till längden av ett conveyor belt segment 
@@ -61,7 +65,7 @@ void AConveyorBelt::BeginPlay()
 		Conveyor[0]->GetActorBounds(false, SegmentOrigin, SegmentBoxExtent);
 		DistBetweenItems = (2*SegmentBoxExtent.Y)/ItemsPerSegment;
 		
-		UE_LOG(LogTemp, Warning, TEXT("MaxItems BEING SET "));
+		//UE_LOG(LogTemp, Warning, TEXT("MaxItems BEING SET "));
 	}
 	PopulateTravelPath();
 }
@@ -242,7 +246,7 @@ void AConveyorBelt::MoveRevolvingArray()
 		AItem* Item = Items[i];
 		if (Items[i] == nullptr) //gå till nästa plats om det inte finns något item på denna plats
 			continue;
-		UE_LOG(LogTemp, Display, TEXT("ITEM WAS NOT NULL"));
+		//UE_LOG(LogTemp, Display, TEXT("ITEM WAS NOT NULL"));
 		int SDir = Segment->Direction;
 		FVector NewLocation = Speed * Segment->GetActorForwardVector() * SDir;
 		
@@ -335,10 +339,13 @@ void AConveyorBelt::MoveRevolvingArraySplinePath()
 				
 					//CurrDistMoved = 0;
 					UpdateCurrentSegment();
-					AItem* ItemToSpawm = BoxSpawner->SpawnBox();
-					//HERE YOU CAN TRIGGER SPAWNING THE NEXT ITEM!!!
-					SpawnItem(ItemToSpawm);
-				
+					if (BoxSpawner)
+					{
+						AItem* ItemToSpawm = BoxSpawner->SpawnBox();
+						//HERE YOU CAN TRIGGER SPAWNING THE NEXT ITEM!!!
+						SpawnItem(ItemToSpawm);
+					}
+					
 					MovedDelta = 0;
 				}
 			}
@@ -395,7 +402,7 @@ void AConveyorBelt::ShouldTurnOff()
 	//stäng av om det inte finns några items
 	if (Items.Num() == 0) //detta kommer inte hända när jag kör nullpointers och inte tar bort actual stuff!!
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Turning off"));
+		//UE_LOG(LogTemp, Warning, TEXT("Turning off"));
 		On = false;
 		return;
 	}
@@ -407,7 +414,7 @@ void AConveyorBelt::ShouldTurnOff()
 			break;
 		if (i +1 >= Items.Num())
 			On = false;
-		UE_LOG(LogTemp, Warning, TEXT("Turning off"));
+		//UE_LOG(LogTemp, Warning, TEXT("Turning off"));
 	}
 }
 
@@ -422,7 +429,7 @@ void AConveyorBelt::PopulateTravelPath()
 	{
 		Path->AddSplinePointAtIndex(Conveyor[i]->GetActorLocation() + PathOffset,i,ESplineCoordinateSpace::World);
 		Path -> SetSplinePointType(i,ESplinePointType::Linear,true);
-		UE_LOG(LogTemp, Warning, TEXT("Added s at i: %d  with  vector:  X %f  Y  %f"),i, (Path->GetSplinePointAt(i,ESplineCoordinateSpace::World)).Position.X, (Path->GetSplinePointAt(i,ESplineCoordinateSpace::World)).Position.Y);
+		//UE_LOG(LogTemp, Warning, TEXT("Added s at i: %d  with  vector:  X %f  Y  %f"),i, (Path->GetSplinePointAt(i,ESplineCoordinateSpace::World)).Position.X, (Path->GetSplinePointAt(i,ESplineCoordinateSpace::World)).Position.Y);
 	}
 	
 	//lägg till punkt utanför arrayen för offset där de ska falla
@@ -442,8 +449,8 @@ void AConveyorBelt::PopulateTravelPath()
 	Path->AddSplinePointAtIndex(Conveyor[Conveyor.Num()-1]->GetActorLocation() + DirOffset  + PathOffset,Conveyor.Num(),ESplineCoordinateSpace::World);
 	Path -> SetSplinePointType(Conveyor.Num(),ESplinePointType::Linear,true);
 	
-	UE_LOG(LogTemp, Warning, TEXT("Path Created, coneyor num: %d"), Conveyor.Num());
-	UE_LOG(LogTemp, Warning, TEXT("Path:  %d"), Path->GetNumberOfSplinePoints ());
+	//UE_LOG(LogTemp, Warning, TEXT("Path Created, coneyor num: %d"), Conveyor.Num());
+	//UE_LOG(LogTemp, Warning, TEXT("Path:  %d"), Path->GetNumberOfSplinePoints ());
 }
 
 int AConveyorBelt::GetItemIndexFromSegment(AConveyorSegment* Segment)
