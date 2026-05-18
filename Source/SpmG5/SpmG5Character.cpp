@@ -96,7 +96,7 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	}
 }
 
-TArray<FHitResult> ASpmG5Character::DoSweep()
+TArray<FHitResult> ASpmG5Character::DoSweep(/*bool Pickup*/)
 {
     TArray<FHitResult> HitResults;
     TArray<FHitResult> HitResultsItems;
@@ -109,14 +109,23 @@ TArray<FHitResult> ASpmG5Character::DoSweep()
     FQuat Rotation = GetActorRotation().Quaternion();
 
     GetWorld()->SweepMultiByChannel(HitResultsItems,Location, End, Rotation, ECC_GameTraceChannel1,Box);
-    GetWorld()->SweepMultiByChannel(HitResultsInteractable,Location, End, Rotation, ECC_GameTraceChannel3,Box);
+	for (FHitResult HitResult : HitResultsItems)
+		HitResults.Add(HitResult);
+	
+	if (true)
+	{
+		GetWorld()->SweepMultiByChannel(HitResultsInteractable,Location, End, Rotation, ECC_GameTraceChannel3,Box);
+		for (FHitResult HitResult : HitResultsInteractable)
+			HitResults.Add(HitResult);
+	}
+	if (!true)
+	{
+		if (ItemToPickup = Cast<AItem>(HitResults[0].GetActor()))
+			ItemToPickup->SetNanite(true);
+		
+	}
+		
 
-    //gör det till en array att returna, 
-    //bör kunnas tas bort om sweep kan göras på 2 channels sammtidigt
-    for (FHitResult HitResult : HitResultsItems)
-        HitResults.Add(HitResult);
-    for (FHitResult HitResult : HitResultsInteractable)
-        HitResults.Add(HitResult);
 
     return HitResults;
 }

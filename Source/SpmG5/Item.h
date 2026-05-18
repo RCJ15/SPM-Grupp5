@@ -187,6 +187,7 @@ public:
 	void SetIsSuspicious(bool SetTo);
 	void SetIsDangerous(bool SetTo);
 	void SetAddress(BoxAddress NewAddress);
+	void SetNanite(bool SetTo) {BaseMesh->bDisallowNanite = SetTo;}
 	
 	UFUNCTION(BlueprintCallable)
 	void SetIsScanned(bool SetTo);

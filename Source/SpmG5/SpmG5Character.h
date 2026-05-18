@@ -85,6 +85,8 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AItem* HeldItem = nullptr;
+	UPROPERTY()
+	AItem* ItemToPickup;
 
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, Category="Input")
@@ -152,7 +154,7 @@ protected:
 	*/
 
 	//metod som sweepar för att hitta items & interactable
-	TArray<FHitResult> DoSweep();
+	TArray<FHitResult> DoSweep(/*bool Pickup*/);
 	void ChooseInteractOrPickup();
 	
 	void PickupAndDrop(const FInputActionValue& Value);
