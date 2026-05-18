@@ -29,6 +29,9 @@ public:
 	
 	UPROPERTY()
 	AConveyorBelt* Belt = nullptr;
+	
+	UPROPERTY()
+	AConveyorBeltUpgraded* BeltUpgraded = nullptr;
 
 protected:
 	// Called when the game starts or when spawned

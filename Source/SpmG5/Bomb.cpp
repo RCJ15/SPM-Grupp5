@@ -3,6 +3,7 @@
 
 #include "Bomb.h"
 #include "ConveyorBelt.h"
+#include "ConveyorBeltUpgraded.h"
 #include "FMODBlueprintStatics.h"
 #include "NiagaraFunctionLibrary.h"
 #include "SpmG5Character.h"
@@ -73,6 +74,12 @@ void ABomb::Explode()
 				//disconnect from conveyor
 				OtherItem->Conveyor->DropItem(OtherItem);
 				OtherItem->Conveyor = nullptr;
+			}
+			
+			if (OtherItem->ConveyorUpgraded != nullptr)
+			{
+				OtherItem->ConveyorUpgraded->RemoveFromBelt(OtherItem);
+				OtherItem->ConveyorUpgraded = nullptr;
 			}
 			
 			//add impulse

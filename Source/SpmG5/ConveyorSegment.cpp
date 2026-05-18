@@ -2,6 +2,7 @@
 
 
 #include "ConveyorBelt.h"
+#include "ConveyorBeltUpgraded.h"
 
 #include "Item.h"
 #include "Components/StaticMeshComponent.h"
@@ -47,17 +48,25 @@ void AConveyorSegment::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 	{
 		if (AItem* Item = Cast<AItem>(OtherActor))
 		{
-			if (!Belt)
-				return;
+			//if (!Belt)
+				//return;
 			//BORDE GÖRAS PÅ ETT ANNAT SÄTT, DET HÄR ÄR LITE AV EN TEMP LÖSNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			//kolla att item inte precis ska droppas från conveyorn
 			//så kolla om detta är last segment isf ignorera
-			if (Belt->Conveyor[Belt->MaxItems-1] == this)
+			//if (Belt->Conveyor[Belt->MaxItems-1] == this)
+				//return;
+			
+			if (!BeltUpgraded)
 				return;
 			
+			if (BeltUpgraded->ItemIsAtEndOfBelt(Item))
+				return;
 			
-			UE_LOG(LogTemp, Warning, TEXT("Should add item to conveyor"));
+			//UE_LOG(LogTemp, Warning, TEXT("Should add item to conveyor"));
 			
+			BeltUpgraded->AddToBelt(Item);
+			
+			/*
 			AConveyorSegment* Segment = this;
 			//NOTE FÖR FRAMTIDEN ISTÄLLET FÖR ATT KOLLA OM DEN ÄR ÖVER 0.5 och byta
 			//KOLLA ATT DEN ÄR UNDER 0.25 på current segment, 
@@ -67,7 +76,7 @@ void AConveyorSegment::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 			if (!Belt->HasItemInSegment(Segment))
 			{
 				Belt->ReceiveItem(Item,Segment);
-			}
+			}*/
 			
 		}
 	}

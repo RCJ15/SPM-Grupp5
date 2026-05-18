@@ -11,6 +11,7 @@
 #include "NiagaraSystem.h"
 #include "Item.generated.h"
 
+class AConveyorBeltUpgraded;
 class AConveyorBelt; // forward-declaration
 
 UENUM(BlueprintType)
@@ -32,6 +33,8 @@ public:
 	
 	UPROPERTY(VisibleAnywhere)
 	AConveyorBelt* Conveyor = nullptr; //pekar til conveyor om den är attached
+	UPROPERTY(VisibleAnywhere)
+	AConveyorBeltUpgraded* ConveyorUpgraded = nullptr; //pekar til conveyor om den är attached
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool bIsInStation = false;
