@@ -187,6 +187,9 @@ public:
 	void SetIsSuspicious(bool SetTo);
 	void SetIsDangerous(bool SetTo);
 	void SetAddress(BoxAddress NewAddress);
+
+	UFUNCTION(BlueprintImplementableEvent, Blueprintable)
+	void ActivateOvelay(bool SetTo);
 	
 	UFUNCTION(BlueprintCallable)
 	void SetIsScanned(bool SetTo);
