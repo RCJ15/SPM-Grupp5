@@ -83,7 +83,8 @@ void ABomb::Explode()
 			}
 			
 			//add impulse
-			OtherItem->AddImpulse(GetActorLocation(), 5); //5 temp test för strength
+			if (OtherItem->BaseMesh->IsSimulatingPhysics())
+				OtherItem->AddImpulse(GetActorLocation(), 5); //5 temp test för strength
 			if (OtherItem->GetIsFragile())
 				OtherItem->Disintegrate(false);
 		}
