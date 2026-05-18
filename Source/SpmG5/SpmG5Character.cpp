@@ -395,12 +395,13 @@ void ASpmG5Character::Move(const FInputActionValue& Value)
 	}
 	
 	
-	if (!Throwing)
-		DoMove(MovementVector.X, MovementVector.Y);	
-	else if (Throwing && (MovementVector.X != 0 || MovementVector.Y != 0)) {		
+	if (Throwing && (MovementVector.X != 0 || MovementVector.Y != 0)) {		
 		FRotator R = FMath::Lerp(GetActorRotation(), Rotate(MovementVector), TurningSpeed/100);
-		SetActorRotation(FQuat(R));		
+		SetActorRotation(FQuat(R));
+		MovementVector.X /= MovementDebufMult;
+		MovementVector.Y /= MovementDebufMult;
 	}
+	DoMove(MovementVector.X, MovementVector.Y);	
 		
 	// route the input
 }
