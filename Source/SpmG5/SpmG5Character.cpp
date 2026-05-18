@@ -397,6 +397,7 @@ FRotator ASpmG5Character::Rotate(FVector2d Input)
 void ASpmG5Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (!HeldItem)
 	DoSweep(false);
 }
 
