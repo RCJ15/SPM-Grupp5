@@ -26,32 +26,28 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Box Properities")
 	int AmountOfBoxesPerLevel = 100.f;
 	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
+	double SmallBoxesPercentage = 75.0;
+	
+	double LargeBoxesPercentage = 25.0;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
-	double SmallBoxesPercentage = 75.5f;
-	
-	double LargeBoxesPercentage = 24.5f;
-	
+	double FragileBoxesPercentage = 15.0;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
-	double FragileBoxesPercentage = 15.f;
-	
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
-	double SuspiciousBoxesPercentage = 40.f;
+	double SuspiciousBoxesPercentage = 40.0;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
-	double DangerousBoxesPercentage = 50.f;
-	
+	double DangerousBoxesPercentage = 50.0;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities|Dangerous Boxes") //, meta=(UIMin = "0.0", UIMax = "100.0"))
-	double BombBoxesWeight = 1.f;
+	double BombBoxesWeight = 1;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities|Dangerous Boxes") //, meta=(UIMin = "0.0", UIMax = "100.0"))
-	double ToxicWasteBoxesWeight = 2.f;
+	double ToxicWasteBoxesWeight = 0;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities|Dangerous Boxes") //, meta=(UIMin = "0.0", UIMax = "100.0"))
-	double FlashBangBoxesWeight = 7.f;
+	double FlashBangBoxesWeight = 0;
 	
 	int RemainingSmallBoxes;
 	int RemainingLargeBoxes;
@@ -62,14 +58,14 @@ protected:
 	int RemainingToxicWasteBoxes;
 	int RemainingFlashBangBoxes;
 	
-	int SmallBoxesSpawnRate;
-	int LargeBoxesSpawnRate;
-	int FragileBoxesSpawnRate;
-	int SuspiciousBoxesSpawnRate;
-	int DangerousBoxesSpawnRate;
-	int BombBoxesSpawnRate;
-	int ToxicWasteBoxesSpawnRate;
-	int FlashBangBoxesSpawnRate;
+	double SmallBoxesSpawnRate;
+	double LargeBoxesSpawnRate;
+	double FragileBoxesSpawnRate;
+	double SuspiciousBoxesSpawnRate;
+	double DangerousBoxesSpawnRate;
+	double BombBoxesSpawnRate;
+	double ToxicWasteBoxesSpawnRate;
+	double FlashBangBoxesSpawnRate;
 
 public:	
 	// Called every frame
@@ -77,7 +73,6 @@ public:
 	
 	void ConvertAllPercentageToBoxes();
 	void ConvertPercentageToBox(double& Percentage, int& TypeOfRemainingBoxes, int DependencyFromAmount);
-	void ConvertWeightToBox(double& Weight, int& TypeOfRemainingBoxes, int DependencyFromAmount);
-	void SetUpSpawnRate(int& SpawnRate, int BoxType);
-	int RoundToClosestInt(float Value);
+	void ConvertWeightToBox();
+	void SetUpSpawnRate(double& SpawnRate, int BoxType, int DependencyFromAmount);
 };
