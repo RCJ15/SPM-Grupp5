@@ -87,8 +87,6 @@ protected:
 	AItem* HeldItem = nullptr;
 	UPROPERTY()
 	AItem* ItemToPickup;
-	UPROPERTY()
-	AItem* TestCastItemToPickup;
 
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, Category="Input")
@@ -159,7 +157,8 @@ protected:
 	*/
 
 	//metod som sweepar för att hitta items & interactable
-	TArray<FHitResult> DoSweep(bool Pickup);
+	TArray<FHitResult> DoSweep();
+	void FindBoxToPickup();
 	void ChooseInteractOrPickup();
 	
 	void PickupAndDrop(const FInputActionValue& Value);
