@@ -1,9 +1,11 @@
 // Marcus hopefully approves of this.
 
 
+#include "BoxSpawnRateManager.h"
 #include "SpawnAI.h"
 
 #include "RenderCore.h"
+#include "Chaos/Deformable/ChaosDeformableCollisionsProxy.h"
 
 // Sets default values
 ASpawnAI::ASpawnAI()
@@ -18,7 +20,7 @@ void ASpawnAI::BeginPlay()
 	Super::BeginPlay();
 	
 	ConvertAllPercentageToBoxes();
-	
+	/*
 	UE_LOG(LogTemp, Warning, TEXT("All boxes remaining: %d"), AmountOfBoxesPerLevel);
 	UE_LOG(LogTemp, Warning, TEXT("Small boxes remaining: %d"), RemainingSmallBoxes);
 	UE_LOG(LogTemp, Warning, TEXT("Large boxes remaining: %d"), RemainingLargeBoxes);
@@ -38,7 +40,7 @@ void ASpawnAI::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("ToxicWaste boxes spawn rate: %f"), ToxicWasteBoxesSpawnRate);
 	UE_LOG(LogTemp, Warning, TEXT("FlashBang boxes spawn rate: %f"), FlashBangBoxesSpawnRate);
 	
-	/*UE_LOG(LogTemp, Warning, TEXT("Small boxes: %f"), SmallBoxesPercentage);
+	UE_LOG(LogTemp, Warning, TEXT("Small boxes: %f"), SmallBoxesPercentage);
 	UE_LOG(LogTemp, Warning, TEXT("Small boxes remaining: %d"), RemainingSmallBoxes);
 	UE_LOG(LogTemp, Warning, TEXT("Large boxes: %f"), LargeBoxesPercentage);
 	UE_LOG(LogTemp, Warning, TEXT("Large boxes remaining: %d"), RemainingLargeBoxes);
@@ -64,8 +66,56 @@ void ASpawnAI::Tick(float DeltaTime)
 
 void ASpawnAI::ConvertAllPercentageToBoxes()
 {
+	double TotalWeight = 0;
+	for (const TPair<EBoxType, double>& Pair : DangerousTypes)
+	{
+		TotalWeight += Pair.Value;
+	}
+	
+	for (EBoxType BoxType : AllBoxTypes)
+	{
+		FBoxSpawnInfo BoxSpawnInfo = FBoxSpawnInfo(BoxType);
+		int RemainingBoxes;
+		double SpawnRate = 0;
+		if (DangerousTypes.Contains(BoxType))
+		{
+			double Percentage = ConvertWeightToPercentage(DangerousTypes[BoxType], TotalWeight);
+			ConvertPercentageToBox(Percentage, RemainingBoxes, GetSpawnInfo(EBoxType::Dangerous).RemainingBoxes);
+			SetUpSpawnRate(SpawnRate, RemainingBoxes, GetSpawnInfo(EBoxType::Dangerous).RemainingBoxes); 
+		}
+		else
+		{
+			BoxType == EBoxType::Dangerous ? ConvertPercentageToBox(SpawnRates[BoxType], RemainingBoxes, GetSpawnInfo(EBoxType::Suspicious).RemainingBoxes) : ConvertPercentageToBox(SpawnRates[BoxType], RemainingBoxes, AmountOfBoxesPerLevel);
+			BoxType == EBoxType::Dangerous ? SetUpSpawnRate(SpawnRate, RemainingBoxes, GetSpawnInfo(EBoxType::Suspicious).RemainingBoxes) : SetUpSpawnRate(SpawnRate, RemainingBoxes, AmountOfBoxesPerLevel); 
+		}
+		BoxSpawnInfo.RemainingBoxes = RemainingBoxes;
+		BoxSpawnInfo.CurrentSpawnRate = SpawnRate;
+		Boxes.Add(BoxSpawnInfo);
+		if (BoxType == EBoxType::Small)
+		{
+			FBoxSpawnInfo LargeSpawnInfo = FBoxSpawnInfo(EBoxType::Large);
+			LargeSpawnInfo.RemainingBoxes = AmountOfBoxesPerLevel-RemainingBoxes;
+			SetUpSpawnRate(SpawnRate, LargeSpawnInfo.RemainingBoxes, AmountOfBoxesPerLevel);
+			LargeSpawnInfo.CurrentSpawnRate = SpawnRate;
+			Boxes.Add(LargeSpawnInfo);
+		}
+		//if (DangerousTypes.Contains(BoxType));
+	}
+	for (const FBoxSpawnInfo& Info : Boxes)
+	{
+		UE_LOG(LogTemp, Warning,
+			TEXT("BoxType: %s | RemainingBoxes: %d | CurrentSpawnRate: %.2f | CountSinceLastSpawn: %d"),
+			*UEnum::GetValueAsString(Info.BoxType),
+			Info.RemainingBoxes,
+			Info.CurrentSpawnRate,
+			Info.CountSinceLastSpawn);
+	}
+	/*
 	LargeBoxesPercentage = 100 - SmallBoxesPercentage;
 	ConvertPercentageToBox(SmallBoxesPercentage, RemainingSmallBoxes, AmountOfBoxesPerLevel);
+	
+	
+	
 	ConvertPercentageToBox(LargeBoxesPercentage, RemainingLargeBoxes, AmountOfBoxesPerLevel);
 	ConvertPercentageToBox(FragileBoxesPercentage, RemainingFragileBoxes, AmountOfBoxesPerLevel);
 	ConvertPercentageToBox(SuspiciousBoxesPercentage, RemainingSuspiciousBoxes, AmountOfBoxesPerLevel);
@@ -75,10 +125,12 @@ void ASpawnAI::ConvertAllPercentageToBoxes()
 	
 	/*UE_LOG(LogTemp, Warning, TEXT("Percentage small box: %f"), SmallBoxesPercentage);
 	UE_LOG(LogTemp, Warning, TEXT("Percentage bombs: %f"), BombBoxesWeight);*/
-	
+	/*
 	ConvertPercentageToBox(BombBoxesWeight, RemainingBombBoxes, RemainingDangerousBoxes);
 	ConvertPercentageToBox(ToxicWasteBoxesWeight, RemainingToxicWasteBoxes, RemainingDangerousBoxes);
 	ConvertPercentageToBox(FlashBangBoxesWeight, RemainingFlashBangBoxes, RemainingDangerousBoxes);
+	
+	//UBoxSpawnRateManager* agjksg = GetWorld()->  GetBoxSpawnRateManager();
 	
 	SetUpSpawnRate(SmallBoxesSpawnRate, RemainingSmallBoxes, AmountOfBoxesPerLevel);
 	SetUpSpawnRate(LargeBoxesSpawnRate, RemainingLargeBoxes, AmountOfBoxesPerLevel);
@@ -88,9 +140,10 @@ void ASpawnAI::ConvertAllPercentageToBoxes()
 	SetUpSpawnRate(BombBoxesSpawnRate, RemainingBombBoxes, RemainingDangerousBoxes);
 	SetUpSpawnRate(ToxicWasteBoxesSpawnRate, RemainingToxicWasteBoxes, RemainingDangerousBoxes);
 	SetUpSpawnRate(FlashBangBoxesSpawnRate, RemainingFlashBangBoxes, RemainingDangerousBoxes);
+	*/
 }
 
-void ASpawnAI::ConvertPercentageToBox(double& Percentage, int& TypeOfRemainingBoxes, int DependencyFromAmount)
+void ASpawnAI::ConvertPercentageToBox(double Percentage, int& TypeOfRemainingBoxes, int DependencyFromAmount)
 {
 	double TempPercentage = Percentage;
 	
@@ -103,26 +156,25 @@ void ASpawnAI::ConvertPercentageToBox(double& Percentage, int& TypeOfRemainingBo
 	TypeOfRemainingBoxes = Percentage;
 }
 
-void ASpawnAI::ConvertWeightToBox()
+double ASpawnAI::ConvertWeightToPercentage(double Weight, double TotalWeight)
 {
-	double TotalWeight = BombBoxesWeight + ToxicWasteBoxesWeight + FlashBangBoxesWeight;
-	TArray BadBoxes = {&BombBoxesWeight, &ToxicWasteBoxesWeight, &FlashBangBoxesWeight};
-	
-	for (int i = 0; i < BadBoxes.Num(); i++)
-	{
-		double TempWeight = *BadBoxes[i];
-		*BadBoxes[i] = (TempWeight/TotalWeight * 100.0);
-	}
-	
-	/*UE_LOG(LogTemp, Warning, TEXT("After loop Percentage: %f"), BombBoxesWeight);
-	UE_LOG(LogTemp, Warning, TEXT("After loop Percentage: %f"), ToxicWasteBoxesWeight);
-	UE_LOG(LogTemp, Warning, TEXT("After loop Percentage: %f"), FlashBangBoxesWeight);*/
+	return Weight / TotalWeight * 100.0;
 }
 
 void ASpawnAI::SetUpSpawnRate(double& SpawnRate, int BoxType, int DependencyFromAmount)
 {
 	if (BoxType > 0)
 	{
-		SpawnRate = static_cast<double>(DependencyFromAmount) / static_cast<double>(BoxType);
+		SpawnRate = static_cast<double>(BoxType) / static_cast<double>(DependencyFromAmount);
+		//UBoxSpawnRateManager->SpawnRate;
 	}
+}
+
+FBoxSpawnInfo ASpawnAI::GetSpawnInfo(EBoxType Type)
+{
+	for (FBoxSpawnInfo Box : Boxes)
+	{
+		if (Box.BoxType == Type) return Box;
+	}
+	return FBoxSpawnInfo();
 }
