@@ -4,7 +4,9 @@
 #include "BoxSpawnRateManager.h"
 #include "SpawnAI.h"
 
+#include "DiffUtils.h"
 #include "RenderCore.h"
+#include "AI/NavigationModifier.h"
 #include "Chaos/Deformable/ChaosDeformableCollisionsProxy.h"
 
 // Sets default values
@@ -20,6 +22,35 @@ void ASpawnAI::BeginPlay()
 	Super::BeginPlay();
 	
 	ConvertAllPercentageToBoxes();
+	
+	//UE_LOG(LogTemp, Warning, TEXT("All boxes remaining: %d"), AmountOfBoxesPerLevel);
+	for (const FBoxSpawnInfo& Info : Boxes)
+	{
+		UE_LOG(LogTemp, Warning,
+			TEXT("BoxType: %s | RemainingBoxes: %d | CurrentSpawnRate: %.2f | CountSinceLastSpawn: %d"),
+			*UEnum::GetValueAsString(Info.BoxType),
+			Info.RemainingBoxes,
+			Info.CurrentSpawnRate,
+			Info.CountSinceLastSpawn);
+	}
+	for (int i = 0; i < 10; i++)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Box %d: "), i);
+		TArray<EBoxType> props = DecideProperties();
+		for (EBoxType Type : props)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("		: %d"), Type);
+		}
+	}
+	for (const FBoxSpawnInfo& Info : Boxes)
+	{
+		UE_LOG(LogTemp, Warning,
+			TEXT("BoxType: %s | RemainingBoxes: %d | CurrentSpawnRate: %.2f | CountSinceLastSpawn: %d"),
+			*UEnum::GetValueAsString(Info.BoxType),
+			Info.RemainingBoxes,
+			Info.CurrentSpawnRate,
+			Info.CountSinceLastSpawn);
+	}
 	/*
 	UE_LOG(LogTemp, Warning, TEXT("All boxes remaining: %d"), AmountOfBoxesPerLevel);
 	UE_LOG(LogTemp, Warning, TEXT("Small boxes remaining: %d"), RemainingSmallBoxes);
@@ -101,15 +132,7 @@ void ASpawnAI::ConvertAllPercentageToBoxes()
 		}
 		//if (DangerousTypes.Contains(BoxType));
 	}
-	for (const FBoxSpawnInfo& Info : Boxes)
-	{
-		UE_LOG(LogTemp, Warning,
-			TEXT("BoxType: %s | RemainingBoxes: %d | CurrentSpawnRate: %.2f | CountSinceLastSpawn: %d"),
-			*UEnum::GetValueAsString(Info.BoxType),
-			Info.RemainingBoxes,
-			Info.CurrentSpawnRate,
-			Info.CountSinceLastSpawn);
-	}
+	
 	/*
 	LargeBoxesPercentage = 100 - SmallBoxesPercentage;
 	ConvertPercentageToBox(SmallBoxesPercentage, RemainingSmallBoxes, AmountOfBoxesPerLevel);
@@ -149,9 +172,9 @@ void ASpawnAI::ConvertPercentageToBox(double Percentage, int& TypeOfRemainingBox
 	
 	Percentage = (DependencyFromAmount * (TempPercentage / 100.f));
 	
-	UE_LOG(LogTemp, Warning, TEXT("			before round Percentage: %f"), Percentage);
+	//UE_LOG(LogTemp, Warning, TEXT("			before round Percentage: %f"), Percentage);
 	Percentage = FMath::RoundHalfFromZero(Percentage);
-	UE_LOG(LogTemp, Warning, TEXT("			after round Percentage: %f"), Percentage);
+	//UE_LOG(LogTemp, Warning, TEXT("			after round Percentage: %f"), Percentage);
 	
 	TypeOfRemainingBoxes = Percentage;
 }
@@ -170,11 +193,80 @@ void ASpawnAI::SetUpSpawnRate(double& SpawnRate, int BoxType, int DependencyFrom
 	}
 }
 
-FBoxSpawnInfo ASpawnAI::GetSpawnInfo(EBoxType Type)
+TArray<EBoxType> ASpawnAI::DecideProperties()
 {
+	TArray<EBoxType> Properties;
+	
+	RollForProperty(EBoxType::Small) ? AddProperty(Properties, EBoxType::Small) : AddProperty(Properties, EBoxType::Large);
+	if (RollForProperty(EBoxType::Fragile)) AddProperty(Properties, EBoxType::Fragile);
+	
+	if (!RollForProperty(EBoxType::Suspicious)) return Properties;
+	AddProperty(Properties, EBoxType::Suspicious);
+		
+	if (!RollForProperty(EBoxType::Dangerous)) return Properties; 
+	AddProperty(Properties, EBoxType::Dangerous);
+	
+	double BadBoxPercentage = GivePercentage();
+	double CurrentRate = 0.0;
+	
 	for (FBoxSpawnInfo Box : Boxes)
+	{
+		if (DangerousTypes.Contains(Box.BoxType) && Box.RemainingBoxes > 0)
+		{
+			// Checks which bad box should be added
+			if (BadBoxPercentage >= CurrentRate && BadBoxPercentage <= Box.CurrentSpawnRate + CurrentRate)
+			{
+				AddProperty(Properties, Box.BoxType);
+				break;
+			}
+			
+			CurrentRate += Box.CurrentSpawnRate;
+		}
+	}
+	return Properties;
+}
+
+bool ASpawnAI::RollForProperty(EBoxType BoxType)
+{
+	FBoxSpawnInfo SpawnInfo = GetSpawnInfo(BoxType);
+	if (SpawnInfo.RemainingBoxes <= 0) return false;
+	double Chance = GivePercentage();
+	double SpawnRate = SpawnInfo.CurrentSpawnRate;
+	
+	if (Chance <= SpawnRate)
+	{
+		return true;
+	}
+	
+	return false;
+}
+
+bool ASpawnAI::SetProperties()
+{
+	
+	
+	return true;
+}
+
+double ASpawnAI::GivePercentage()
+{
+	return FMath::RandRange(0.0, 1.0);
+}
+
+FBoxSpawnInfo& ASpawnAI::GetSpawnInfo(EBoxType Type)
+{
+	for (FBoxSpawnInfo& Box : Boxes)
 	{
 		if (Box.BoxType == Type) return Box;
 	}
-	return FBoxSpawnInfo();
+	return Boxes[0];
 }
+
+void ASpawnAI::AddProperty(TArray<EBoxType>& Properties, EBoxType Type)
+{
+	Properties.Add(Type);
+	GetSpawnInfo(Type).DecrementBoxCount();
+
+}
+
+

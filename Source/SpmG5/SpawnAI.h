@@ -34,6 +34,13 @@ struct FBoxSpawnInfo
 	int RemainingBoxes;
 	double CurrentSpawnRate;
 	int CountSinceLastSpawn = 0;
+	
+	void DecrementBoxCount()
+	{
+		RemainingBoxes--;
+		CountSinceLastSpawn = 0;
+	};
+	
 };
 
 UCLASS()
@@ -121,9 +128,16 @@ public:
 	void ConvertPercentageToBox(double Percentage, int& TypeOfRemainingBoxes, int DependencyFromAmount);
 	double ConvertWeightToPercentage(double Weight, double TotalWeight);
 	void SetUpSpawnRate(double& SpawnRate, int BoxType, int DependencyFromAmount);
+	TArray<EBoxType> DecideProperties();
+	bool RollForProperty(EBoxType BoxType);
+	bool SetProperties();
+	double GivePercentage();
+	
 	
 private:
 	TArray<EBoxType> AllBoxTypes{EBoxType::Small, EBoxType::Fragile, EBoxType::Suspicious, EBoxType::Dangerous, EBoxType::Bomb, EBoxType::ToxicWaste, EBoxType::FlashBang};
 	
-	FBoxSpawnInfo GetSpawnInfo(EBoxType Type);
+	FBoxSpawnInfo& GetSpawnInfo(EBoxType Type);
+	
+	void AddProperty(TArray<EBoxType>& Properties, EBoxType Type);
 };
