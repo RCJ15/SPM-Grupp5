@@ -106,6 +106,8 @@ protected:
 	int Points;
 	
 	UPrimitiveComponent* PrimComp;
+	
+	UPROPERTY(BlueprintReadOnly)
 	AActor* MostRecentHolder;
 	
 	void CalculateIfBreakIfFragile();
