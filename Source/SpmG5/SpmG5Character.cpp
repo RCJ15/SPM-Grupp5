@@ -60,6 +60,9 @@ ASpmG5Character::ASpmG5Character()
 	
 	PrimComp = Cast<UPrimitiveComponent>(GetCapsuleComponent());
 	
+	//OM vi vill ha den i timer så får vi fixa det här
+	// GetWorld()->GetTimerManager().SetTimer(OutlineUpdateTimer, this, &ASpmG5Character::DoSweep(false), OutlineUpdateRate, true, 1);
+	
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
@@ -96,7 +99,7 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	}
 }
 
-TArray<FHitResult> ASpmG5Character::DoSweep()
+TArray<FHitResult> ASpmG5Character::DoSweep(bool Pickup)
 {
     TArray<FHitResult> HitResults;
     TArray<FHitResult> HitResultsItems;
@@ -109,15 +112,33 @@ TArray<FHitResult> ASpmG5Character::DoSweep()
     FQuat Rotation = GetActorRotation().Quaternion();
 
     GetWorld()->SweepMultiByChannel(HitResultsItems,Location, End, Rotation, ECC_GameTraceChannel1,Box);
-    GetWorld()->SweepMultiByChannel(HitResultsInteractable,Location, End, Rotation, ECC_GameTraceChannel3,Box);
-
-    //gör det till en array att returna, 
-    //bör kunnas tas bort om sweep kan göras på 2 channels sammtidigt
-    for (FHitResult HitResult : HitResultsItems)
-        HitResults.Add(HitResult);
-    for (FHitResult HitResult : HitResultsInteractable)
-        HitResults.Add(HitResult);
-
+	for (FHitResult HitResult : HitResultsItems)
+		HitResults.Add(HitResult);
+	
+	if (Pickup)
+	{
+		GetWorld()->SweepMultiByChannel(HitResultsInteractable,Location, End, Rotation, ECC_GameTraceChannel3,Box);
+		for (FHitResult HitResult : HitResultsInteractable)
+			HitResults.Add(HitResult);
+	}
+	else
+	{
+		if (HitResults.IsValidIndex(0) && Cast<AItem>(HitResults[0].GetActor()))
+		{
+			TestCastItemToPickup = Cast<AItem>(HitResults[0].GetActor());
+			if (TestCastItemToPickup != ItemToPickup)
+			{
+				if (ItemToPickup)
+					ItemToPickup->ActivateOvelay(false);
+				
+				ItemToPickup = TestCastItemToPickup;
+				ItemToPickup->ActivateOvelay(true);
+			}
+		}
+		else if(ItemToPickup)		
+			ItemToPickup->ActivateOvelay(false);
+	}
+	
     return HitResults;
 }
 
@@ -130,7 +151,7 @@ void ASpmG5Character::ChooseInteractOrPickup()
     UObject* StationHit = nullptr;
 
     //Kolla igenom items och interactables in range
-    for (FHitResult HitResult : DoSweep()) //Borde flyttas till hjälpmetod
+    for (FHitResult HitResult : DoSweep(true)) //Borde flyttas till hjälpmetod
     {
         if (HitResult.GetActor() && HitResult.GetComponent())
         {
@@ -180,7 +201,6 @@ void ASpmG5Character::ChooseInteractOrPickup()
             Drop();
         }
     }
-
 }
 
 void ASpmG5Character::Pickup(AItem* Item)
@@ -377,6 +397,8 @@ FRotator ASpmG5Character::Rotate(FVector2d Input)
 void ASpmG5Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (!HeldItem)
+	DoSweep(false);
 }
 
 void ASpmG5Character::Move(const FInputActionValue& Value)
@@ -395,12 +417,13 @@ void ASpmG5Character::Move(const FInputActionValue& Value)
 	}
 	
 	
-	if (!Throwing)
-		DoMove(MovementVector.X, MovementVector.Y);	
-	else if (Throwing && (MovementVector.X != 0 || MovementVector.Y != 0)) {		
+	if (Throwing && (MovementVector.X != 0 || MovementVector.Y != 0)) {		
 		FRotator R = FMath::Lerp(GetActorRotation(), Rotate(MovementVector), TurningSpeed/100);
-		SetActorRotation(FQuat(R));		
+		SetActorRotation(FQuat(R));
+		MovementVector.X /= MovementDebufMult;
+		MovementVector.Y /= MovementDebufMult;
 	}
+	DoMove(MovementVector.X, MovementVector.Y);	
 		
 	// route the input
 }

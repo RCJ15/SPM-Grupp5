@@ -70,6 +70,9 @@ protected:
 	float StartingThrowForce = 300.0f;
 	UPROPERTY(BlueprintReadOnly)
 	float CurrentThrowForce = 300.0f;
+	UPROPERTY(EditAnywhere)
+	float MovementDebufMult = 8.0f;
+	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool HasItem = false;
@@ -82,6 +85,10 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AItem* HeldItem = nullptr;
+	UPROPERTY()
+	AItem* ItemToPickup;
+	UPROPERTY()
+	AItem* TestCastItemToPickup;
 
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, Category="Input")
@@ -135,6 +142,9 @@ public:
 	ASpmG5Character();	
 
 protected:
+	//Om ska implementera som timer istället
+	// FTimerHandle OutlineUpdateTimer;
+	// float OutlineUpdateRate = 0.01f;
 
 	/** Initialize input action bindings */
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -149,7 +159,7 @@ protected:
 	*/
 
 	//metod som sweepar för att hitta items & interactable
-	TArray<FHitResult> DoSweep();
+	TArray<FHitResult> DoSweep(bool Pickup);
 	void ChooseInteractOrPickup();
 	
 	void PickupAndDrop(const FInputActionValue& Value);
