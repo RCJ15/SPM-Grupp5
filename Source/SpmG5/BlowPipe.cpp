@@ -30,6 +30,11 @@ void ABlowPipe::BeginPlay()
 	BlowStateLoop(TimeBeforeBlowing);
 }
 
+void ABlowPipe::BlowFromBP(UPrimitiveComponent* Component, float DeltaTime)
+{
+	Component->GetOwner()->SetActorLocation(Component->GetOwner()->GetActorLocation() + GetActorForwardVector() * ForceMultiplier * DeltaTime);
+}
+
 void ABlowPipe::Blow(float DeltaTime)
 {
 	//Doing sweep
@@ -64,10 +69,12 @@ void ABlowPipe::CallBlowMethod()
 	//Stop Showing Indicator
 	UE_LOG(LogTemp, Warning, TEXT("Blowing Loop! Time left: %f"), TimeLeftBlowing);
 	if (TimeLeftBlowing > 0)
-		Blow(GetWorld()->GetDeltaSeconds());
+		ActivateBlowing(true);
+		//Blow(GetWorld()->GetDeltaSeconds());
 	else
 	{		
 		//Resett Timer and stop blowing
+		ActivateBlowing(false);
 		GetWorldTimerManager().ClearTimer(BlowingTimer);
 		UE_LOG(LogTemp, Warning, TEXT("Ended blowing:("));
 		BlowStateLoop(TimeLeftBlowing = Stream.FRandRange(WaitTimeRange.X, WaitTimeRange.Y));	
