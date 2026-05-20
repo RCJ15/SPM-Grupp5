@@ -106,6 +106,8 @@ protected:
 	int Points;
 	
 	UPrimitiveComponent* PrimComp;
+	
+	UPROPERTY(BlueprintReadOnly)
 	AActor* MostRecentHolder;
 	
 	void CalculateIfBreakIfFragile();
@@ -188,8 +190,11 @@ public:
 	void SetIsDangerous(bool SetTo);
 	void SetAddress(BoxAddress NewAddress);
 
-	UFUNCTION(BlueprintImplementableEvent, Blueprintable)
+	UFUNCTION(BlueprintImplementableEvent, Blueprintable, BlueprintCallable)
 	void ActivateOvelay(bool SetTo);
+	
+	
+	virtual void CallActivateOvelay(bool SetTo) {ActivateOvelay(SetTo);}
 	
 	UFUNCTION(BlueprintCallable)
 	void SetIsScanned(bool SetTo);
