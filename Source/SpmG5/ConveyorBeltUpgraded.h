@@ -45,6 +45,9 @@ public:
 	bool bIsOn;
 	UPROPERTY(EditAnywhere, Category="Conveyor Settings")
 	float Speed; //Antal lådor som spawnar per sekund ish (1 = en låda per sekund) (0,5 = en låda varannan sekund)
+	UPROPERTY(EditAnywhere, Category="Conveyor Settings", BlueprintReadWrite)
+	bool SpawnItemsSelf = true;
+	
 	
 	FVector PathOffset = FVector(0,0,100);
 	int GuardRailLengthOffset = 10; //Detta är extra längden från guard rails som bör subtraheras
