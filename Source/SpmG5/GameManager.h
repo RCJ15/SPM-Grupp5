@@ -18,6 +18,9 @@ class SPMG5_API UGameManager : public UGameInstance
 	
 public:
 	void LoadLevel(TSoftObjectPtr<UWorld> Level);
+	
+	/*UFUNCTION(BlueprintCallable)
+	void RestartLevel();*/
 
 	FName PendingLevelName;
 	
@@ -44,6 +47,9 @@ public:
 	UUserWidget* HUDWidget;
 	
 	UPROPERTY(BlueprintReadWrite)
+	UUserWidget* StartCountdownWidget;
+	
+	UPROPERTY(BlueprintReadWrite)
 	UUserWidget* MenuWidget;
 	
 	UPROPERTY(BlueprintReadWrite)
@@ -68,6 +74,12 @@ protected:
 private:
 	UFUNCTION()
 	void LevelLoaded();
+	
+	UFUNCTION()
+	void LevelUnloaded();
+
+	UFUNCTION()
+	void BroadcastLoaded();
 
 	bool FirstTime = true;
 };
