@@ -18,6 +18,9 @@ class SPMG5_API UGameManager : public UGameInstance
 	
 public:
 	void LoadLevel(TSoftObjectPtr<UWorld> Level);
+	
+	UFUNCTION(BlueprintCallable)
+	void RestartLevel();
 
 	FName PendingLevelName;
 	

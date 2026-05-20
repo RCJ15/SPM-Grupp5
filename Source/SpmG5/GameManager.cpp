@@ -23,6 +23,20 @@ void UGameManager::LoadLevel(TSoftObjectPtr<UWorld> Level)
 	UGameplayStatics::LoadStreamLevelBySoftObjectPtr(GetWorld(),Level, true, false, LatentInfo);
 }
 
+void UGameManager::RestartLevel()
+{
+	if (FirstTime) return;
+	FLatentActionInfo LatentInfo;
+	LatentInfo.CallbackTarget = this;
+	LatentInfo.ExecutionFunction = FName("UGameplayStatics::LoadStreamLevelBySoftObjectPtr(");
+	LatentInfo.Linkage = 0;
+	
+	UGameplayStatics::UnloadStreamLevelBySoftObjectPtr(GetWorld(), CurrentLevel, LatentInfo, false);
+
+	
+}
+
+
 bool UGameManager::GetLevelStarted()
 {
 	return LevelStarted;
@@ -49,8 +63,11 @@ void UGameManager::LevelLoaded()
 		FLatentActionInfo LatentInfo;
 		
 		// Deloads previous level
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *PreviousLevel.ToString());
-		UGameplayStatics::UnloadStreamLevelBySoftObjectPtr(GetWorld(), PreviousLevel, LatentInfo, false);
+		if (PreviousLevel != CurrentLevel)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("%s"), *PreviousLevel.ToString());
+			UGameplayStatics::UnloadStreamLevelBySoftObjectPtr(GetWorld(), PreviousLevel, LatentInfo, false);
+		}
 	}
 	
 	// Let's relevant classes know when a level has finished being loaded in
