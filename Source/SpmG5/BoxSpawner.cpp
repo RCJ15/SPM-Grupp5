@@ -84,9 +84,7 @@ AItem* ABoxSpawner::SpawnItem(bool IsDangerous, bool IsLarge, bool IsFragile, bo
 	TSubclassOf<AActor> ItemToSpawn = BoxToSpawn;
 	
 	if (IsSuspicious)
-	{
-		IsDangerous = ShouldHappen(DangerousBoxSpawnRate);
-		
+	{		
 		if (IsDangerous)
 		{
 			ItemToSpawn = BombToSpawn;

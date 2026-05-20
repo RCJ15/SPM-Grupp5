@@ -106,7 +106,7 @@ void AConveyorBeltUpgraded::AddToBelt(AItem* Item)
 	FVector Offset = FVector(0,0,0);
 	if (abs(MovedDelta) > 0.2)
 		Offset += Item->GetActorLocation() - Path->GetLocationAtSplineInputKey(MovedDelta,ESplineCoordinateSpace::World);
-	if (abs(Offset.X) > 100 || abs(Offset.Y) > 100 || abs(Offset.Z)>10) //lägg inte till om för långt ute på kanten
+	if (abs(Offset.X) > 100 || abs(Offset.Y) > 100 || abs(Offset.Z)>50) //lägg inte till om för långt ute på kanten
 		return;
 	FObjectOnBelt* Obj = new FObjectOnBelt(Item,nullptr, MovedDelta,Offset);
 	//Item->Conveyor = this; 
