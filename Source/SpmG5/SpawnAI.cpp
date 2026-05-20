@@ -34,17 +34,18 @@ void ASpawnAI::BeginPlay()
 			Info.CountSinceLastSpawn);
 	}
 	
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 1001; i++)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Box %d: "), i);
 		TArray<EBoxType> props = DecideProperties();
-		
+		if (AmountOfBoxesPerLevel > 0) AmountOfBoxesPerLevel--;
 		for (EBoxType Type : props)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("		: %d"), Type);
 		}
 	}
-	
+	UE_LOG(LogTemp, Warning, TEXT("All boxes remaining: %d"), AmountOfBoxesPerLevel);
+
 	for (const FBoxSpawnInfo& Info : Boxes)
 	{
 		UE_LOG(LogTemp, Warning,
@@ -94,6 +95,7 @@ void ASpawnAI::ConvertAllPercentageToBoxes()
 		BoxSpawnInfo.CurrentSpawnRate = SpawnRate;
 		Boxes.Add(BoxSpawnInfo);
 		
+		
 		if (BoxType == EBoxType::Small)
 		{
 			FBoxSpawnInfo LargeSpawnInfo = FBoxSpawnInfo(EBoxType::Large);
@@ -140,27 +142,51 @@ TArray<EBoxType> ASpawnAI::DecideProperties()
 {
 	TArray<EBoxType> Properties;
 	
-	RollForProperty(EBoxType::Small) ? AddProperty(Properties, EBoxType::Small) : AddProperty(Properties, EBoxType::Large);
+	//RollForProperty(EBoxType::Small) ? AddProperty(Properties, EBoxType::Small) : AddProperty(Properties, EBoxType::Large);
 	//RollForProperty(EBoxType::Small) ? AddProperty(Properties, EBoxType::Small) : RollForProperty(EBoxType::Large) ? AddProperty(Properties, EBoxType::Large) : return Properties) return Properties;
 	//AddProperty(Properties, EBoxType::Small);
 	
-	/*if (!RollForProperty(EBoxType::Small))
+	//Roll if small or large
+	if (!RollForProperty(EBoxType::Small))
 	{
-		if (!RollForProperty(EBoxType::Large)) return Properties;
-		AddProperty(Properties, EBoxType::Large);
+		if (GetSpawnInfo(EBoxType::Large).RemainingBoxes <= 0)
+		{
+			if (GetSpawnInfo(EBoxType::Small).RemainingBoxes > 0)
+			{
+				AddProperty(Properties, EBoxType::Small);
+			}else
+			{
+				return Properties; // No boxes left
+			}
+		}
+		else
+		{
+			AddProperty(Properties, EBoxType::Large);
+		}
 	}
 	else
 	{
 		AddProperty(Properties, EBoxType::Small);
-	}*/
+	}
 	
-	if (RollForProperty(EBoxType::Fragile)) AddProperty(Properties, EBoxType::Fragile);
+	//Roll if fragile
+	if (!GuaranteeProperty(Properties, EBoxType::Fragile, AmountOfBoxesPerLevel))
+		if (RollForProperty(EBoxType::Fragile)) AddProperty(Properties, EBoxType::Fragile);
 	
-	if (!RollForProperty(EBoxType::Suspicious)) return Properties;
-	AddProperty(Properties, EBoxType::Suspicious);
-		
-	if (!RollForProperty(EBoxType::Dangerous)) return Properties;
-	AddProperty(Properties, EBoxType::Dangerous);
+	//Roll if suspicious
+	if (!GuaranteeProperty(Properties, EBoxType::Suspicious, AmountOfBoxesPerLevel))
+	{
+		if (!RollForProperty(EBoxType::Suspicious)) return Properties;
+		AddProperty(Properties, EBoxType::Suspicious);
+	}
+	
+
+	if (!GuaranteeProperty(Properties, EBoxType::Dangerous, GetSpawnInfo(EBoxType::Suspicious).RemainingBoxes))
+	{
+		if (!RollForProperty(EBoxType::Dangerous)) return Properties;
+		AddProperty(Properties, EBoxType::Dangerous);
+	}
+	
 	
 	double MaxSpawnRateDangerousBoxes = 0.0;
 	
@@ -216,6 +242,16 @@ double ASpawnAI::GiveRandomPercentage()
 double ASpawnAI::GiveBadBoxesMaxPercentage(double MaxPercentage)
 {
 	return FMath::RandRange(0.0, MaxPercentage);
+}
+
+bool ASpawnAI::GuaranteeProperty(TArray<EBoxType>& Properties, EBoxType BoxType, int DependencyFromAmount)
+{
+	if (GetSpawnInfo(BoxType).RemainingBoxes == DependencyFromAmount && GetSpawnInfo(BoxType).RemainingBoxes > 0)
+	{
+		AddProperty(Properties, BoxType);
+		return true;
+	}
+	return false;
 }
 
 FBoxSpawnInfo& ASpawnAI::GetSpawnInfo(EBoxType Type)

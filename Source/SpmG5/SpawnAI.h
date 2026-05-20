@@ -72,6 +72,7 @@ protected:
 	TMap<EBoxType, double> DangerousTypes = {{ EBoxType::Bomb, 1.0 }, { EBoxType::ToxicWaste, 0.0 }, { EBoxType::FlashBang, 0.0 }};
 	
 	TArray<FBoxSpawnInfo> Boxes;
+	//TMap<EBoxType, FBoxSpawnInfo> SpawnInfos; POTENTIELL UPGRADE ???
 
 public:	
 	// Called every frame
@@ -93,4 +94,6 @@ private:
 	bool RollForProperty(EBoxType BoxType);
 	double GiveRandomPercentage();
 	double GiveBadBoxesMaxPercentage(double MaxPercentage);
+	
+	bool GuaranteeProperty(TArray<EBoxType>& Properties, EBoxType BoxType, int DependencyFromAmount);
 };
