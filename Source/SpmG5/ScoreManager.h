@@ -48,6 +48,8 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	TMap<TSoftObjectPtr<UWorld>, int> ScoreMap;
 
+	UScoreManager* GetScoreManager() { return this; }
+	
 private:
 	UPROPERTY()
 	UUserWidget* HUDWidget;
