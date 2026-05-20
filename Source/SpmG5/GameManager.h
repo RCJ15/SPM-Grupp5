@@ -44,6 +44,9 @@ public:
 	UUserWidget* HUDWidget;
 	
 	UPROPERTY(BlueprintReadWrite)
+	UUserWidget* StartCountdownWidget;
+	
+	UPROPERTY(BlueprintReadWrite)
 	UUserWidget* MenuWidget;
 	
 	UPROPERTY(BlueprintReadWrite)
