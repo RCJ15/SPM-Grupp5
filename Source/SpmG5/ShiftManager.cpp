@@ -57,6 +57,8 @@ void UShiftManager::CountdownShift()
 
 	CurrentMin = TimeRemaining / 60;
 	CurrentSec = TimeRemaining % 60;
+	
+	OnTimeChanged.Broadcast();
 }
 
 /*void UShiftManager::TimeRunsOut()
