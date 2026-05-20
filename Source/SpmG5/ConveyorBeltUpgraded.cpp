@@ -150,7 +150,7 @@ bool AConveyorBeltUpgraded::ItemIsAtEndOfBelt(AItem* Item)
 
 void AConveyorBeltUpgraded::Move()
 {
-	if (!First)
+	if (!First && SpawnItemsSelf)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("First item doesnt exist!"));
 		AItem* NewItem = BoxSpawner->SpawnBox();
@@ -176,7 +176,7 @@ void AConveyorBeltUpgraded::Move()
 		//if (Item)
 		//Item->SetActorRotation(Path->GetRotationAtSplineInputKey(SegmentIndex+MovedDelta,ESplineCoordinateSpace::World));
 		
-		if (First!= nullptr && First->MovedDelta >= 1)
+		if (First!= nullptr && First->MovedDelta >= 1 && SpawnItemsSelf)
 		{
 			AItem* NewItem = BoxSpawner->SpawnBox();
 			AddToBelt(NewItem);
