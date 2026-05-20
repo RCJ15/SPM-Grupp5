@@ -99,7 +99,7 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	}
 }
 
-TArray<FHitResult> ASpmG5Character::DoSweep(bool Pickup)
+TArray<FHitResult> ASpmG5Character::DoSweep()
 {
     TArray<FHitResult> HitResults;
     TArray<FHitResult> HitResultsItems;
@@ -114,32 +114,39 @@ TArray<FHitResult> ASpmG5Character::DoSweep(bool Pickup)
     GetWorld()->SweepMultiByChannel(HitResultsItems,Location, End, Rotation, ECC_GameTraceChannel1,Box);
 	for (FHitResult HitResult : HitResultsItems)
 		HitResults.Add(HitResult);
-	
-	if (Pickup)
-	{
-		GetWorld()->SweepMultiByChannel(HitResultsInteractable,Location, End, Rotation, ECC_GameTraceChannel3,Box);
-		for (FHitResult HitResult : HitResultsInteractable)
-			HitResults.Add(HitResult);
-	}
-	else
-	{
-		if (HitResults.IsValidIndex(0) && Cast<AItem>(HitResults[0].GetActor()))
-		{
-			TestCastItemToPickup = Cast<AItem>(HitResults[0].GetActor());
-			if (TestCastItemToPickup != ItemToPickup)
-			{
-				if (ItemToPickup)
-					ItemToPickup->ActivateOvelay(false);
-				
-				ItemToPickup = TestCastItemToPickup;
-				ItemToPickup->ActivateOvelay(true);
-			}
-		}
-		else if(ItemToPickup)		
-			ItemToPickup->ActivateOvelay(false);
-	}
+	GetWorld()->SweepMultiByChannel(HitResultsInteractable,Location, End, Rotation, ECC_GameTraceChannel3,Box);
+	for (FHitResult HitResult : HitResultsInteractable)
+	HitResults.Add(HitResult);
 	
     return HitResults;
+}
+
+void ASpmG5Character::FindBoxToPickup()
+{
+	TArray<FHitResult> HitResults = DoSweep();
+	int FirstBoxIndex = 0;
+	
+	for (FHitResult HitResult : HitResults)
+	{
+		if (Cast<AItem>(HitResult.GetActor()))		
+			break;
+		FirstBoxIndex++;
+	}
+		
+	if (HitResults.IsValidIndex(FirstBoxIndex) && Cast<AItem>(HitResults[FirstBoxIndex].GetActor()))
+	{
+		AItem* TestCastItemToPickup = Cast<AItem>(HitResults[FirstBoxIndex].GetActor());
+		if (TestCastItemToPickup != ItemToPickup)
+		{
+			if (ItemToPickup)
+				ItemToPickup->CallActivateOvelay(false);
+				
+			ItemToPickup = TestCastItemToPickup;
+			ItemToPickup->CallActivateOvelay(true);
+		}
+	}
+	else if(ItemToPickup)		
+		ItemToPickup->CallActivateOvelay(false);
 }
 
 void ASpmG5Character::ChooseInteractOrPickup()
@@ -151,7 +158,7 @@ void ASpmG5Character::ChooseInteractOrPickup()
     UObject* StationHit = nullptr;
 
     //Kolla igenom items och interactables in range
-    for (FHitResult HitResult : DoSweep(true)) //Borde flyttas till hjälpmetod
+    for (FHitResult HitResult : DoSweep()) //Borde flyttas till hjälpmetod
     {
         if (HitResult.GetActor() && HitResult.GetComponent())
         {
@@ -398,7 +405,7 @@ void ASpmG5Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	if (!HeldItem)
-	DoSweep(false);
+		FindBoxToPickup();
 }
 
 void ASpmG5Character::Move(const FInputActionValue& Value)

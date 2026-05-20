@@ -27,6 +27,11 @@ protected:
 	float TimeLeftBlowing = 0.0f;
 	FRandomStream Stream = FRandomStream(0);
 	
+	UFUNCTION(BlueprintCallable)
+	void BlowFromBP(UPrimitiveComponent* Component, float DeltaTime);
+	UFUNCTION(BlueprintImplementableEvent, Blueprintable)
+	void ActivateBlowing(bool Blowing);
+	
 	void Blow(float DeltaTime);
 	void StartBlowing();
 	void CallBlowMethod();

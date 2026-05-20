@@ -39,6 +39,13 @@ public:
 	
 	virtual void OnEndTimer_Implementation() override;
 	
+	
+	UFUNCTION(BlueprintImplementableEvent, Blueprintable)
+	void ActivateBadOvelay(bool SetTo);
+	
+	virtual void CallActivateOvelay(bool SetTo) override {ActivateBadOvelay(SetTo);} 
+	
+	
 	UPROPERTY(Blueprintable, BlueprintReadWrite, BlueprintAssignable)
 	FExampleDelegate_OnSomething ExampleDelegateVariable;
 private:
