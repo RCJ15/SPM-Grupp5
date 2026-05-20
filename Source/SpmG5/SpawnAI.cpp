@@ -23,7 +23,7 @@ void ASpawnAI::BeginPlay()
 	
 	ConvertAllPercentageToBoxes();
 	
-	//UE_LOG(LogTemp, Warning, TEXT("All boxes remaining: %d"), AmountOfBoxesPerLevel);
+	UE_LOG(LogTemp, Warning, TEXT("All boxes remaining: %d"), AmountOfBoxesPerLevel);
 	for (const FBoxSpawnInfo& Info : Boxes)
 	{
 		UE_LOG(LogTemp, Warning,
@@ -130,10 +130,10 @@ void ASpawnAI::SetUpSpawnRate(double& SpawnRate, int RemainingBoxType, int Depen
 		SpawnRate = static_cast<double>(RemainingBoxType) / static_cast<double>(DependencyFromAmount);
 		//UBoxSpawnRateManager->SpawnRate;
 	}
-	else
+	/*else
 	{
 		SpawnRate = 0.0;
-	}
+	}*/
 }
 
 TArray<EBoxType> ASpawnAI::DecideProperties()
@@ -141,9 +141,18 @@ TArray<EBoxType> ASpawnAI::DecideProperties()
 	TArray<EBoxType> Properties;
 	
 	RollForProperty(EBoxType::Small) ? AddProperty(Properties, EBoxType::Small) : AddProperty(Properties, EBoxType::Large);
-	
 	//RollForProperty(EBoxType::Small) ? AddProperty(Properties, EBoxType::Small) : RollForProperty(EBoxType::Large) ? AddProperty(Properties, EBoxType::Large) : return Properties) return Properties;
 	//AddProperty(Properties, EBoxType::Small);
+	
+	/*if (!RollForProperty(EBoxType::Small))
+	{
+		if (!RollForProperty(EBoxType::Large)) return Properties;
+		AddProperty(Properties, EBoxType::Large);
+	}
+	else
+	{
+		AddProperty(Properties, EBoxType::Small);
+	}*/
 	
 	if (RollForProperty(EBoxType::Fragile)) AddProperty(Properties, EBoxType::Fragile);
 	
