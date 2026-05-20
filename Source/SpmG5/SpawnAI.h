@@ -26,7 +26,7 @@ struct FBoxSpawnInfo
 {
 	GENERATED_BODY()
 	
-	FBoxSpawnInfo(){};
+	FBoxSpawnInfo(){}
 	
 	FBoxSpawnInfo(EBoxType Type){BoxType = Type;}
 	
@@ -39,8 +39,12 @@ struct FBoxSpawnInfo
 	{
 		RemainingBoxes--;
 		CountSinceLastSpawn = 0;
-	};
+	}
 	
+	void IncreaseCounter()
+	{
+		CountSinceLastSpawn++;
+	}
 };
 
 UCLASS()
@@ -60,79 +64,20 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category = "Box Properities")
 	int AmountOfBoxesPerLevel = 100.f;
-	/*
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
-	double SmallBoxesPercentage = 74.5;
-	
-	double LargeBoxesPercentage = 25;
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
-	double FragileBoxesPercentage = 15.0;
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
-	double SuspiciousBoxesPercentage = 40.0;
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"))
-	double DangerousBoxesPercentage = 50.0;
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities|Dangerous Boxes") //, meta=(UIMin = "0.0", UIMax = "100.0"))
-	double BombBoxesWeight = 1;
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities|Dangerous Boxes") //, meta=(UIMin = "0.0", UIMax = "100.0"))
-	double ToxicWasteBoxesWeight = 0;
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Box Properities|Dangerous Boxes") //, meta=(UIMin = "0.0", UIMax = "100.0"))
-	double FlashBangBoxesWeight = 0;
-	*/
 	
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, EditFixedSize, Category = "Box Properities", meta=(UIMin = "0.0", UIMax = "100.0"), meta=(ReadOnlyKeys))
 	TMap<EBoxType, double> SpawnRates = {{ EBoxType::Small, 75.0 }, { EBoxType::Fragile, 15.0 },{ EBoxType::Suspicious, 40.0 },{ EBoxType::Dangerous, 50.0 }};
 	
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, EditFixedSize, Category = "Box Properities", meta=(ReadOnlyKeys))
-	TMap<EBoxType, double> DangerousTypes = {{ EBoxType::Bomb, 1.0 }, { EBoxType::ToxicWaste, 0.0 }, { EBoxType::FlashBang, 0.0 } };
+	TMap<EBoxType, double> DangerousTypes = {{ EBoxType::Bomb, 1.0 }, { EBoxType::ToxicWaste, 0.0 }, { EBoxType::FlashBang, 0.0 }};
 	
 	TArray<FBoxSpawnInfo> Boxes;
-	
-	/*int RemainingSmallBoxes;
-	int RemainingLargeBoxes;
-	int RemainingFragileBoxes;
-	int RemainingSuspiciousBoxes;
-	int RemainingDangerousBoxes;
-	int RemainingBombBoxes;
-	int RemainingToxicWasteBoxes;
-	int RemainingFlashBangBoxes;
-	
-	double SmallBoxesSpawnRate;
-	double LargeBoxesSpawnRate;
-	double FragileBoxesSpawnRate;
-	double SuspiciousBoxesSpawnRate;
-	double DangerousBoxesSpawnRate;
-	double BombBoxesSpawnRate;
-	double ToxicWasteBoxesSpawnRate;
-	double FlashBangBoxesSpawnRate;
-	
-	int SmallBoxes;
-	int LargeBoxes;
-	int FragileBoxes;
-	int SuspiciousBoxes;
-	int DangerousBoxes;
-	int BombBoxes;
-	int ToxicWasteBoxes;
-	int FlashBangBoxes;*/
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
-	void ConvertAllPercentageToBoxes();
-	void ConvertPercentageToBox(double Percentage, int& TypeOfRemainingBoxes, int DependencyFromAmount);
-	double ConvertWeightToPercentage(double Weight, double TotalWeight);
-	void SetUpSpawnRate(double& SpawnRate, int BoxType, int DependencyFromAmount);
 	TArray<EBoxType> DecideProperties();
-	bool RollForProperty(EBoxType BoxType);
-	bool SetProperties();
-	double GivePercentage();
-	
 	
 private:
 	TArray<EBoxType> AllBoxTypes{EBoxType::Small, EBoxType::Fragile, EBoxType::Suspicious, EBoxType::Dangerous, EBoxType::Bomb, EBoxType::ToxicWaste, EBoxType::FlashBang};
@@ -140,4 +85,12 @@ private:
 	FBoxSpawnInfo& GetSpawnInfo(EBoxType Type);
 	
 	void AddProperty(TArray<EBoxType>& Properties, EBoxType Type);
+	
+	void ConvertAllPercentageToBoxes();
+	void ConvertPercentageToBox(double Percentage, int& TypeOfRemainingBoxes, int DependencyFromAmount);
+	double ConvertWeightToPercentage(double Weight, double TotalWeight);
+	void SetUpSpawnRate(double& SpawnRate, int RemainingBoxType, int DependencyFromAmount);
+	bool RollForProperty(EBoxType BoxType);
+	double GiveRandomPercentage();
+	double GiveBadBoxesMaxPercentage(double MaxPercentage);
 };
