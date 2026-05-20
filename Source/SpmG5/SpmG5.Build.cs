@@ -6,6 +6,7 @@ public class SpmG5 : ModuleRules
 {
 	public SpmG5(ReadOnlyTargetRules Target) : base(Target)
 	{
+		bEnableExceptions = true;
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(new string[] {
