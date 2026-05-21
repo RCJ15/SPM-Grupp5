@@ -37,7 +37,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetShiftTime(int seconds);
 	
-	int BaseShiftLengthInSeconds = 50;
+	int BaseShiftLengthInSeconds = 500;
 	int ShiftLengthInSeconds = 300;
 
 	int TimeRemaining = ShiftLengthInSeconds;
