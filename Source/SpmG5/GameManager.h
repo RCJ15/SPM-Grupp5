@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "LevelButton.h"
 #include "GameManager.generated.h"
 
 
@@ -18,6 +19,9 @@ class SPMG5_API UGameManager : public UGameInstance
 	
 public:
 	void LoadLevel(TSoftObjectPtr<UWorld> Level);
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Default")
+	FLevelInfo CurrentLevelInfo;
 	
 	/*UFUNCTION(BlueprintCallable)
 	void RestartLevel();*/

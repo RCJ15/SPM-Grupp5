@@ -104,8 +104,11 @@ void USpawnAI::SetUpSpawnRate(double& SpawnRate, int RemainingBoxType, int Depen
 	}*/
 }
 
-void USpawnAI::SetupSpawner(TMap<EBoxType, double> InSpawnRates, TMap<EBoxType, double> InDangerousTypes, int InAmountOfBoxesPerLevel)
+void USpawnAI::SetupSpawner(int InAmountOfBoxesPerLevel, TMap<EBoxType, double> InSpawnRates, TMap<EBoxType, double> InDangerousTypes)
 {
+	
+	Boxes.Empty();
+	
 	SpawnRates = InSpawnRates;
 	DangerousTypes = InDangerousTypes;
 	AmountOfBoxesPerLevel = InAmountOfBoxesPerLevel;
@@ -122,34 +125,24 @@ void USpawnAI::SetupSpawner(TMap<EBoxType, double> InSpawnRates, TMap<EBoxType, 
 			Info.CurrentSpawnRate,
 			Info.CountSinceLastSpawn);
 	}
-	
+	/*
 	for (int i = 0; i < 839; i++)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Box %d: "), i);
-		TArray<EBoxType> props = DecideProperties();
+		TArray<EBoxType> props = ConstructBox();
 		if (AmountOfBoxesPerLevel > 0) AmountOfBoxesPerLevel--;
 		for (EBoxType Type : props)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("		: %d"), Type);
 		}
 	}
-	UE_LOG(LogTemp, Warning, TEXT("All boxes remaining: %d"), AmountOfBoxesPerLevel);
-
-	for (const FBoxSpawnInfo& Info : Boxes)
-	{
-		UE_LOG(LogTemp, Warning,
-			TEXT("BoxType: %s | RemainingBoxes: %d | CurrentSpawnRate: %.2f | CountSinceLastSpawn: %d"),
-			*UEnum::GetValueAsString(Info.BoxType),
-			Info.RemainingBoxes,
-			Info.CurrentSpawnRate,
-			Info.CountSinceLastSpawn);
-	}
-	
+	*/
 }
 
-TArray<EBoxType> USpawnAI::DecideProperties()
+TArray<EBoxType> USpawnAI::ConstructBox()
 {
 	TArray<EBoxType> Properties;
+	if (Boxes.IsEmpty()) return Properties;
 	
 	//Roll if small or large
 	if (!RollForProperty(EBoxType::Small))

@@ -52,9 +52,10 @@ class SPMG5_API USpawnAI : public UWorldSubsystem
 
 public:
 	
-	void SetupSpawner(TMap<EBoxType, double> InSpawnRates, TMap<EBoxType, double> InDangerousTypes, int InAmountOfBoxesPerLevel);
+	UFUNCTION(BlueprintCallable)
+	void SetupSpawner(int InAmountOfBoxesPerLevel, TMap<EBoxType, double> InSpawnRates, TMap<EBoxType, double> InDangerousTypes);
 
-	TArray<EBoxType> DecideProperties();
+	TArray<EBoxType> ConstructBox();
 
 
 private:

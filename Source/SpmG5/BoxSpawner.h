@@ -26,6 +26,9 @@ protected:
 	float SpawnRate = 1;
 	
 	FTimerHandle SpawnRateTimer;
+	
+	UPROPERTY(EditAnywhere)
+	bool IsOldBoxSpawner = false;
 
 	//UPROPERTY(EditAnywhere)
 	//FVector SpawnLocation = FVector(50,50,120);
@@ -76,11 +79,12 @@ public:
 	
 	BoxAddress SetBoxAddress();
 	
-	
-	
 	//FULT!!!!! TA BORT EFTER SPELTEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	UPROPERTY(EditAnywhere)
 	bool PlayBoxSound = true;
 	
+private:
 	
+	UPROPERTY()
+	USpawnAI* SpawnAI;
 };

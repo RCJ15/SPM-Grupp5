@@ -343,7 +343,7 @@ void AConveyorBelt::MoveRevolvingArraySplinePath()
 					{
 						AItem* ItemToSpawm = BoxSpawner->SpawnBox();
 						//HERE YOU CAN TRIGGER SPAWNING THE NEXT ITEM!!!
-						SpawnItem(ItemToSpawm);
+						if (ItemToSpawm) SpawnItem(ItemToSpawm);
 					}
 					
 					MovedDelta = 0;
