@@ -21,34 +21,64 @@ void ABoxSpawner::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	SpawnAI = GetWorld()->GetSubsystem<USpawnAI>();
+	
 	if (SpawnOnPoint)
 		LoopSpawnBox(SpawnRate);
 }
 
-void ABoxSpawner::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
 AItem* ABoxSpawner::SpawnItem()
 {
+	if (IsOldBoxSpawner)
+	{
+		FTransform SpawnTransform = FTransform(FRotator::ZeroRotator, SpawnLocation->GetComponentLocation());
+	
+		TSubclassOf<AActor> ItemToSpawn = BoxToSpawn;
+		bool IsSuspicious = ShouldHappen(SuspiciousBoxSpawnRate);
+		bool IsDangerous = ShouldHappen(DangerousBoxSpawnRate);
+	
+		if (IsSuspicious)
+		{		
+			if (IsDangerous)
+			{
+				ItemToSpawn = BombToSpawn;
+			}
+		}
+	
+		// Sets all properties of an item before spawning it
+		AActor* NewActor = GetWorld()->SpawnActorDeferred<AActor>(ItemToSpawn, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+		AItem* Item = Cast<AItem>(NewActor);
+	
+		if (Item)
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Spawning Box"));
+			Item->SetIsLarge(ShouldHappen(LargeBoxSpawnRate));
+			Item->SetIsFragile(ShouldHappen(FragileBoxSpawnRate));
+			//Item->SetIsDangerous(ShouldHappen(DangerousBoxSpawnRate));
+			//Item->SetActorRotation(SpawnLocation->GetComponentRotation() + FRotator(0, FMath::RandRange(-15,15), 0));
+			Item->SetIsSuspicious(IsSuspicious);
+			Item->SetIsDangerous(IsDangerous);
+			Item->SetPlaySound(PlayBoxSound);
+		}
+
+		// Actually spawn item
+		UGameplayStatics::FinishSpawningActor(Item, SpawnTransform);
+		return Item;
+	}
+	
 	FTransform SpawnTransform = FTransform(FRotator::ZeroRotator, SpawnLocation->GetComponentLocation());
 	
 	TSubclassOf<AActor> ItemToSpawn = BoxToSpawn;
-	bool IsSuspicious = ShouldHappen(SuspiciousBoxSpawnRate);
-	bool IsDangerous = false;
-	
-	if (IsSuspicious)
+	TArray<EBoxType> Properties = SpawnAI->ConstructBox();
+	if (Properties.IsEmpty())
 	{
-		IsDangerous = ShouldHappen(DangerousBoxSpawnRate);
-		
-		if (IsDangerous)
-		{
-			ItemToSpawn = BombToSpawn;
-			UE_LOG(LogTemp, Warning, TEXT("Dangerous box should spawn!!!!"));
-		}
+		return nullptr;
 	}
-	
+	if (Properties.Contains(EBoxType::Dangerous))
+	{
+		ItemToSpawn = BombToSpawn;
+	}
+
 	// Sets all properties of an item before spawning it
 	AActor* NewActor = GetWorld()->SpawnActorDeferred<AActor>(ItemToSpawn, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	AItem* Item = Cast<AItem>(NewActor);
@@ -56,12 +86,13 @@ AItem* ABoxSpawner::SpawnItem()
 	if (Item)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("Spawning Box"));
-		Item->SetIsLarge(ShouldHappen(LargeBoxSpawnRate));
-		Item->SetIsFragile(ShouldHappen(FragileBoxSpawnRate));
+		Item->SetIsLarge(Properties.Contains(EBoxType::Large));
+		Item->SetIsFragile(Properties.Contains(EBoxType::Fragile));
 		//Item->SetIsDangerous(ShouldHappen(DangerousBoxSpawnRate));
 		//Item->SetActorRotation(SpawnLocation->GetComponentRotation() + FRotator(0, FMath::RandRange(-15,15), 0));
-		Item->SetIsSuspicious(IsSuspicious);
-		Item->SetIsDangerous(IsDangerous);
+		Item->SetIsSuspicious(Properties.Contains(EBoxType::Suspicious));
+		Item->SetIsDangerous(Properties.Contains(EBoxType::Dangerous));
+		
 		Item->SetAddress(SetBoxAddress());
 		
 		Item->SetPlaySound(PlayBoxSound);
@@ -88,7 +119,6 @@ AItem* ABoxSpawner::SpawnItem(bool IsDangerous, bool IsLarge, bool IsFragile, bo
 		if (IsDangerous)
 		{
 			ItemToSpawn = BombToSpawn;
-			UE_LOG(LogTemp, Warning, TEXT("Dangerous box should spawn!!!!"));
 		}
 	}
 	

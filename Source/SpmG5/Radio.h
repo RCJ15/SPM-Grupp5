@@ -5,9 +5,8 @@
 #include "CoreMinimal.h"
 #include "Interactable.h"
 #include "GameFramework/Actor.h"
-#include "Sound/AmbientSound.h"
-#include "FMODEvent.h"
 #include "FMODAudioComponent.h"
+#include "SongPlaylistAsset.h"
 #include "Radio.generated.h"
 
 UCLASS()
@@ -37,8 +36,13 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	//void OnInteract(ASpmG5Character* InteractingPlayer);
 private:
+	bool IsOn;
+	
 	UPROPERTY(EditAnywhere)
-	TArray<UFMODEvent*> Songs; //array with all music for this level
+	bool TurnOnInBeginPlay;
+	
+	UPROPERTY(EditAnywhere)
+	USongPlaylistAsset* Playlist; //playlist with all songs for this level
 	TArray<int32> Copy; //used so all channels are played once before repeating
 	UFMODAudioComponent* CurrentInstance; //current FMOD Event Instance playing
 	
