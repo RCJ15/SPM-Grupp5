@@ -42,9 +42,9 @@ class SPMG5_API AConveyorBeltUpgraded : public AActor
 	
 public:	
 	UPROPERTY(EditAnywhere, Category="Conveyor Settings")
-	bool bIsOn;
+	bool bIsOn = true;
 	UPROPERTY(EditAnywhere, Category="Conveyor Settings")
-	float Speed; //Antal lådor som spawnar per sekund ish (1 = en låda per sekund) (0,5 = en låda varannan sekund)
+	float Speed = 0.2; //Antal lådor som spawnar per sekund ish (1 = en låda per sekund) (0,5 = en låda varannan sekund)
 	UPROPERTY(EditAnywhere, Category="Conveyor Settings", BlueprintReadWrite)
 	bool SpawnItemsSelf = true;
 	

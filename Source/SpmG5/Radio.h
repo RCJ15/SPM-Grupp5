@@ -20,11 +20,10 @@ public:
 	ARadio();
 	UFUNCTION(BlueprintCallable)
 	void SwitchChannel();
+	UFUNCTION(BlueprintCallable)
 	void TurnOff();
+	UFUNCTION(BlueprintCallable)
 	void TurnOn();
-	
-	UPROPERTY(EditAnywhere)
-	bool bSwitchChannel;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* BaseMesh;

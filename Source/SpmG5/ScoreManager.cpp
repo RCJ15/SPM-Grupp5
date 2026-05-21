@@ -28,6 +28,7 @@ void UScoreManager::AddScore(int ScoreChange)
 	if (NewScore < 0)
 	{
 		NewScore = 0;
+		OnScoreChanged.Broadcast();
 	}
 	
 	if (NewScore != Score)
