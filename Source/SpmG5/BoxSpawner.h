@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Item.h"
+#include "SpawnAI.h"
 #include "BoxSpawner.generated.h"
 
 UCLASS()
@@ -30,8 +31,7 @@ protected:
 	//FVector SpawnLocation = FVector(50,50,120);
 
 public:	
-	virtual void Tick(float DeltaTime) override;
-
+	
 	//UFUNCTION(BlueprintImplementableEvent)
 	AItem* SpawnBox();
 	

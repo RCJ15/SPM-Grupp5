@@ -25,11 +25,6 @@ void ABoxSpawner::BeginPlay()
 		LoopSpawnBox(SpawnRate);
 }
 
-void ABoxSpawner::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
 AItem* ABoxSpawner::SpawnItem()
 {
 	FTransform SpawnTransform = FTransform(FRotator::ZeroRotator, SpawnLocation->GetComponentLocation());
