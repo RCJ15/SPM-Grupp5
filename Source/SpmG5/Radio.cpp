@@ -24,13 +24,8 @@ void ARadio::BeginPlay()
 	
 	BaseMesh->OnComponentHit.AddDynamic(this, &ARadio::OnHit);
 	
-	//gör så att AmbientSound loopar?
-	//AmbientSound->GetAudioComponent()->
 	InitializeCopyArray();
-	//SwitchChannel();
-	//TurnOn();
-	
-	//börja spela music
+	TurnOn();
 }
 
 //använde det här som källa https://forums.unrealengine.com/t/choosing-random-numbers-in-a-range-all-at-least-once/344734/2
@@ -89,8 +84,8 @@ void ARadio::TurnOff()
 {
 	//stop playing music
 	//AmbientSound->Stop();
-	
-	CurrentInstance->Stop();
+	if (CurrentInstance)
+		CurrentInstance->Stop();
 	CurrentInstance = nullptr;
 }
 
@@ -98,8 +93,11 @@ void ARadio::TurnOn()
 {
 	//start playing music
 	//AmbientSound->Play();
-	
-	CurrentInstance->Play();
+	if (CurrentInstance)
+		CurrentInstance->Play();
+	if (!CurrentInstance)
+		SwitchChannel();
+		
 }
 
 
@@ -107,22 +105,9 @@ void ARadio::TurnOn()
 void ARadio::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (bSwitchChannel)
-	{
-		SwitchChannel();
-		bSwitchChannel = false;
-	}
 	
-	if (!CurrentInstance || !CurrentInstance->IsPlaying())
-	{
-		SwitchChannel();
-	}
 }
 
-/*void ARadio::OnInteract(ASpmG5Character* InteractingPlayer)
-{
-}*/
 
 void ARadio::InitializeCopyArray()
 {
