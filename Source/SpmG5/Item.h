@@ -43,6 +43,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
+	int CollisionSoundsPlayed;
+	
 	UPROPERTY(EditAnywhere, Category="Audio")
 	EAudioItemType AudioType;
 	
