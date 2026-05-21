@@ -16,12 +16,36 @@ void UGameManager::LoadLevel(TSoftObjectPtr<UWorld> Level)
 	CurrentLevel = Level;
 	FLatentActionInfo LatentInfo;
 	LatentInfo.CallbackTarget = this;
-	LatentInfo.ExecutionFunction = FName("LevelLoaded");
-	LatentInfo.Linkage = 0;
+	if(FirstTime || CurrentLevel != PreviousLevel)
+	{
+		LatentInfo.ExecutionFunction = FName("LevelLoaded");
+		LatentInfo.Linkage = 0;
+		UGameplayStatics::LoadStreamLevelBySoftObjectPtr(GetWorld(),Level, true, false, LatentInfo);
+	}
+	else
+	{
+		LatentInfo.ExecutionFunction = FName("LevelUnloaded");
+		LatentInfo.Linkage = 0;
+		UGameplayStatics::UnloadStreamLevelBySoftObjectPtr(GetWorld(), Level, LatentInfo, false);
+	}
 	
 	// Loads additive level
-	UGameplayStatics::LoadStreamLevelBySoftObjectPtr(GetWorld(),Level, true, false, LatentInfo);
 }
+
+/*void UGameManager::RestartLevel()
+{
+	if (FirstTime) return;
+	FLatentActionInfo LatentInfo;
+	LatentInfo.CallbackTarget = this;
+	LatentInfo.ExecutionFunction = FName();
+	LatentInfo.Linkage = 0;
+	
+	UGameplayStatics::UnloadStreamLevelBySoftObjectPtr(GetWorld(), PreviousLevel, LatentInfo, false);
+	UGameplayStatics::LoadStreamLevelBySoftObjectPtr(GetWorld(), CurrentLevel, true, false, LatentInfo);
+
+	
+}*/
+
 
 bool UGameManager::GetLevelStarted()
 {
@@ -49,12 +73,30 @@ void UGameManager::LevelLoaded()
 		FLatentActionInfo LatentInfo;
 		
 		// Deloads previous level
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *PreviousLevel.ToString());
-		UGameplayStatics::UnloadStreamLevelBySoftObjectPtr(GetWorld(), PreviousLevel, LatentInfo, false);
+		if (PreviousLevel != CurrentLevel)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("%s"), *PreviousLevel.ToString());
+			UGameplayStatics::UnloadStreamLevelBySoftObjectPtr(GetWorld(), PreviousLevel, LatentInfo, false);
+		}
 	}
 	
-	// Let's relevant classes know when a level has finished being loaded in
+	// Lets relevant classes know when a level has finished being loaded in
 	OnLevelLoadedInternal.Broadcast();
 }
 
+void UGameManager::LevelUnloaded()
+{
+	FLatentActionInfo LatentInfo;
+	LatentInfo.CallbackTarget = this;
+	LatentInfo.ExecutionFunction = FName("BroadcastLoaded");
+	LatentInfo.Linkage = 0;
+	
+	UGameplayStatics::LoadStreamLevelBySoftObjectPtr(GetWorld(),CurrentLevel, true, false, LatentInfo);
+}
+
+void UGameManager::BroadcastLoaded()
+{
+	UE_LOG(LogTemp, Warning, TEXT("clartabomb"));
+	OnLevelLoadedInternal.Broadcast();
+}
 

@@ -77,6 +77,43 @@ AItem* ABoxSpawner::SpawnBox()
 	return SpawnItem();
 }
 
+AItem* ABoxSpawner::SpawnItem(bool IsDangerous, bool IsLarge, bool IsFragile, bool IsSuspicious, BoxAddress Address)
+{
+	FTransform SpawnTransform = FTransform(FRotator::ZeroRotator, SpawnLocation->GetComponentLocation());
+	
+	TSubclassOf<AActor> ItemToSpawn = BoxToSpawn;
+	
+	if (IsSuspicious)
+	{		
+		if (IsDangerous)
+		{
+			ItemToSpawn = BombToSpawn;
+			UE_LOG(LogTemp, Warning, TEXT("Dangerous box should spawn!!!!"));
+		}
+	}
+	
+	// Sets all properties of an item before spawning it
+	AActor* NewActor = GetWorld()->SpawnActorDeferred<AActor>(ItemToSpawn, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+	AItem* Item = Cast<AItem>(NewActor);
+	
+	if (Item)
+	{
+		//UE_LOG(LogTemp, Warning, TEXT("Spawning Box"));
+		Item->SetIsLarge(IsLarge);
+		Item->SetIsFragile(IsFragile);
+		//Item->SetIsDangerous(ShouldHappen(DangerousBoxSpawnRate));
+		//Item->SetActorRotation(SpawnLocation->GetComponentRotation() + FRotator(0, FMath::RandRange(-15,15), 0));
+		Item->SetIsSuspicious(IsSuspicious);
+		Item->SetIsDangerous(IsDangerous);
+		Item->SetAddress(Address);
+		Item->SetPlaySound(PlayBoxSound);
+	}
+
+	// Actually spawn item
+	UGameplayStatics::FinishSpawningActor(Item, SpawnTransform);
+	return Item;
+}
+
 void ABoxSpawner::SpawnBoxOnPoint()
 {
 	SpawnItem();

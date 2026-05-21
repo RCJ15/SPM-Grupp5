@@ -9,17 +9,29 @@
 /**
  * 
  */
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnScoreChanged);
+
 UCLASS()
 class SPMG5_API UScoreManager : public UWorldSubsystem
 {
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(BlueprintAssignable)
+	FOnScoreChanged OnScoreChanged;
+	
+	UFUNCTION(BlueprintCallable)
+	void ConnectHUDWidget(UUserWidget* Widget) { HUDWidget = Widget; }
+	
 	UFUNCTION(BlueprintCallable)
 	int GetScore();
 	
 	UFUNCTION(BlueprintCallable)
-	void AddScore(int AddedScore);
+	int GetAddedScore();
+	
+	UFUNCTION(BlueprintCallable)
+	void AddScore(int ScoreChange);
 	
 	UFUNCTION(BlueprintCallable)
 	void ResetScore();
@@ -36,6 +48,13 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	TMap<TSoftObjectPtr<UWorld>, int> ScoreMap;
 
+	UScoreManager* GetScoreManager() { return this; }
+	
 private:
+	UPROPERTY()
+	UUserWidget* HUDWidget;
+	
 	int Score;
+	
+	int AddedScore;
 };	

@@ -106,7 +106,7 @@ void AConveyorBeltUpgraded::AddToBelt(AItem* Item)
 	FVector Offset = FVector(0,0,0);
 	if (abs(MovedDelta) > 0.2)
 		Offset += Item->GetActorLocation() - Path->GetLocationAtSplineInputKey(MovedDelta,ESplineCoordinateSpace::World);
-	if (abs(Offset.X) > 100 || abs(Offset.Y) > 100 || abs(Offset.Z)>10) //lägg inte till om för långt ute på kanten
+	if (abs(Offset.X) > 100 || abs(Offset.Y) > 100 || abs(Offset.Z)>50) //lägg inte till om för långt ute på kanten
 		return;
 	FObjectOnBelt* Obj = new FObjectOnBelt(Item,nullptr, MovedDelta,Offset);
 	//Item->Conveyor = this; 
@@ -150,7 +150,7 @@ bool AConveyorBeltUpgraded::ItemIsAtEndOfBelt(AItem* Item)
 
 void AConveyorBeltUpgraded::Move()
 {
-	if (!First)
+	if (!First && SpawnItemsSelf)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("First item doesnt exist!"));
 		AItem* NewItem = BoxSpawner->SpawnBox();
@@ -176,7 +176,7 @@ void AConveyorBeltUpgraded::Move()
 		//if (Item)
 		//Item->SetActorRotation(Path->GetRotationAtSplineInputKey(SegmentIndex+MovedDelta,ESplineCoordinateSpace::World));
 		
-		if (First!= nullptr && First->MovedDelta >= 1)
+		if (First!= nullptr && First->MovedDelta >= 1 && SpawnItemsSelf)
 		{
 			AItem* NewItem = BoxSpawner->SpawnBox();
 			AddToBelt(NewItem);
