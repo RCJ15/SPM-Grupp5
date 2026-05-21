@@ -4,7 +4,9 @@
 #include "Item.h"
 #include "ConveyorBelt.h"
 #include "FMODBlueprintStatics.h"
+#include "Interactable.h"
 #include "NiagaraFunctionLibrary.h"
+#include "SpmG5Character.h"
 #include "StateTreeTypes.h"
 #include "DynamicMesh/DynamicMesh3.h"
 #include "GameFramework/PawnMovementComponent.h"
@@ -123,6 +125,26 @@ void AItem::Disintegrate(bool bThrownInTrash)
 	}
 	else
 	{
+
+		if (IsValid(MostRecentHolder))
+		{
+			if (ASpmG5Character* Char = Cast<ASpmG5Character>(MostRecentHolder))
+			{
+				if (Char->GetItem() == this)
+				{
+					Char->Drop();
+					UE_LOG(LogTemp, Error, TEXT("Item dropped from player"));
+				}
+			}
+			else if (MostRecentHolder->Implements<UInteractable>())
+			{
+				UObject* StationHit = Cast<UObject>(MostRecentHolder);
+				//StationHit->k
+				//DEALA MED ATT TA BORT LYSANDE STUFF
+			}
+		}
+		
+		
 		// Box breaks (it's fragile)
 		if (FragileBreakParticles)
 		{
