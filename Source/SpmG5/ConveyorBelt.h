@@ -75,7 +75,7 @@ public:
 	UPROPERTY(EditAnywhere, Category="Conveyor Settings")
 	bool RunWhileEmpty; //if the conveyor should still be able to be on while it has no items.
 	UPROPERTY(EditAnywhere, Category="Conveyor Settings", BlueprintReadWrite)
-	bool SpawnItemsSelf = true;
+	bool SpawnItemsSelf = false;
 	UPROPERTY(EditAnywhere, Category="Conveyor Settings")
 	float Speed = 0.5; //Antal lådor som spawnar per sekund ish (1 = en låda per sekund) (0,5 = en låda varannan sekund)
 	UPROPERTY(EditAnywhere, Category="Conveyor Settings")
