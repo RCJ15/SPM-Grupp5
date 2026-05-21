@@ -261,5 +261,5 @@ void AItem::SetIsInspected(bool SetTo)
 
 void AItem::SetHasBeenDroppedOff(bool SetTo)
 {
-	IsInspected = SetTo;
+	HasBeenDroppedOff = SetTo;
 }
