@@ -1,6 +1,5 @@
 // Marcus hopefully approves of this.
 
-
 #include "Radio.h"
 
 #include "FMODBlueprintStatics.h"
@@ -25,7 +24,12 @@ void ARadio::BeginPlay()
 	BaseMesh->OnComponentHit.AddDynamic(this, &ARadio::OnHit);
 	
 	InitializeCopyArray();
-	TurnOn();
+	
+	// Countdown will turn on the radio when it ends, except for the tutorial - Ruben
+	if (TurnOnInBeginPlay)
+	{
+		TurnOn();
+	}
 }
 
 //använde det här som källa https://forums.unrealengine.com/t/choosing-random-numbers-in-a-range-all-at-least-once/344734/2
@@ -57,15 +61,15 @@ void ARadio::SwitchChannel()
 	//sätt aktiv kanal till SoundWave[Index];
 	
 	//wchar_t* Name = SoundWave[Index]->GetName();
-	UE_LOG(LogTemp, Warning, TEXT("Index: %d and Song: %s"), Copy[Index], *Songs[Copy[Index]]->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("Index: %d and Song: %s"), Copy[Index], *Playlist->Songs[Copy[Index]]->GetName());
 	
 	//AmbientSound->GetAudioComponent()->Sound=SoundWave[Index]; //det här ser så fel ut
 	//AmbientSound->Play();
 	
-	UFMODEvent* Evt = Songs[Copy[Index]];
+	USongAsset* Song = Playlist->Songs[Copy[Index]];
 	
 	CurrentInstance = UFMODBlueprintStatics::PlayEventAttached(
-		Evt, //FMOD event asset
+		Song->Event, //FMOD event asset
 		BaseMesh, //component to attach to
 		NAME_None, //optional socket name
 		FVector::ZeroVector, 
@@ -85,8 +89,12 @@ void ARadio::TurnOff()
 	//stop playing music
 	//AmbientSound->Stop();
 	if (CurrentInstance)
+	{
 		CurrentInstance->Stop();
+	}
 	CurrentInstance = nullptr;
+		
+	IsOn = false;
 }
 
 void ARadio::TurnOn()
@@ -94,10 +102,15 @@ void ARadio::TurnOn()
 	//start playing music
 	//AmbientSound->Play();
 	if (CurrentInstance)
+	{
 		CurrentInstance->Play();
-	if (!CurrentInstance)
+	}
+	else
+	{
 		SwitchChannel();
-		
+	}
+			
+	IsOn = true;
 }
 
 
@@ -106,14 +119,20 @@ void ARadio::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
+	if (IsOn && (!CurrentInstance || !CurrentInstance->IsPlaying()))
+	{
+		SwitchChannel();
+	}
 }
 
 
 void ARadio::InitializeCopyArray()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Initialize Copy Array"));
+	int Length = Playlist->Songs.Num();
+	
 	//initialize copy array with indexes of songs
-	for (int i = 0; i < Songs.Num(); i++)
+	for (int i = 0; i < Length; i++)
 	{
 		Copy.Add(i);
 	}
