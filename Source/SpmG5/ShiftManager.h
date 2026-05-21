@@ -7,6 +7,7 @@
 #include "ShiftManager.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTimeRunsOut);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTimeChanged);
 /**
  * 
  */
@@ -30,10 +31,13 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnTimeRunsOut OnTimeRunsOut;
 	
+	UPROPERTY(BlueprintAssignable)
+	FOnTimeChanged OnTimeChanged;
+	
 	UFUNCTION(BlueprintCallable)
 	void SetShiftTime(int seconds);
 	
-	int BaseShiftLengthInSeconds = 50;
+	int BaseShiftLengthInSeconds = 500;
 	int ShiftLengthInSeconds = 300;
 
 	int TimeRemaining = ShiftLengthInSeconds;

@@ -34,6 +34,10 @@ public:
 
 	//UFUNCTION(BlueprintImplementableEvent)
 	AItem* SpawnBox();
+	
+	UFUNCTION(BlueprintCallable)
+	AItem* SpawnItem(bool IsDangerous, bool IsLarge, bool IsFragile, bool IsSuspicious, BoxAddress Address);
+	
 	void SpawnBoxOnPoint();
 	
 	void LoopSpawnBox(float NewSpawnRate);
