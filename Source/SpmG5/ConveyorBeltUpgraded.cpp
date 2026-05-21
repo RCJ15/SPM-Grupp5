@@ -108,6 +108,8 @@ void AConveyorBeltUpgraded::AddToBelt(AItem* Item)
 		Offset += Item->GetActorLocation() - Path->GetLocationAtSplineInputKey(MovedDelta,ESplineCoordinateSpace::World);
 	if (abs(Offset.X) > 100 || abs(Offset.Y) > 100 || abs(Offset.Z)>50) //lägg inte till om för långt ute på kanten
 		return;
+	Item->SetActorRotation(FRotator(0, Item->GetActorRotation().Yaw, 0));
+	
 	FObjectOnBelt* Obj = new FObjectOnBelt(Item,nullptr, MovedDelta,Offset);
 	//Item->Conveyor = this; 
 	Item->ConveyorUpgraded = this;
@@ -223,7 +225,7 @@ void AConveyorBeltUpgraded::GenerateSpline()
 	Segments[0]->GetActorBounds(false, SegmentOrigin, SegmentBoxExtent);
 	FVector DirOffset = FVector(0,0,0) + (Segments[Segments.Num()-1] -> GetForward() * (SegmentBoxExtent.X-GuardRailLengthOffset));
 	
-	Path-> AddSplinePointAtIndex(Segments[Segments.Num()-1]->GetActorLocation() + DirOffset/2  + PathOffset,Segments.Num(),ESplineCoordinateSpace::World);
+	Path-> AddSplinePointAtIndex(Segments[Segments.Num()-1]->GetActorLocation() + DirOffset  + PathOffset,Segments.Num(),ESplineCoordinateSpace::World);
 	Path -> SetSplinePointType(Segments.Num(),ESplinePointType::Linear,true);
 	
 }
