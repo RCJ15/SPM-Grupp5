@@ -43,6 +43,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
+	int CollisionSoundsPlayed;
+	
 	UPROPERTY(EditAnywhere, Category="Audio")
 	EAudioItemType AudioType;
 	
@@ -84,6 +86,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere)
 	bool IsInspected = false;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool HasBeenDroppedOff = false;
 	
 	UPROPERTY(EditAnywhere)
 	int SmallBoxPoints = 5;
@@ -181,6 +186,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	BoxAddress GetAddress(){return Address;}
 	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool GetHasBeenDroppedOff(){return HasBeenDroppedOff;}
+	
 	UFUNCTION(BlueprintCallable)
 	void SetMostRecentHolder(AActor* holder);
 	
@@ -201,6 +209,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void SetIsInspected(bool SetTo);
+	
+	UFUNCTION(BlueprintCallable)
+	void SetHasBeenDroppedOff(bool SetTo);
 	
 	//FULT!!!!! TA BORT EFTER SPELTEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	

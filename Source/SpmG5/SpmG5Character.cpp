@@ -226,6 +226,10 @@ void ASpmG5Character::Pickup(AItem* Item)
 		HeldItem->ConveyorUpgraded->RemoveFromBelt(HeldItem);
 		UE_LOG(LogTemp, Display, TEXT("Dropping item from conveyor"));
 	}
+	if (Item->GetIsFragile())
+	{
+		Item->ShouldBreakOnImpact = false;
+	}
 	AttachPackage();
 }
 

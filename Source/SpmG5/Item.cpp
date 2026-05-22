@@ -4,7 +4,9 @@
 #include "Item.h"
 #include "ConveyorBelt.h"
 #include "FMODBlueprintStatics.h"
+#include "Interactable.h"
 #include "NiagaraFunctionLibrary.h"
+#include "SpmG5Character.h"
 #include "StateTreeTypes.h"
 #include "DynamicMesh/DynamicMesh3.h"
 #include "GameFramework/PawnMovementComponent.h"
@@ -123,6 +125,26 @@ void AItem::Disintegrate(bool bThrownInTrash)
 	}
 	else
 	{
+
+		if (IsValid(MostRecentHolder))
+		{
+			if (ASpmG5Character* Char = Cast<ASpmG5Character>(MostRecentHolder))
+			{
+				if (Char->GetItem() == this)
+				{
+					Char->Drop();
+					UE_LOG(LogTemp, Error, TEXT("Item dropped from player"));
+				}
+			}
+			else if (MostRecentHolder->Implements<UInteractable>())
+			{
+				UObject* StationHit = Cast<UObject>(MostRecentHolder);
+				//StationHit->k
+				//DEALA MED ATT TA BORT LYSANDE STUFF
+			}
+		}
+		
+		
 		// Box breaks (it's fragile)
 		if (FragileBreakParticles)
 		{
@@ -163,11 +185,17 @@ void AItem::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimit
 			);
 		
 			if (Volume <= 0) { return; }
+			
+			// Ignore first play as it's from when the box is spawned in the conveyor - Ruben
+			CollisionSoundsPlayed++;
+			
+			if (CollisionSoundsPlayed > 1)
+			{
+				//UE_LOG(LogTemp, Warning, TEXT("Item was HIT with force of %f!!! Playing with a volume of %f"), Magnitude, Volume);
 		
-			//UE_LOG(LogTemp, Warning, TEXT("Item was HIT with force of %f!!! Playing with a volume of %f"), Magnitude, Volume);
-		
-			FFMODEventInstance Evt = UFMODBlueprintStatics::PlayEventAtLocation(this, CollisionSFX, FTransform(Hit.ImpactPoint), true);
-			UFMODBlueprintStatics::EventInstanceSetVolume(Evt, Volume);	
+				FFMODEventInstance Evt = UFMODBlueprintStatics::PlayEventAtLocation(this, CollisionSFX, FTransform(Hit.ImpactPoint), true);
+				UFMODBlueprintStatics::EventInstanceSetVolume(Evt, Volume);	
+			}
 		}
 	}
 }
@@ -235,4 +263,9 @@ void AItem::SetIsScanned(bool SetTo)
 void AItem::SetIsInspected(bool SetTo)
 {
 	IsInspected = SetTo;
+}
+
+void AItem::SetHasBeenDroppedOff(bool SetTo)
+{
+	HasBeenDroppedOff = SetTo;
 }
