@@ -265,6 +265,11 @@ void AItem::SetIsInspected(bool SetTo)
 	IsInspected = SetTo;
 }
 
+void AItem::SetIsHeld(bool SetTo)
+{
+	IsHeld = SetTo;
+}
+
 void AItem::SetHasBeenDroppedOff(bool SetTo)
 {
 	HasBeenDroppedOff = SetTo;

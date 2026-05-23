@@ -17,6 +17,7 @@
 #endif
 #include "SpmG5.h"
 #include "FMODBlueprintStatics.h"
+#include "IDetailTreeNode.h"
 #include "Interactable.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -212,7 +213,7 @@ void ASpmG5Character::ChooseInteractOrPickup()
 
 void ASpmG5Character::Pickup(AItem* Item)
 {
-	if (!Item)
+	if (!Item || Item->GetIsHeld())
 		return;
 	HeldItem = Item;
 	HasItem = true;
@@ -231,6 +232,7 @@ void ASpmG5Character::Pickup(AItem* Item)
 		Item->ShouldBreakOnImpact = false;
 	}
 	AttachPackage();
+	Item->SetIsHeld(true);
 }
 
 void ASpmG5Character::AttachPackage()
@@ -330,6 +332,7 @@ AItem* ASpmG5Character::Drop()
 	HeldItem = nullptr;
 	HasItem = false;
 	Throwing = false;	
+	Item->SetIsHeld(false);
 	return Item;
 }
 
@@ -376,6 +379,7 @@ void ASpmG5Character::Throw(const FInputActionValue& Value)
 	CurrentThrowForce = StartingThrowForce;
 	
 	//Resettar inför pickup
+	HeldItem->SetIsHeld(false);
 	HeldItem = nullptr;
 	HasItem = false;
 	Throwing = false;
