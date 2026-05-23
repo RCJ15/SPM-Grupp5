@@ -414,6 +414,13 @@ void ASpmG5Character::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if (!HeldItem)
 		FindBoxToPickup();
+	
+	if (bIncreaseIncapacitation)
+	{
+		IncreaseIncapacitation();
+	}
+	
+	DecreaseIncapacitation();
 }
 
 void ASpmG5Character::Move(const FInputActionValue& Value)
@@ -451,6 +458,45 @@ void ASpmG5Character::Move(const FInputActionValue& Value)
 	// route the input
 	DoLook(LookAxisVector.X, LookAxisVector.Y);
 }*/
+
+void ASpmG5Character::IncreaseIncapacitation(float Increase)
+{
+	IncapacitationMeter += Increase * GetWorld()->GetDeltaSeconds();
+	
+	if (IncapacitationMeter > MaxIncapacitation && !bIsRagdolling)
+	{
+		DoRagdoll();
+	}
+}
+
+void ASpmG5Character::DecreaseIncapacitation(float Decrease)
+{
+	if (IncapacitationMeter <= 0)
+		return;
+	
+	if (IncapacitationMeter > 0)
+		IncapacitationMeter -= Decrease * GetWorld()->GetDeltaSeconds();
+	
+	if (IncapacitationMeter < 0)
+	{
+		IncapacitationMeter = 0;
+		StopRagdoll();
+	}
+		
+}
+
+void ASpmG5Character::DoRagdoll()
+{
+	UE_LOG(LogTemp, Warning, TEXT("DoRagdoll"));
+	bIsRagdolling = true;
+	Drop();
+}
+
+void ASpmG5Character::StopRagdoll()
+{
+	UE_LOG(LogTemp, Warning, TEXT("DoRagdoll"));
+	bIsRagdolling = false;
+}
 
 void ASpmG5Character::DoMove(float Right, float Forward)
 {

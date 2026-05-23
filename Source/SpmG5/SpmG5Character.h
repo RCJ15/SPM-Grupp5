@@ -47,6 +47,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USceneComponent* HoldingLocation;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float IncapacitationMeter = 0; 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIncreaseIncapacitation = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MaxIncapacitation = 10;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsRagdolling = false;
 	
 	UPROPERTY(EditAnywhere)
 	FVector PickUpBoxSize = FVector(80.0f, 50.0f, 120.0f);
@@ -179,7 +187,17 @@ protected:
 public:
 	void AddVelocity(FVector Force){AddMovementInput(Force);}
 
+	
+	UFUNCTION(BlueprintCallable, Category="Item Reactions")
+	void IncreaseIncapacitation(float Increase = 2);
+	UFUNCTION(BlueprintCallable, Category="Item Reactions")
+	void DecreaseIncapacitation(float Decrease = 1);
 
+	UFUNCTION(BlueprintCallable, Category="Physics")
+	void DoRagdoll();
+	UFUNCTION(BlueprintCallable, Category="Physics")
+	void StopRagdoll();
+	
 	/** Handles move inputs from either controls or UI interfaces */
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoMove(float Right, float Forward);
