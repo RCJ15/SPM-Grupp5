@@ -226,4 +226,7 @@ public:
 	bool PlaySound = true;
 	
 	void SetPlaySound(bool SetTo){PlaySound = SetTo;}
+	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void SetAddressDecal();
 };
