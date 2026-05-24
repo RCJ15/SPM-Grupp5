@@ -184,7 +184,7 @@ void ASpmG5Character::ChooseInteractOrPickup()
     //bestämm vad som ska göras
     if (bHitItem && bHitStation && !ItemHit->bIsInStation)
     {
-        if (!HeldItem && !HeldItem)
+        if (!HeldItem)
         {
             Pickup(ItemHit);
         }
