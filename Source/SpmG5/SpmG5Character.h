@@ -171,7 +171,6 @@ protected:
 	
 	void PickupAndDrop(const FInputActionValue& Value);
 	void AttachPackage();
-	void InteractWithConveyor();
 	
 	void Pickup();
 	void Hold();

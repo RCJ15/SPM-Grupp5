@@ -184,7 +184,7 @@ void ASpmG5Character::ChooseInteractOrPickup()
     //bestämm vad som ska göras
     if (bHitItem && bHitStation && !ItemHit->bIsInStation)
     {
-        if (!HasItem && !HeldItem)
+        if (!HeldItem && !HeldItem)
         {
             Pickup(ItemHit);
         }
@@ -200,7 +200,7 @@ void ASpmG5Character::ChooseInteractOrPickup()
     }
     else if (bHitItem)
     {
-        if (!HasItem)
+        if (!HeldItem)
         {
             Pickup(ItemHit);
         }
@@ -213,6 +213,7 @@ void ASpmG5Character::ChooseInteractOrPickup()
 
 void ASpmG5Character::Pickup(AItem* Item)
 {
+	Drop();
 	if (!Item || Item->GetIsHeld())
 		return;
 	HeldItem = Item;
@@ -267,57 +268,18 @@ void ASpmG5Character::Hold()
 }
 
 
-//OBS DEN HÄR BÖR KUNNAS TA BORT!!!!!!!!
-void ASpmG5Character::InteractWithConveyor()
-{
-	TArray<FHitResult> SearchForConveyor;
-	
-	float Distance = 5.0f;
-	FVector Location = HoldingLocation->GetComponentLocation();	
-	FVector End = Location + GetActorForwardVector() * Distance;
-	FCollisionShape Box = FCollisionShape::MakeBox(PickUpBoxSize);
-	FQuat Rotation = GetActorRotation().Quaternion();
-	
-	GetWorld()->SweepMultiByChannel(SearchForConveyor,Location, End, Rotation, ECC_GameTraceChannel2,Box);
-	
-	for (FHitResult& Hit : SearchForConveyor)
-	{
-		if (Hit.GetActor() != nullptr)
-		{
-			if (AConveyorSegment* Segment = Cast<AConveyorSegment>(Hit.GetActor()))
-			{
-				//kolla om segment är tomt
-				if (AConveyorBelt* Belt = Segment->Belt)
-				{
-					if (Segment->IndexInConveyorBelt == 0)
-						return;
-					//NOTE FÖR FRAMTIDEN ISTÄLLET FÖR ATT KOLLA OM DEN ÄR ÖVER 0.5 och byta
-					//KOLLA ATT DEN ÄR UNDER 0.25 på current segment, 
-					//eller över 0.75 på previous segment
-					if (Belt->MovedDelta > 0.5)				
-						Segment = Belt->Conveyor[Segment->IndexInConveyorBelt-1];				
-					if (!Belt->HasItemInSegment(Segment))
-					{
-						Belt->ReceiveItem(HeldItem,Segment);	
-						break; //så den inte forstätter kolla igenom hit results
-					}
-				}
-				
-			}
-		}
-	}
-
-}
-
 AItem* ASpmG5Character::Drop()
 {
 	if (!HeldItem)
+	{
+		HasItem = false; //Se till att HasItem är false när HeldItem är nullptr
 		return nullptr;
+	}
+		
 		
 	//Resetting Box
 	GetWorldTimerManager().ClearTimer(HoldingTimer);
 	HeldItem->SetPhysics(true);
-	//InteractWithConveyor();
 	HeldItem->ResetVelocity();	
 	
 	AItem* Item = HeldItem;
