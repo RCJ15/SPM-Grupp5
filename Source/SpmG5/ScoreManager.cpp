@@ -19,6 +19,11 @@ int UScoreManager::GetAddedScore()
 	return AddedScore;
 }
 
+int UScoreManager::GetComboMultiplier()
+{
+	return ComboMultiplier;
+}
+
 void UScoreManager::AddScore(int ScoreChange)
 {
 	AddedScore = ScoreChange;
@@ -35,6 +40,17 @@ void UScoreManager::AddScore(int ScoreChange)
 	{
 		Score = NewScore;
 		OnScoreChanged.Broadcast();
+		
+		//Höj combo multiplier vid rätt sortering, och ta bort vid fel sortering
+		if (AddedScore < 0)
+		{
+			ComboMultiplier = 1;
+		}
+		else
+		{
+			++ComboMultiplier;
+		}
+		OnComboChanged.Broadcast();
 	}
 	
  	UE_LOG(LogTemp, Warning, TEXT("Score: %d"), Score);

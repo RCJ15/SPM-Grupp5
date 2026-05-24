@@ -11,6 +11,7 @@
  */
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnScoreChanged);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnComboChanged);
 
 UCLASS()
 class SPMG5_API UScoreManager : public UWorldSubsystem
@@ -20,15 +21,17 @@ class SPMG5_API UScoreManager : public UWorldSubsystem
 public:
 	UPROPERTY(BlueprintAssignable)
 	FOnScoreChanged OnScoreChanged;
-	
-	UFUNCTION(BlueprintCallable)
-	void ConnectHUDWidget(UUserWidget* Widget) { HUDWidget = Widget; }
+	UPROPERTY(BlueprintAssignable)
+	FOnComboChanged OnComboChanged;
 	
 	UFUNCTION(BlueprintCallable)
 	int GetScore();
 	
 	UFUNCTION(BlueprintCallable)
 	int GetAddedScore();
+	
+	UFUNCTION(BlueprintCallable)
+	int GetComboMultiplier();
 	
 	UFUNCTION(BlueprintCallable)
 	void AddScore(int ScoreChange);
@@ -51,10 +54,10 @@ public:
 	UScoreManager* GetScoreManager() { return this; }
 	
 private:
-	UPROPERTY()
-	UUserWidget* HUDWidget;
 	
 	int Score;
 	
 	int AddedScore;
+	
+	int ComboMultiplier = 1;
 };	
