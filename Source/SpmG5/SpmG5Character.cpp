@@ -17,6 +17,7 @@
 #endif
 #include "SpmG5.h"
 #include "FMODBlueprintStatics.h"
+#include "IDetailTreeNode.h"
 #include "Interactable.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -183,7 +184,7 @@ void ASpmG5Character::ChooseInteractOrPickup()
     //bestämm vad som ska göras
     if (bHitItem && bHitStation && !ItemHit->bIsInStation)
     {
-        if (!HasItem && !HeldItem)
+        if (!HeldItem)
         {
             Pickup(ItemHit);
         }
@@ -199,7 +200,7 @@ void ASpmG5Character::ChooseInteractOrPickup()
     }
     else if (bHitItem)
     {
-        if (!HasItem)
+        if (!HeldItem)
         {
             Pickup(ItemHit);
         }
@@ -212,7 +213,8 @@ void ASpmG5Character::ChooseInteractOrPickup()
 
 void ASpmG5Character::Pickup(AItem* Item)
 {
-	if (!Item)
+	Drop();
+	if (!Item || Item->GetIsHeld())
 		return;
 	HeldItem = Item;
 	HasItem = true;
@@ -231,6 +233,7 @@ void ASpmG5Character::Pickup(AItem* Item)
 		Item->ShouldBreakOnImpact = false;
 	}
 	AttachPackage();
+	Item->SetIsHeld(true);
 }
 
 void ASpmG5Character::AttachPackage()
@@ -265,57 +268,18 @@ void ASpmG5Character::Hold()
 }
 
 
-//OBS DEN HÄR BÖR KUNNAS TA BORT!!!!!!!!
-void ASpmG5Character::InteractWithConveyor()
-{
-	TArray<FHitResult> SearchForConveyor;
-	
-	float Distance = 5.0f;
-	FVector Location = HoldingLocation->GetComponentLocation();	
-	FVector End = Location + GetActorForwardVector() * Distance;
-	FCollisionShape Box = FCollisionShape::MakeBox(PickUpBoxSize);
-	FQuat Rotation = GetActorRotation().Quaternion();
-	
-	GetWorld()->SweepMultiByChannel(SearchForConveyor,Location, End, Rotation, ECC_GameTraceChannel2,Box);
-	
-	for (FHitResult& Hit : SearchForConveyor)
-	{
-		if (Hit.GetActor() != nullptr)
-		{
-			if (AConveyorSegment* Segment = Cast<AConveyorSegment>(Hit.GetActor()))
-			{
-				//kolla om segment är tomt
-				if (AConveyorBelt* Belt = Segment->Belt)
-				{
-					if (Segment->IndexInConveyorBelt == 0)
-						return;
-					//NOTE FÖR FRAMTIDEN ISTÄLLET FÖR ATT KOLLA OM DEN ÄR ÖVER 0.5 och byta
-					//KOLLA ATT DEN ÄR UNDER 0.25 på current segment, 
-					//eller över 0.75 på previous segment
-					if (Belt->MovedDelta > 0.5)				
-						Segment = Belt->Conveyor[Segment->IndexInConveyorBelt-1];				
-					if (!Belt->HasItemInSegment(Segment))
-					{
-						Belt->ReceiveItem(HeldItem,Segment);	
-						break; //så den inte forstätter kolla igenom hit results
-					}
-				}
-				
-			}
-		}
-	}
-
-}
-
 AItem* ASpmG5Character::Drop()
 {
 	if (!HeldItem)
+	{
+		HasItem = false; //Se till att HasItem är false när HeldItem är nullptr
 		return nullptr;
+	}
+		
 		
 	//Resetting Box
 	GetWorldTimerManager().ClearTimer(HoldingTimer);
 	HeldItem->SetPhysics(true);
-	//InteractWithConveyor();
 	HeldItem->ResetVelocity();	
 	
 	AItem* Item = HeldItem;
@@ -330,6 +294,7 @@ AItem* ASpmG5Character::Drop()
 	HeldItem = nullptr;
 	HasItem = false;
 	Throwing = false;	
+	Item->SetIsHeld(false);
 	return Item;
 }
 
@@ -376,6 +341,7 @@ void ASpmG5Character::Throw(const FInputActionValue& Value)
 	CurrentThrowForce = StartingThrowForce;
 	
 	//Resettar inför pickup
+	HeldItem->SetIsHeld(false);
 	HeldItem = nullptr;
 	HasItem = false;
 	Throwing = false;
@@ -410,6 +376,13 @@ void ASpmG5Character::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if (!HeldItem)
 		FindBoxToPickup();
+	
+	if (bIncreaseIncapacitation)
+	{
+		IncreaseIncapacitation();
+	}
+	
+	DecreaseIncapacitation();
 }
 
 void ASpmG5Character::Move(const FInputActionValue& Value)
@@ -447,6 +420,45 @@ void ASpmG5Character::Move(const FInputActionValue& Value)
 	// route the input
 	DoLook(LookAxisVector.X, LookAxisVector.Y);
 }*/
+
+void ASpmG5Character::IncreaseIncapacitation(float Increase)
+{
+	IncapacitationMeter += Increase * GetWorld()->GetDeltaSeconds();
+	
+	if (IncapacitationMeter > MaxIncapacitation && !bIsRagdolling)
+	{
+		DoRagdoll();
+	}
+}
+
+void ASpmG5Character::DecreaseIncapacitation(float Decrease)
+{
+	if (IncapacitationMeter <= 0)
+		return;
+	
+	if (IncapacitationMeter > 0)
+		IncapacitationMeter -= Decrease * GetWorld()->GetDeltaSeconds();
+	
+	if (IncapacitationMeter < 0)
+	{
+		IncapacitationMeter = 0;
+		StopRagdoll();
+	}
+		
+}
+
+void ASpmG5Character::DoRagdoll()
+{
+	UE_LOG(LogTemp, Warning, TEXT("DoRagdoll"));
+	bIsRagdolling = true;
+	Drop();
+}
+
+void ASpmG5Character::StopRagdoll()
+{
+	UE_LOG(LogTemp, Warning, TEXT("DoRagdoll"));
+	bIsRagdolling = false;
+}
 
 void ASpmG5Character::DoMove(float Right, float Forward)
 {

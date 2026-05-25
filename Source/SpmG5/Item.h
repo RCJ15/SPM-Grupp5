@@ -43,6 +43,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
+	int CollisionSoundsPlayed;
+	
 	UPROPERTY(EditAnywhere, Category="Audio")
 	EAudioItemType AudioType;
 	
@@ -85,7 +87,8 @@ protected:
 	UPROPERTY(EditAnywhere)
 	bool IsInspected = false;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsHeld = false;
+	
 	bool HasBeenDroppedOff = false;
 	
 	UPROPERTY(EditAnywhere)
@@ -185,6 +188,9 @@ public:
 	BoxAddress GetAddress(){return Address;}
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool GetIsHeld(){return IsHeld;}
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool GetHasBeenDroppedOff(){return HasBeenDroppedOff;}
 	
 	UFUNCTION(BlueprintCallable)
@@ -209,12 +215,18 @@ public:
 	void SetIsInspected(bool SetTo);
 	
 	UFUNCTION(BlueprintCallable)
-	void SetHasBeenDroppedOff(bool SetTo);
+	void SetIsHeld(bool SetTo);
 	
+	UFUNCTION(BlueprintCallable)
+	void SetHasBeenDroppedOff(bool SetTo);
+		
 	//FULT!!!!! TA BORT EFTER SPELTEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	
 	UPROPERTY(EditAnywhere)
 	bool PlaySound = true;
 	
 	void SetPlaySound(bool SetTo){PlaySound = SetTo;}
+	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void SetAddressDecal();
 };

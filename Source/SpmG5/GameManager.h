@@ -66,6 +66,9 @@ public:
 	UUserWidget* WinOrLoseWidget;
 	
 	UPROPERTY(BlueprintReadWrite)
+	UUserWidget* ResultsWidget;
+	
+	UPROPERTY(BlueprintReadWrite)
 	UUserWidget* PauseWidget;
 	
 	UPROPERTY(BlueprintReadWrite)

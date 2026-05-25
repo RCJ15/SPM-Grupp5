@@ -73,3 +73,8 @@ Plugins/**/Intermediate/*
 # Cache files for the editor to use
 DerivedDataCache/*
 .idea/.idea.SpmG5.dir/.idea/workspace.xml
+.idea/workspace.xml
+
+Plugins/FMODStudio/Binaries/Win64/UnrealEditor-FMODStudio.pdb
+Plugins/FMODStudio/Binaries/Win64/UnrealEditor-FMODStudioEditor.pdb
+Plugins/FMODStudioNiagara/Binaries/Win64/UnrealEditor-FMODStudioNiagara.pdb
