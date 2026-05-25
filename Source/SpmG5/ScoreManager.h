@@ -12,6 +12,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnScoreChanged);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnComboChanged);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnComboTimerChanged);
 
 UCLASS()
 class SPMG5_API UScoreManager : public UWorldSubsystem
@@ -19,10 +20,15 @@ class SPMG5_API UScoreManager : public UWorldSubsystem
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bUseComboMultiplier = true;
+	
 	UPROPERTY(BlueprintAssignable)
 	FOnScoreChanged OnScoreChanged;
 	UPROPERTY(BlueprintAssignable)
 	FOnComboChanged OnComboChanged;
+	UPROPERTY(BlueprintAssignable)
+	FOnComboTimerChanged OnComboTimeChanged;
 	
 	UFUNCTION(BlueprintCallable)
 	int GetScore();
@@ -32,6 +38,15 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	int GetComboMultiplier();
+	UFUNCTION(BlueprintCallable)
+	float GetComboTimePercent();
+	
+	UFUNCTION(BlueprintCallable)
+	void StartTimer();
+	
+	
+	UFUNCTION(BlueprintCallable)
+	int GetCorrectlySortedBoxes();
 	
 	UFUNCTION(BlueprintCallable)
 	void AddScore(int ScoreChange);
@@ -60,4 +75,13 @@ private:
 	int AddedScore;
 	
 	int ComboMultiplier = 1;
+	float ComboTimeRemaining = 0;
+	int TimeRate = 1;
+	float ComboTimerMAX = 5;
+	FTimerHandle ComboTimer;
+	void CountdownCombo();
+	void ChangeCombo(int Change);
+	
+	
+	int CorrectlySortedBoxes = 0;
 };	
