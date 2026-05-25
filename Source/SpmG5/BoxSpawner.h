@@ -14,8 +14,8 @@ class SPMG5_API ABoxSpawner : public AActor
 public:	
 	ABoxSpawner();
 	
-private:
-	static int SpawnedBoxes;
+	//UFUNCTION(BlueprintImplementableEvent)
+	AItem* SpawnBox();
 
 protected:
 	virtual void BeginPlay() override;
@@ -33,16 +33,16 @@ protected:
 	//UPROPERTY(EditAnywhere)
 	//FVector SpawnLocation = FVector(50,50,120);
 
-public:	
+private:
+	static int SpawnedBoxes;
 	
-	//UFUNCTION(BlueprintImplementableEvent)
-	AItem* SpawnBox();
+	UPROPERTY()
+	USpawnAI* SpawnAI;
 	
 	UFUNCTION(BlueprintCallable)
 	AItem* SpawnItem(bool IsDangerous, bool IsLarge, bool IsFragile, bool IsSuspicious, BoxAddress Address);
 	
 	void SpawnBoxOnPoint();
-	
 	void LoopSpawnBox(float NewSpawnRate);
 	
 	UPROPERTY(VisibleAnywhere)
@@ -63,6 +63,7 @@ public:
 	// UPROPERTY(EditAnywhere)
 	// AActor* ItemToSpawn;
 
+	// Not used currently
 	UPROPERTY(EditAnywhere)
 	float LargeBoxSpawnRate = 5;
 	
@@ -82,9 +83,4 @@ public:
 	//FULT!!!!! TA BORT EFTER SPELTEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	UPROPERTY(EditAnywhere)
 	bool PlayBoxSound = true;
-	
-private:
-	
-	UPROPERTY()
-	USpawnAI* SpawnAI;
 };
