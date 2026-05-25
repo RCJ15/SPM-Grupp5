@@ -50,5 +50,4 @@ public:
 	
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Default", meta=(ShowOnlyInnerProperties))
 	FLevelInfo LevelInfo;
-	
 };
