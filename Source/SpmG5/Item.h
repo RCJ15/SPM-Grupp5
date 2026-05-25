@@ -128,6 +128,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetNegativePoints();
 	
+	UFUNCTION(BlueprintCallable)
+	UPrimitiveComponent* GetPrimitive(){return PrimComp;}
+	
 	void SetPhysics(bool SetTo);
 	void ResetVelocity(){PrimComp->SetPhysicsLinearVelocity(FVector(0,0,0));}
 	void AddVelocity(int Force){PrimComp->SetPhysicsLinearVelocity(GetActorForwardVector() * Force + GetActorUpVector() * Force/2);}
