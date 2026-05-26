@@ -215,6 +215,7 @@ void ASpmG5Character::Pickup(AItem* Item)
 	}
 	AttachPackage();
 	Item->SetIsHeld(true);
+	UE_LOG(LogTemp, Display, TEXT("%i"), Item->GetIsHeld());
 }
 
 void ASpmG5Character::AttachPackage()
