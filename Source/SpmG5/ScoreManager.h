@@ -12,7 +12,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnScoreChanged);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnComboChanged);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnComboTimerChanged);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnComboBreak);
 
 UCLASS()
 class SPMG5_API UScoreManager : public UWorldSubsystem
@@ -28,7 +28,7 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnComboChanged OnComboChanged;
 	UPROPERTY(BlueprintAssignable)
-	FOnComboTimerChanged OnComboTimeChanged;
+	FOnComboBreak OnComboBreak;
 	
 	UFUNCTION(BlueprintCallable)
 	int GetScore();
