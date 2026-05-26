@@ -6,7 +6,6 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "SpawnAI.generated.h"
 
-
 UENUM(BlueprintType)
 enum class EBoxType : uint8
 {
@@ -45,32 +44,34 @@ struct FBoxSpawnInfo
 		CountSinceLastSpawn++;
 	}
 };
+
 UCLASS()
 class SPMG5_API USpawnAI : public UWorldSubsystem
 {
 	GENERATED_BODY()
 
 public:
-	
 	UFUNCTION(BlueprintCallable)
 	void SetupSpawner(int InAmountOfBoxesPerLevel, TMap<EBoxType, double> InSpawnRates, TMap<EBoxType, double> InDangerousTypes);
+	
+	UFUNCTION(BlueprintCallable)
+	void SetupSpawnerOnRestart();
 
 	TArray<EBoxType> ConstructBox();
 
-
 private:
+	int AmountOfBoxesPerLevelLevelStart;
+	TMap<EBoxType, double> SpawnRatesLevelStart;
+	TMap<EBoxType, double> DangerousTypesLevelStart;
 	
 	int AmountOfBoxesPerLevel;
 	TMap<EBoxType, double> SpawnRates;
 	TMap<EBoxType, double> DangerousTypes;
 	
 	TArray<FBoxSpawnInfo> Boxes; //TMap<EBoxType, FBoxSpawnInfo> SpawnInfos; POTENTIELL UPGRADE ???
-	
 	TArray<EBoxType> AllBoxTypes{EBoxType::Small, EBoxType::Fragile, EBoxType::Suspicious, EBoxType::Dangerous, EBoxType::Bomb, EBoxType::ToxicWaste, EBoxType::FlashBang};
 	
 	FBoxSpawnInfo& GetSpawnInfo(EBoxType Type);
-	
-	void AddProperty(TArray<EBoxType>& Properties, EBoxType Type);
 	
 	void ConvertAllPercentageToBoxes();
 	void ConvertPercentageToBox(double Percentage, int& TypeOfRemainingBoxes, int DependencyFromAmount);
@@ -80,6 +81,6 @@ private:
 	bool RollForProperty(EBoxType BoxType);
 	double GiveRandomPercentage();
 	double GiveBadBoxesMaxPercentage(double MaxPercentage);
-	
 	bool GuaranteeProperty(TArray<EBoxType>& Properties, EBoxType BoxType, int DependencyFromAmount);
+	void AddProperty(TArray<EBoxType>& Properties, EBoxType Type);
 };
