@@ -48,11 +48,12 @@ void UShiftManager::CountdownShift()
 
 	// Update timer on screen
 	
-	if (TimeRemaining <= 0)
+	if (TimeRemaining <= -1)
 	{
 		//GetWorld()->GetTimerManager().PauseTimer(ShiftTimer);
 		GetWorld()->GetTimerManager().ClearTimer(ShiftTimer);
 		OnTimeRunsOut.Broadcast();
+		return;
 	}
 
 	CurrentMin = TimeRemaining / 60;
