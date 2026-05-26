@@ -121,6 +121,12 @@ void ARadio::UpdatePitch()
 		return;
 	}
 	
+	//TEMP FIX FOR TUTORIAL SO IT ISN'T ALWAYS HIGH PITCH - Ruben
+	if (TurnOnInBeginPlay)
+	{
+		return;
+	}
+	
 	float Pitch;
 	
 	if (TimeLeft <= 10)
