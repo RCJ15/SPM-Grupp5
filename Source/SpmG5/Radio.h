@@ -23,6 +23,11 @@ public:
 	void TurnOff();
 	UFUNCTION(BlueprintCallable)
 	void TurnOn();
+	UFUNCTION(BlueprintCallable)
+	void UpdatePitch();
+	
+	UPROPERTY(BlueprintReadWrite)
+	int TimeLeft;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* BaseMesh;
@@ -40,6 +45,12 @@ private:
 	
 	UPROPERTY(EditAnywhere)
 	bool TurnOnInBeginPlay;
+	
+	UPROPERTY(EditAnywhere)
+	float Last30SecondsPitch = 1.25f;
+	
+	UPROPERTY(EditAnywhere)
+	float Last10SecondsPitch = 1.5f;
 	
 	UPROPERTY(EditAnywhere)
 	USongPlaylistAsset* Playlist; //playlist with all songs for this level
