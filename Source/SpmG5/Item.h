@@ -7,7 +7,7 @@
 #include "Components/StaticMeshComponent.h"
 //#include "BoxDestroyer.h"
 #include "AudioEnums.h"
-#include "FMODEvent.h"
+#include "FMODBlueprintStatics.h"
 #include "NiagaraSystem.h"
 #include "Item.generated.h"
 
@@ -50,6 +50,12 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category="Audio")
 	UFMODEvent* CollisionSFX;
+	
+	UPROPERTY(EditAnywhere, Category="Audio")
+	float CollisionSFXCooldown = 0.1;
+	float CollisionSFXTimer;
+	
+	UFMODAudioComponent* CollisionSFXInstance;
 	
 	UPROPERTY(EditAnywhere, Category="Audio")
 	float SFXNormalImpulseMin = 50.0f;
@@ -222,7 +228,7 @@ public:
 		
 	//FULT!!!!! TA BORT EFTER SPELTEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, blueprintReadWrite)
 	bool PlaySound = true;
 	
 	void SetPlaySound(bool SetTo){PlaySound = SetTo;}
