@@ -39,7 +39,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int GetComboMultiplier();
 	UFUNCTION(BlueprintCallable)
-	float GetComboTimePercent();
+	float GetComboTimeRate();
 	
 	UFUNCTION(BlueprintCallable)
 	void StartTimer();

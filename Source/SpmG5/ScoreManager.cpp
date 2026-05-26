@@ -24,11 +24,12 @@ int UScoreManager::GetComboMultiplier()
 	return ComboMultiplier;
 }
 
-float UScoreManager::GetComboTimePercent()
+float UScoreManager::GetComboTimeRate()
 {
-	if (ComboTimeRemaining <= 0)
-		return 0;
-	return ComboTimeRemaining/ComboTimerMAX;
+	return ComboTimerMAX / TimeRate;
+	//if (ComboTimeRemaining <= 0)
+		//return 0;
+	//return ComboTimeRemaining/ComboTimerMAX;
 }
 
 void UScoreManager::StartTimer()
@@ -36,7 +37,6 @@ void UScoreManager::StartTimer()
 	//OnTimeRunsOut.RemoveAll(this);
 	GetWorld()->GetTimerManager().ClearTimer(ComboTimer);
 	ComboTimeRemaining = ComboTimerMAX;
-	OnComboTimeChanged.Broadcast();
 	
 	//CurrentMin = ShiftLengthInSeconds / 60;
 	//CurrentSec = ShiftLengthInSeconds % 60;
@@ -56,13 +56,14 @@ void UScoreManager::CountdownCombo()
 		//GetWorld()->GetTimerManager().PauseTimer(ShiftTimer);
 		GetWorld()->GetTimerManager().ClearTimer(ComboTimer);
 		//OnTimeRunsOut.Broadcast();
+		OnComboTimeChanged.Broadcast();
 		ChangeCombo(-1);
 	}
 
 	//CurrentMin = ComboTimeRemaining / 60;
 	//CurrentSec = ComboTimeRemaining % 60;
 	
-	OnComboTimeChanged.Broadcast();
+	
 }
 
 void UScoreManager::ChangeCombo(int Change)
@@ -99,7 +100,10 @@ void UScoreManager::AddScore(int ScoreChange)
 	if (AddedScore < 0)
 	{
 		if (bUseComboMultiplier)
+		{
 			ChangeCombo(999);
+		}
+			
 	}
 	else
 	{
