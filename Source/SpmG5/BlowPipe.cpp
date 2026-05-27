@@ -64,8 +64,10 @@ void ABlowPipe::CallBlowMethod()
 	//Stop Showing Indicator
 	UE_LOG(LogTemp, Warning, TEXT("Blowing Loop! Time left: %f"), TimeLeftBlowing);
 	if (TimeLeftBlowing > 0)
+	{
 		ActivateBlowing(true);
-		//Blow(GetWorld()->GetDeltaSeconds());
+		TimeLeftBlowing -= GetWorld()->GetDeltaSeconds();
+	}
 	else
 	{		
 		//Resett Timer and stop blowing

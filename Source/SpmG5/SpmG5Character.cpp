@@ -430,19 +430,6 @@ void ASpmG5Character::DecreaseIncapacitation(float Decrease)
 		
 }
 
-void ASpmG5Character::DoRagdoll()
-{
-	UE_LOG(LogTemp, Warning, TEXT("DoRagdoll"));
-	bIsRagdolling = true;
-	Drop();
-}
-
-void ASpmG5Character::StopRagdoll()
-{
-	UE_LOG(LogTemp, Warning, TEXT("DoRagdoll"));
-	bIsRagdolling = false;
-}
-
 void ASpmG5Character::DoMove(float Right, float Forward)
 {
 	if (GetController() != nullptr)
