@@ -138,6 +138,7 @@ public:
 	UPrimitiveComponent* GetPrimitive(){return PrimComp;}
 	
 	void SetPhysics(bool SetTo);
+	void SetCollitionDefultProfile(bool SetTo);
 	void ResetVelocity(){PrimComp->SetPhysicsLinearVelocity(FVector(0,0,0));}
 	void AddVelocity(int Force){PrimComp->SetPhysicsLinearVelocity(GetActorForwardVector() * Force + GetActorUpVector() * Force/2);}
 	

@@ -213,14 +213,16 @@ void ASpmG5Character::Pickup(AItem* Item)
 	{
 		Item->ShouldBreakOnImpact = false;
 	}
-	AttachPackage();
 	Item->SetIsHeld(true);
+	
+	AttachPackage();
 	UE_LOG(LogTemp, Display, TEXT("%i"), Item->GetIsHeld());
 }
 
 void ASpmG5Character::AttachPackage()
 {
-	HeldItem->GetPrimitive()->SetCollisionProfileName("OnConveyor");
+	HeldItem->SetCollitionDefultProfile(false);
+	HeldItem->SetPhysics(true);
 	HeldItem->ResetVelocity();
 	HeldItem->SetActorRotation(GetActorRotation()); 
 	// HeldItem->SetActorRelativeRotation(FRotator(0,0,0));
@@ -228,7 +230,7 @@ void ASpmG5Character::AttachPackage()
 	// HeldItem->SetActorRelativeRotation(FRotator(0,0,0));
 	HeldItem->SetMostRecentHolder(this);
 	
-	AttatchPackageToConstaint( HeldItem);
+	AttatchPackageToConstaint(HeldItem);
 	
 	// HeldItem->SetActorRelativeRotation(FRotator(0,0,0));
 	// GetWorldTimerManager().SetTimer(HoldingTimer, this, &ASpmG5Character::Hold, 0.01f, true);
