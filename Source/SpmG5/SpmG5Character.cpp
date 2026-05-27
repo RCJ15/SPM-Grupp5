@@ -315,6 +315,7 @@ void ASpmG5Character::Throw(const FInputActionValue& Value)
 	
 	ShowOrHideThrowBar(false);
 	HeldItem->SetPhysics(true);
+	HeldItem->SetCollitionDefultProfile(true);
 	DeAattatchPackageToConstaint(HeldItem);
 	HeldItem->AddVelocity(CurrentThrowForce);
 	
