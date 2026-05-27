@@ -56,7 +56,6 @@ void UScoreManager::CountdownCombo()
 		//GetWorld()->GetTimerManager().PauseTimer(ShiftTimer);
 		GetWorld()->GetTimerManager().ClearTimer(ComboTimer);
 		//OnTimeRunsOut.Broadcast();
-		OnComboTimeChanged.Broadcast();
 		ChangeCombo(-1);
 	}
 
@@ -73,16 +72,24 @@ void UScoreManager::ChangeCombo(int Change)
 		ComboMultiplier = 1;
 		GetWorld()->GetTimerManager().ClearTimer(ComboTimer);
 		ComboTimeRemaining = 0;
-		OnComboChanged.Broadcast();
-		OnComboTimeChanged.Broadcast();
+		//OnComboChanged.Broadcast();
+		OnComboBreak.Broadcast();
 		return;
 	}
 	
 	ComboMultiplier+= Change;
 	if (ComboMultiplier < 1)
+	{
 		ComboMultiplier = 1;
-	if (ComboMultiplier > 1)
-		StartTimer();
+		OnComboBreak.Broadcast();
+		return;
+	}
+
+	StartTimer();
+	if (ComboMultiplier > 5) //max 5 i kombo multi
+	{
+		ComboMultiplier = 5;
+	}
 	OnComboChanged.Broadcast();
 }
 

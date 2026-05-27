@@ -16,7 +16,13 @@ public:
 	FString Name;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Song Data")
-	float BPM;
+	FString Description;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Song Data")
+	float Bpm;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Song Data")
+	float BpmDelay;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Song Data")
 	UFMODEvent* Event;

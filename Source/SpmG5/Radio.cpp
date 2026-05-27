@@ -81,6 +81,7 @@ void ARadio::SwitchChannel()
 
 	Copy.RemoveAtSwap(Index);
 	
+	UpdatePitch();
 }
 
 //possibly om man håller in en knapp så kommer den stängas av/sättas på beroende på tillstånd
@@ -111,6 +112,37 @@ void ARadio::TurnOn()
 	}
 			
 	IsOn = true;
+}
+
+void ARadio::UpdatePitch()
+{
+	if (!CurrentInstance)
+	{
+		return;
+	}
+	
+	//TEMP FIX FOR TUTORIAL SO IT ISN'T ALWAYS HIGH PITCH - Ruben
+	if (TurnOnInBeginPlay)
+	{
+		return;
+	}
+	
+	float Pitch;
+	
+	if (TimeLeft <= 10)
+	{
+		Pitch = Last10SecondsPitch;
+	}
+	else if (TimeLeft <= 30)
+	{
+		Pitch = Last30SecondsPitch;
+	}
+	else
+	{
+		Pitch = 1;
+	}
+	
+	CurrentInstance->SetPitch(Pitch);
 }
 
 

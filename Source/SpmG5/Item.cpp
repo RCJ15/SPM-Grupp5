@@ -40,6 +40,11 @@ void AItem::BeginPlay()
 void AItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+	if (CollisionSFXTimer > 0)
+	{
+		CollisionSFXTimer -= DeltaTime;
+	}
 }
 
 void AItem::SetPoints()
@@ -153,8 +158,17 @@ void AItem::Disintegrate(bool bThrownInTrash)
 	}
 	
 	//Play SFX - Ruben
-	if (PlaySound)//TA BORT EFTER SPELTEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	if (PlaySound) //TA BORT EFTER SPELTEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	{
 		UFMODBlueprintStatics::PlayEventAtLocation(this, DestroySFX, FTransform(GetActorLocation()), true);
+		
+		if (CollisionSFXInstance)
+		{
+			CollisionSFXInstance->Stop();
+			CollisionSFXInstance->Release();
+			CollisionSFXInstance = nullptr;
+		}
+	}
 	
 	Destroy();
 }
@@ -173,28 +187,55 @@ void AItem::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimit
 			}
 		}
 		
-		//Play Collision SFX. Volume is based on how big the impact was - Ruben
-		float Magnitude = NormalImpulse.Size();
-		
-		if (Magnitude > SFXNormalImpulseMin && PlaySound)//FIXA EFTER SPLETEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		//FIXA EFTER SPLETEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		// ^^^ Kommentaren ovan pratar om PlaySound ^^^
+		if (PlaySound && CollisionSFXTimer <= 0 && !OtherActor->IsA(AItem::StaticClass())) 
 		{
-			float Volume = FMath::GetMappedRangeValueClamped(
-				FVector2D(SFXNormalImpulseMin, SFXNormalImpulseMax),
-				FVector2D(SFXCollisionVolumeMin, SFXCollisionVolumeMax),
-				Magnitude
-			);
+			//Play Collision SFX. Volume is based on how big the impact was - Ruben
+			float Magnitude = NormalImpulse.Size();
 		
-			if (Volume <= 0) { return; }
-			
-			// Ignore first play as it's from when the box is spawned in the conveyor - Ruben
-			CollisionSoundsPlayed++;
-			
-			if (CollisionSoundsPlayed > 1)
+			if (Magnitude > SFXNormalImpulseMin)
 			{
-				//UE_LOG(LogTemp, Warning, TEXT("Item was HIT with force of %f!!! Playing with a volume of %f"), Magnitude, Volume);
+				float Volume = FMath::GetMappedRangeValueClamped(
+					FVector2D(SFXNormalImpulseMin, SFXNormalImpulseMax),
+					FVector2D(SFXCollisionVolumeMin, SFXCollisionVolumeMax),
+					Magnitude
+				);
 		
-				FFMODEventInstance Evt = UFMODBlueprintStatics::PlayEventAtLocation(this, CollisionSFX, FTransform(Hit.ImpactPoint), true);
-				UFMODBlueprintStatics::EventInstanceSetVolume(Evt, Volume);	
+				if (Volume <= 0) { return; }
+			
+				// Ignore first play as it's from when the box is spawned in the conveyor - Ruben
+				CollisionSoundsPlayed++;
+				
+				CollisionSFXTimer = CollisionSFXCooldown;
+			
+				if (CollisionSoundsPlayed > 1)
+				{
+					//UE_LOG(LogTemp, Warning, TEXT("Item was HIT with force of %f!!! Playing with a volume of %f"), Magnitude, Volume);
+		
+					if (CollisionSFXInstance)
+					{
+						CollisionSFXInstance->Stop();
+						CollisionSFXInstance->Release();
+						CollisionSFXInstance = nullptr;
+					}
+					
+					CollisionSFXInstance = UFMODBlueprintStatics::PlayEventAttached(
+						CollisionSFX, 
+						BaseMesh, 
+						NAME_None, 
+						FVector::ZeroVector, 
+						EAttachLocation::KeepRelativeOffset, 
+						true, 
+						true, 
+						true
+						);
+					
+					if (CollisionSFXInstance)
+					{
+						CollisionSFXInstance->SetVolume(Volume);
+					}
+				}
 			}
 		}
 	}
