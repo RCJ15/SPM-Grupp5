@@ -16,9 +16,7 @@
 #endif
 #include "SpmG5.h"
 #include "FMODBlueprintStatics.h"
-#include "IDetailTreeNode.h"
 #include "Interactable.h"
-#include "Kismet/GameplayStatics.h"
 
 ASpmG5Character::ASpmG5Character()
 {
@@ -315,7 +313,7 @@ void ASpmG5Character::Throw(const FInputActionValue& Value)
 	HeldItem->SetPhysics(true);
 	HeldItem->SetCollitionDefultProfile(true);
 	DeAattatchPackageToConstaint(HeldItem);
-	HeldItem->AddVelocity(CurrentThrowForce);
+	HeldItem->AddVelocity(CurrentThrowForce, GetActorForwardVector());
 	
 	float HalfThrowForce = StartingThrowForce + ((MaxThrowForce - StartingThrowForce) * 0.66);
 	
