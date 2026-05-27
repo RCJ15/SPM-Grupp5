@@ -66,6 +66,8 @@ protected:
 	
 	UPROPERTY(BlueprintReadWrite, Category="Trowing settings")
 	bool Throwing = false;
+	UPROPERTY(BlueprintReadWrite, Category="Trowing settings")
+	bool Thrown = false;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Trowing settings")
 	float MaxThrowForce = 500.0f;
 	UPROPERTY(EditAnywhere, Category="Trowing settings")
