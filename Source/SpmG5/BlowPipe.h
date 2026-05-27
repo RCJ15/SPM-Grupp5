@@ -37,6 +37,8 @@ protected:
 	void CallBlowMethod();
 	void BlowStateLoop(float LoopRate);
 	void ShowIndicator();
+	UFUNCTION(BlueprintCallable)
+	float GetForceMultiplier(){return ForceMultiplier;}
 	
 public:	
 	// Called every frame
