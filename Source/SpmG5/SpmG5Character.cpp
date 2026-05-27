@@ -311,6 +311,8 @@ void ASpmG5Character::Throw(const FInputActionValue& Value)
 	if (!HeldItem)
 		return;
 	
+	Thrown = true;
+	
 	ShowOrHideThrowBar(false);
 	HeldItem->SetPhysics(true);
 	DeAattatchPackageToConstaint(HeldItem);
@@ -337,6 +339,7 @@ void ASpmG5Character::Throw(const FInputActionValue& Value)
 	HeldItem = nullptr;
 	HasItem = false;
 	Throwing = false;
+	// Thrown = false;
 	// GetWorldTimerManager().ClearTimer(HoldingTimer);
 }
 
