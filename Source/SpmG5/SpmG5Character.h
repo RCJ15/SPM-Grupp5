@@ -177,9 +177,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Item Reactions")
 	void DecreaseIncapacitation(float Decrease = 1);
 
-	UFUNCTION(BlueprintCallable, Category="Physics")
+	UFUNCTION(BlueprintImplementableEvent, Blueprintable, BlueprintCallable, Category="Physics")
 	void DoRagdoll();
-	UFUNCTION(BlueprintCallable, Category="Physics")
+	UFUNCTION(BlueprintImplementableEvent, Blueprintable, BlueprintCallable, Category="Physics")
 	void StopRagdoll();
 	
 	/** Handles move inputs from either controls or UI interfaces */
