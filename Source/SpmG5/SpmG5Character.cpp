@@ -269,6 +269,7 @@ AItem* ASpmG5Character::Drop()
 	//Resetting Box
 	//GetWorldTimerManager().ClearTimer(HoldingTimer);
 	HeldItem->SetPhysics(true);
+	HeldItem->SetCollitionDefultProfile(true);
 	HeldItem->ResetVelocity();	
 	
 	AItem* Item = HeldItem;
