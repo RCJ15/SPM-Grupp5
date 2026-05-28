@@ -295,9 +295,11 @@ void AItem::SetIsDangerous(bool SetTo)
 	IsDangerous = SetTo;
 }
 
-void AItem::SetAddress(BoxAddress NewAddress)
+void AItem::SetAddress(EBoxAddress NewAddress)
 {
 	Address = NewAddress;
+	
+	UE_LOG(LogTemp, Warning, TEXT("New address: %d"), Address);
 }
 
 void AItem::SetIsScanned(bool SetTo)
