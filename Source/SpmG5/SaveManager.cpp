@@ -1,6 +1,6 @@
 // Marcus hopefully approves of this.
 
-
+//#include "NoraWennerberg.h"
 #include "SaveManager.h"
 #include "JsonObjectConverter.h"
 #include "Misc/FileHelper.h"
@@ -10,6 +10,9 @@
 #include "Serialization/JsonTypes.h"
 #include "Hal/FileManager.h"
 #include "JsonObjectConverter.h"
+#include "NiagaraDebuggerCommon.h"
+#include "ScoreManager.h"
+#include "SNegativeActionButton.h"
 
 
 
@@ -30,14 +33,38 @@ void USaveManager::SaveGame(const FGameData& GameData)
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("JSON FILE FAILED: %s"), *FilePath);
+			UE_LOG(LogTemp, Error, TEXT("JSON FILE FAILED: %s"), *FilePath);
 		}
 	}
 	
 }
 
-void USaveManager::LoadGame(const FGameData& GameData)
+FGameData USaveManager::LoadGame()
 {
+	FString FilePath = FPaths::ProjectSavedDir() / TEXT("SaveData.json");
+	FString JsonString;
+	
+	if (!FFileHelper::LoadFileToString(JsonString, *FilePath))
+	{
+		UE_LOG(LogTemp, Error, TEXT("JSON FILE FAILED TO LOAD: %s"), *FilePath);
+		return FGameData();
+	}
+	
+	TSharedPtr<FJsonObject> JsonObject;
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonString);
+	
+	if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
+	{
+		FGameData SaveData;
+		if (FJsonObjectConverter::JsonObjectToUStruct(JsonObject.ToSharedRef(), &SaveData))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("JSON SUCCESSFULLY LOADED"));
+			return SaveData;
+		}
+	}
+	
+	UE_LOG(LogTemp, Error, TEXT("Something went wrong with reading json file"));
+	return FGameData();
 }
 
 void USaveManager::ApplySettings()
