@@ -10,19 +10,25 @@ struct FGameData
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(BlueprintReadWrite)
-	TMap<FString, int32> HighScores;
+	
+	
+	
+	/*UPROPERTY(BlueprintReadWrite)
+	TMap<FString, int32> HighScores;*/
 	
 	UPROPERTY(BlueprintReadWrite)
-	float MasterVolume;
+	TMap<TSoftObjectPtr<UWorld>, int32> HighScores;
+
+	UPROPERTY(BlueprintReadWrite)
+	float MasterVolume = 100;
+		
+	UPROPERTY(BlueprintReadWrite)
+	float MusicVolume = 100;
 	
 	UPROPERTY(BlueprintReadWrite)
-	float MusicVolume;
+	float SFXVolume = 100;
 	
 	UPROPERTY(BlueprintReadWrite)
-	float SFXVolume;
-	
-	UPROPERTY(BlueprintReadWrite)
-	bool StopCameraMove;
+	bool StopCameraMove = false;
 	
 };
