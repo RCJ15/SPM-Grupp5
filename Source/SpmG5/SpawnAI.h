@@ -17,7 +17,10 @@ enum class EBoxType : uint8
 	Dangerous,
 	Bomb,
 	ToxicWaste,
-	FlashBang
+	FlashBang,
+	Circle,
+	Square,
+	Triangle
 };
 
 USTRUCT(BlueprintType)
@@ -53,28 +56,22 @@ class SPMG5_API USpawnAI : public UWorldSubsystem
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void SetupSpawner(int InAmountOfBoxesPerLevel, TMap<EBoxType, double> InSpawnRates, TMap<EBoxType, double> InDangerousTypes, TMap<EBoxAddress, double> InAddressTypes);
+	void SetupSpawner(int InAmountOfBoxesPerLevel, TMap<EBoxType, double> InSpawnRates, TMap<EBoxType, double> InDangerousTypes, TMap<EBoxType, double> InAddressTypes);
 
 	TArray<EBoxType> ConstructBox();
-	EBoxAddress SetAddress();
 
 private:
 	int TotalBoxCount;
 	TMap<EBoxType, double> SpawnRates;
 	TMap<EBoxType, double> DangerousTypes;
-	TMap<EBoxAddress, double> AddressTypes;
+	TMap<EBoxType, double> AddressTypes;
 	
 	TArray<FBoxSpawnInfo> Boxes; //TMap<EBoxType, FBoxSpawnInfo> SpawnInfos; POTENTIELL UPGRADE ???
-	TArray<EBoxType> AllBoxTypes{EBoxType::Small, EBoxType::Large, EBoxType::Fragile, EBoxType::Suspicious, EBoxType::Dangerous, EBoxType::Bomb, EBoxType::ToxicWaste, EBoxType::FlashBang};
-	
-	TArray<FAddressInfo> Addresses;
-	TArray<EBoxAddress> AllAddressTypes{EBoxAddress::CIRCLE, EBoxAddress::SQUARE, EBoxAddress::TRIANGLE};
+	TArray<EBoxType> AllBoxTypes{EBoxType::Small, EBoxType::Large, EBoxType::Fragile, EBoxType::Suspicious, EBoxType::Dangerous, EBoxType::Bomb, EBoxType::ToxicWaste, EBoxType::FlashBang, EBoxType::Circle, EBoxType::Square, EBoxType::Triangle};
 	
 	FBoxSpawnInfo& GetSpawnInfo(EBoxType Type);
-	FAddressInfo& GetAddressSpawnInfo(EBoxAddress Type);
 	
 	TArray<EBoxType> DecideProperties();
-	EBoxAddress DecideAddress();
 	
 	void ConvertAllPercentageToBoxes();
 	void ConvertPercentageToBox(double Percentage, int& TypeOfRemainingBoxes, int DependencyFromAmount);

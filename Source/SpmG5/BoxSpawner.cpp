@@ -95,7 +95,15 @@ AItem* ABoxSpawner::SpawnItem()
 		Item->SetIsSuspicious(Properties.Contains(EBoxType::Suspicious));
 		Item->SetIsDangerous(Properties.Contains(EBoxType::Dangerous));
 		
-		Item->SetAddress(SpawnAI->SetAddress());
+		if (Properties.Contains(EBoxType::Square))
+		{
+			Item->SetAddress(EBoxAddress::SQUARE);
+		}else if (Properties.Contains(EBoxType::Circle)){
+			Item->SetAddress(EBoxAddress::CIRCLE);
+		}else
+		{
+			Item->SetAddress(EBoxAddress::TRIANGLE);
+		}
 		
 		Item->SetPlaySound(PlayBoxSound);
 	}

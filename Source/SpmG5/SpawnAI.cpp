@@ -4,10 +4,9 @@
 #include "BoxSpawnRateManager.h"
 
 
-void USpawnAI::SetupSpawner(int InAmountOfBoxesPerLevel, TMap<EBoxType, double> InSpawnRates, TMap<EBoxType, double> InDangerousTypes, TMap<EBoxAddress, double> InAddressTypes)
+void USpawnAI::SetupSpawner(int InAmountOfBoxesPerLevel, TMap<EBoxType, double> InSpawnRates, TMap<EBoxType, double> InDangerousTypes, TMap<EBoxType, double> InAddressTypes)
 {
 	Boxes.Empty();
-	Addresses.Empty();
 	
 	TotalBoxCount = InAmountOfBoxesPerLevel;
 	SpawnRates = InSpawnRates;
@@ -121,27 +120,38 @@ TArray<EBoxType> USpawnAI::ConstructBox()
 	return Properties;
 }
 
-EBoxAddress USpawnAI::SetAddress()
-{
-	for (FAddressInfo& AddressInfo : Addresses)
-	{
-		SetUpSpawnRate(AddressInfo.CurrentSpawnRate, AddressInfo.RemainingBoxes, TotalBoxCount);
-	}
-	
-	EBoxAddress Address = DecideAddress();
-	
-	for (EBoxAddress AddressType : AllAddressTypes)
-	{
-		if (Address != AddressType) GetAddressSpawnInfo(AddressType).IncreaseAddressCounter();
-	}
-	
-	return Address;
-}
-
 TArray<EBoxType> USpawnAI::DecideProperties()
 {
 	TArray<EBoxType> Properties;
 	if (Boxes.IsEmpty()) return Properties;
+	
+	double MaxSpawnRateAddress = 0.0;
+	
+	for (FBoxSpawnInfo Info : Boxes)
+	{
+		if (AddressTypes.Contains(Info.BoxType) && Info.RemainingBoxes > 0)
+		{
+			MaxSpawnRateAddress += Info.CurrentSpawnRate;
+		}
+	}
+	
+	double AddressPercentage = GiveBadBoxesMaxPercentage(MaxSpawnRateAddress);
+	double CurrentAddressRate = 0.0;
+		
+	for (FBoxSpawnInfo Info : Boxes)
+	{
+		if (DangerousTypes.Contains(Info.BoxType) && Info.RemainingBoxes > 0)
+		{
+			// Checks which address should be added
+			if (AddressPercentage >= CurrentAddressRate && AddressPercentage <= Info.CurrentSpawnRate + CurrentAddressRate)
+			{
+				AddProperty(Properties, Info.BoxType);
+				break;
+			}
+			
+			CurrentAddressRate += Info.CurrentSpawnRate;
+		}
+	}
 	
 	//Roll if small or large
 	if (!RollForProperty(EBoxType::Small))
@@ -216,47 +226,6 @@ TArray<EBoxType> USpawnAI::DecideProperties()
 	return Properties;
 }
 
-EBoxAddress USpawnAI::DecideAddress()
-{
-	EBoxAddress BoxAddress = EBoxAddress::TRIANGLE;
-	
-	if (Addresses.IsEmpty())
-	{
-		return BoxAddress;
-	}
-	
-	double MaxSpawnRateAddress = 0.0;
-	
-	for (FAddressInfo Info : Addresses)
-	{
-		if (Info.RemainingBoxes > 0)
-		{
-			MaxSpawnRateAddress += Info.CurrentSpawnRate;
-		}
-	}
-	
-	double AddressPercentage = GiveBadBoxesMaxPercentage(MaxSpawnRateAddress);
-	double CurrentRate = 0.0;
-		
-	for (FAddressInfo Info : Addresses)
-	{
-		if (Info.RemainingBoxes > 0)
-		{
-			// Checks which address should be added
-			if (AddressPercentage >= CurrentRate && AddressPercentage <= Info.CurrentSpawnRate + CurrentRate)
-			{
-				BoxAddress = Info.BoxAddress;
-				GetAddressSpawnInfo(BoxAddress).DecrementBoxAddressCount();
-				break;
-			}
-			
-			CurrentRate += Info.CurrentSpawnRate;
-		}
-	}
-	
-	return BoxAddress;
-}
-
 void USpawnAI::ConvertAllPercentageToBoxes()
 {
 	double TotalWeight = 0;
@@ -300,23 +269,28 @@ void USpawnAI::ConvertAllPercentageToBoxes()
 		}
 	}
 	
+	//Addresses
 	TotalWeight = 0;
 	
-	for (const TPair<EBoxAddress, double>& Pair : AddressTypes)
+	for (const TPair<EBoxType, double>& Pair : AddressTypes)
 	{
 		TotalWeight += Pair.Value;
 	}
 	
-	for (EBoxAddress Address : AllAddressTypes)
+	for (EBoxType Address : AllBoxTypes)
 	{
-		FAddressInfo BoxAddressInfo = FAddressInfo(Address);
-		int RemainingBoxes;
-		
-		double Percentage = ConvertWeightToPercentage(AddressTypes[Address], TotalWeight);
-		ConvertPercentageToBox(Percentage, RemainingBoxes, TotalBoxCount);
-		
-		BoxAddressInfo.RemainingBoxes = RemainingBoxes;
-		Addresses.Add(BoxAddressInfo);
+		if (AddressTypes.Contains(Address))
+		{
+			FBoxSpawnInfo BoxAddressInfo = FBoxSpawnInfo(Address);
+            int RemainingBoxes;
+            
+            double Percentage = ConvertWeightToPercentage(AddressTypes[Address], TotalWeight);
+            ConvertPercentageToBox(Percentage, RemainingBoxes, TotalBoxCount);
+            
+            BoxAddressInfo.RemainingBoxes = RemainingBoxes;
+            Boxes.Add(BoxAddressInfo);
+		}
+
 	}
 	
 	EnsurePercentageIsValid();
@@ -356,9 +330,9 @@ void USpawnAI::EnsurePercentageIsValid()
 	}
 	
 	int TotalAddressAmount = 0;
-	TArray<FAddressInfo> RemainingAddresses;
+	TArray<FBoxSpawnInfo> RemainingAddresses;
 	
-	for (FAddressInfo Info : Addresses)
+	for (FBoxSpawnInfo Info : Boxes)
 	{
 		TotalAddressAmount += Info.RemainingBoxes;
 		RemainingAddresses.Add(Info);
@@ -366,7 +340,7 @@ void USpawnAI::EnsurePercentageIsValid()
 	
 	while (TotalAddressAmount > TotalBoxCount)
 	{
-		RemainingAddresses[FMath::RandRange(0, RemainingAddresses.Num()-1)].DecrementBoxAddressCount();
+		RemainingAddresses[FMath::RandRange(0, RemainingAddresses.Num()-1)].DecrementBoxCount();
 	}
 }
 
@@ -435,16 +409,6 @@ FBoxSpawnInfo& USpawnAI::GetSpawnInfo(EBoxType Type)
 	}
 	
 	return Boxes[0];
-}
-
-FAddressInfo& USpawnAI::GetAddressSpawnInfo(EBoxAddress Type)
-{
-	for (FAddressInfo& Info : Addresses)
-	{
-		if (Info.BoxAddress == Type) return Info;
-	}
-	
-	return Addresses[0];
 }
 
 void USpawnAI::AddProperty(TArray<EBoxType>& Properties, EBoxType Type)
