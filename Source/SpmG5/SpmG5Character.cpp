@@ -131,6 +131,8 @@ void ASpmG5Character::FindBoxToPickup()
 
 void ASpmG5Character::ChooseInteractOrPickup()
 {
+	if (bIsRagdolling)
+		return;
     //Choosing between interact or pickup...
     bool bHitItem = false;
     AItem* ItemHit = nullptr;
