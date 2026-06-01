@@ -32,7 +32,6 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	int GetScore();
-	
 	UFUNCTION(BlueprintCallable)
 	int GetAddedScore();
 	
@@ -56,6 +55,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void SaveScore();
+	
+	UFUNCTION(BlueprintCallable)
+	void SetAllHighScores(const TMap<TSoftObjectPtr<UWorld>, int>& NewScores);
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int ScoreToPassTutorial = 70;
