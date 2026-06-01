@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "Item.h"
 #include "CoreMinimal.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "SpawnAI.generated.h"
@@ -73,14 +72,23 @@ private:
 	
 	TArray<EBoxType> DecideProperties();
 	
+	void CheckAndAddPropertiesForWeights(TMap<EBoxType, double> AllBoxesOfType, TArray<EBoxType>& Properties);
+	
 	void ConvertAllPercentageToBoxes();
+	double AddTotalWeightForBoxType(TMap<EBoxType, double> AllBoxesOfType);
+	void CheckAndHandlePercentageForWeightedBoxes(EBoxType BoxType, TMap<EBoxType, double> AllBoxesOfType, double TotalWeight, int& RemainingBoxes, int DependencyFromAmount);
+	
 	void ConvertPercentageToBox(double Percentage, int& TypeOfRemainingBoxes, int DependencyFromAmount);
 	double ConvertWeightToPercentage(double Weight, double TotalWeight);
+	
 	void EnsurePercentageIsValid();
+	void EnsureValidityForBoxType(TMap<EBoxType, double> AllBoxesOfType, int DependencyFromAmount);
 	void SetUpSpawnRate(double& SpawnRate, int RemainingBoxType, int DependencyFromAmount);
+	
 	bool RollForProperty(EBoxType BoxType);
 	double GiveRandomPercentage();
-	double GiveBadBoxesMaxPercentage(double MaxPercentage);
+	double GiveWeightedBoxesMaxPercentage(double MaxPercentage);
+	
 	bool GuaranteeProperty(TArray<EBoxType>& Properties, EBoxType BoxType, int DependencyFromAmount);
 	void AddProperty(TArray<EBoxType>& Properties, EBoxType Type);
 };
