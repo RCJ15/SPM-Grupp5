@@ -156,4 +156,9 @@ void UScoreManager::SaveScore()
 	ResetScore();
 }
 
+void UScoreManager::SetAllHighScores(const TMap<TSoftObjectPtr<UWorld>, int>& NewScores)
+{
+	ScoreMap = NewScores;
+}
+
 
