@@ -16,6 +16,7 @@ void USpawnAI::SetupSpawner(int InAmountOfBoxesPerLevel, TMap<EBoxType, double> 
 	ConvertAllPercentageToBoxes();
 	
 	/*UE_LOG(LogTemp, Warning, TEXT("All boxes remaining: %d"), TotalBoxCount);
+	
 	for (const FBoxSpawnInfo& Info : Boxes)
 	{
 		UE_LOG(LogTemp, Warning,
@@ -26,29 +27,16 @@ void USpawnAI::SetupSpawner(int InAmountOfBoxesPerLevel, TMap<EBoxType, double> 
 			Info.CountSinceLastSpawn);
 	}
 	
-	for (const FAddressInfo& Info : Addresses)
-	{
-		UE_LOG(LogTemp, Warning,
-			TEXT("BoxType: %s | RemainingBoxes: %d | CurrentSpawnRate: %.2f | CountSinceLastSpawn: %d"),
-			*UEnum::GetValueAsString(Info.BoxAddress),
-			Info.RemainingBoxes,
-			Info.CurrentSpawnRate,
-			Info.CountSinceLastSpawn);
-	}
-	
 	for (int i = 0; i < 40; i++)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Box %d: "), i);
 		TArray<EBoxType> props = ConstructBox();
-		EBoxAddress newThing = SetAddress();
 		if (TotalBoxCount > 0) TotalBoxCount--;
 		
 		for (EBoxType Type : props)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("		: %d"), Type);
 		}
-		
-		UE_LOG(LogTemp, Warning, TEXT("		ADDRESS: %d"), newThing);
 		
 		for (const FBoxSpawnInfo& Info : Boxes)
 		{
@@ -59,37 +47,6 @@ void USpawnAI::SetupSpawner(int InAmountOfBoxesPerLevel, TMap<EBoxType, double> 
 				Info.CurrentSpawnRate,
 				Info.CountSinceLastSpawn);
 		}
-		
-		for (const FAddressInfo& Info : Addresses)
-		{
-			UE_LOG(LogTemp, Warning,
-				TEXT("BoxType: %s | RemainingBoxes: %d | CurrentSpawnRate: %.2f | CountSinceLastSpawn: %d"),
-				*UEnum::GetValueAsString(Info.BoxAddress),
-				Info.RemainingBoxes,
-				Info.CurrentSpawnRate,
-				Info.CountSinceLastSpawn);
-		}
-	}
-	
-	UE_LOG(LogTemp, Warning, TEXT("All boxes remaining: %d"), TotalBoxCount);
-	for (const FBoxSpawnInfo& Info : Boxes)
-	{
-		UE_LOG(LogTemp, Warning,
-			TEXT("BoxType: %s | RemainingBoxes: %d | CurrentSpawnRate: %.2f | CountSinceLastSpawn: %d"),
-			*UEnum::GetValueAsString(Info.BoxType),
-			Info.RemainingBoxes,
-			Info.CurrentSpawnRate,
-			Info.CountSinceLastSpawn);
-	}
-	
-	for (const FAddressInfo& Info : Addresses)
-	{
-		UE_LOG(LogTemp, Warning,
-			TEXT("BoxType: %s | RemainingBoxes: %d | CurrentSpawnRate: %.2f | CountSinceLastSpawn: %d"),
-			*UEnum::GetValueAsString(Info.BoxAddress),
-			Info.RemainingBoxes,
-			Info.CurrentSpawnRate,
-			Info.CountSinceLastSpawn);
 	}*/
 }
 
