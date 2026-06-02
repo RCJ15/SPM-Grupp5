@@ -63,6 +63,7 @@ void ABomb::Explode()
 			ASpmG5Character* Character = Cast<ASpmG5Character>(i.GetActor());
 			//spelaren måste droppa item
 			Character->Drop();
+			Character->AddVelocity((GetActorLocation() - Character->GetActorLocation())/GetActorLocation()*10);
 			Character->DoRagdoll();
 		}
 		
