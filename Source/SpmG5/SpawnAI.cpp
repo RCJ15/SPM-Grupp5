@@ -4,10 +4,9 @@
 #include "BoxSpawnRateManager.h"
 
 
-void USpawnAI::SetupSpawner(int InAmountOfBoxesPerLevel, TMap<EBoxType, double> InSpawnRates, TMap<EBoxType, double> InDangerousTypes, TMap<EBoxAddress, double> InAddressTypes)
+void USpawnAI::SetupSpawner(int InAmountOfBoxesPerLevel, TMap<EBoxType, double> InSpawnRates, TMap<EBoxType, double> InDangerousTypes, TMap<EBoxType, double> InAddressTypes)
 {
 	Boxes.Empty();
-	Addresses.Empty();
 	
 	TotalBoxCount = InAmountOfBoxesPerLevel;
 	SpawnRates = InSpawnRates;
@@ -96,6 +95,7 @@ void USpawnAI::SetupSpawner(int InAmountOfBoxesPerLevel, TMap<EBoxType, double> 
 
 TArray<EBoxType> USpawnAI::ConstructBox()
 {
+	// Set up spawn rates for all boxes
 	for (FBoxSpawnInfo& Box : Boxes)
 	{
 		if (DangerousTypes.Contains(Box.BoxType))
@@ -113,6 +113,7 @@ TArray<EBoxType> USpawnAI::ConstructBox()
 	
 	TArray<EBoxType> Properties = DecideProperties();
 	
+	// Increase spawn rate probability for box types not chosen
 	for (EBoxType BoxType : AllBoxTypes)
 	{
 		if (!Properties.Contains(BoxType)) GetSpawnInfo(BoxType).IncreaseCounter();
@@ -121,29 +122,15 @@ TArray<EBoxType> USpawnAI::ConstructBox()
 	return Properties;
 }
 
-EBoxAddress USpawnAI::SetAddress()
-{
-	for (FAddressInfo& AddressInfo : Addresses)
-	{
-		SetUpSpawnRate(AddressInfo.CurrentSpawnRate, AddressInfo.RemainingBoxes, TotalBoxCount);
-	}
-	
-	EBoxAddress Address = DecideAddress();
-	
-	for (EBoxAddress AddressType : AllAddressTypes)
-	{
-		if (Address != AddressType) GetAddressSpawnInfo(AddressType).IncreaseAddressCounter();
-	}
-	
-	return Address;
-}
-
 TArray<EBoxType> USpawnAI::DecideProperties()
 {
 	TArray<EBoxType> Properties;
 	if (Boxes.IsEmpty()) return Properties;
 	
-	//Roll if small or large
+	// Roll for what address type
+	CheckAndAddPropertiesForWeights(AddressTypes, Properties);
+	
+	// Roll if small or large
 	if (!RollForProperty(EBoxType::Small))
 	{
 		if (GetSpawnInfo(EBoxType::Large).RemainingBoxes <= 0)
@@ -167,127 +154,96 @@ TArray<EBoxType> USpawnAI::DecideProperties()
 		AddProperty(Properties, EBoxType::Small);
 	}
 	
-	//Roll if fragile
+	// Roll if fragile
 	if (!GuaranteeProperty(Properties, EBoxType::Fragile, TotalBoxCount))
 		if (RollForProperty(EBoxType::Fragile)) AddProperty(Properties, EBoxType::Fragile);
 	
-	//Roll if suspicious
+	// Roll if suspicious
 	if (!GuaranteeProperty(Properties, EBoxType::Suspicious, TotalBoxCount))
 	{
 		if (!RollForProperty(EBoxType::Suspicious)) return Properties;
 		AddProperty(Properties, EBoxType::Suspicious);
 	}
 	
-	//Roll if dangerous
+	// Roll if dangerous
 	if (!GuaranteeProperty(Properties, EBoxType::Dangerous, GetSpawnInfo(EBoxType::Suspicious).RemainingBoxes))
 	{
 		if (!RollForProperty(EBoxType::Dangerous)) return Properties;
 		AddProperty(Properties, EBoxType::Dangerous);
 	}
 	
-	double MaxSpawnRateDangerousBoxes = 0.0;
-	
-	for (FBoxSpawnInfo Box : Boxes)
-	{
-		if (DangerousTypes.Contains(Box.BoxType) && Box.RemainingBoxes > 0)
-		{
-			MaxSpawnRateDangerousBoxes += Box.CurrentSpawnRate;
-		}
-	}
-	
-	double BadBoxPercentage = GiveBadBoxesMaxPercentage(MaxSpawnRateDangerousBoxes);
-	double CurrentRate = 0.0;
-		
-	for (FBoxSpawnInfo Box : Boxes)
-	{
-		if (DangerousTypes.Contains(Box.BoxType) && Box.RemainingBoxes > 0)
-		{
-			// Checks which bad box should be added
-			if (BadBoxPercentage >= CurrentRate && BadBoxPercentage <= Box.CurrentSpawnRate + CurrentRate)
-			{
-				AddProperty(Properties, Box.BoxType);
-				break;
-			}
-			
-			CurrentRate += Box.CurrentSpawnRate;
-		}
-	}
+	// Roll for what dangerous type
+	CheckAndAddPropertiesForWeights(DangerousTypes, Properties);
 	
 	return Properties;
 }
 
-EBoxAddress USpawnAI::DecideAddress()
+void USpawnAI::CheckAndAddPropertiesForWeights(TMap<EBoxType, double> AllBoxesOfType, TArray<EBoxType>& Properties)
 {
-	EBoxAddress BoxAddress = EBoxAddress::TRIANGLE;
+	double MaxSpawnRate = 0.0;
 	
-	if (Addresses.IsEmpty())
+	for (FBoxSpawnInfo Info : Boxes)
 	{
-		return BoxAddress;
-	}
-	
-	double MaxSpawnRateAddress = 0.0;
-	
-	for (FAddressInfo Info : Addresses)
-	{
-		if (Info.RemainingBoxes > 0)
+		if (AllBoxesOfType.Contains(Info.BoxType) && Info.RemainingBoxes > 0)
 		{
-			MaxSpawnRateAddress += Info.CurrentSpawnRate;
+			MaxSpawnRate += Info.CurrentSpawnRate;
 		}
 	}
 	
-	double AddressPercentage = GiveBadBoxesMaxPercentage(MaxSpawnRateAddress);
+	double Percentage = GiveWeightedBoxesMaxPercentage(MaxSpawnRate);
 	double CurrentRate = 0.0;
 		
-	for (FAddressInfo Info : Addresses)
+	for (FBoxSpawnInfo Info : Boxes)
 	{
-		if (Info.RemainingBoxes > 0)
+		if (AllBoxesOfType.Contains(Info.BoxType) && Info.RemainingBoxes > 0)
 		{
 			// Checks which address should be added
-			if (AddressPercentage >= CurrentRate && AddressPercentage <= Info.CurrentSpawnRate + CurrentRate)
+			if (Percentage >= CurrentRate && Percentage <= Info.CurrentSpawnRate + CurrentRate)
 			{
-				BoxAddress = Info.BoxAddress;
-				GetAddressSpawnInfo(BoxAddress).DecrementBoxAddressCount();
+				AddProperty(Properties, Info.BoxType);
 				break;
 			}
 			
 			CurrentRate += Info.CurrentSpawnRate;
 		}
 	}
-	
-	return BoxAddress;
 }
 
 void USpawnAI::ConvertAllPercentageToBoxes()
 {
-	double TotalWeight = 0;
-	
-	for (const TPair<EBoxType, double>& Pair : DangerousTypes)
-	{
-		TotalWeight += Pair.Value;
-	}
+	double TotalDangerousWeight = AddTotalWeightForBoxType(DangerousTypes);
+	double TotalAddressWeight = AddTotalWeightForBoxType(AddressTypes);
 	
 	// Set up all boxes of every enum
 	for (EBoxType BoxType : AllBoxTypes)
 	{
 		if (BoxType == EBoxType::Large) continue;
+		
 		FBoxSpawnInfo BoxSpawnInfo = FBoxSpawnInfo(BoxType);
 		int RemainingBoxes;
-		//double SpawnRate = 0;
+		
+		// brutalt lång metod.. i dont like
+		
+		//CheckAndHandlePercentageForWeightedBoxes(BoxType, DangerousTypes, TotalDangerousWeight, RemainingBoxes, GetSpawnInfo(EBoxType::Dangerous).RemainingBoxes);
+		//CheckAndHandlePercentageForWeightedBoxes(BoxType, AddressTypes, TotalAddressWeight, RemainingBoxes, TotalBoxCount);
 		
 		if (DangerousTypes.Contains(BoxType))
 		{
-			double Percentage = ConvertWeightToPercentage(DangerousTypes[BoxType], TotalWeight);
+			double Percentage = ConvertWeightToPercentage(DangerousTypes[BoxType], TotalDangerousWeight);
 			ConvertPercentageToBox(Percentage, RemainingBoxes, GetSpawnInfo(EBoxType::Dangerous).RemainingBoxes);
-			//SetUpSpawnRate(SpawnRate, RemainingBoxes, GetSpawnInfo(EBoxType::Dangerous).RemainingBoxes);
+		}
+		
+		else if (AddressTypes.Contains(BoxType))
+		{
+			double Percentage = ConvertWeightToPercentage(AddressTypes[BoxType], TotalAddressWeight);
+			ConvertPercentageToBox(Percentage, RemainingBoxes, TotalBoxCount);
 		}
 		else
 		{
 			BoxType == EBoxType::Dangerous ? ConvertPercentageToBox(SpawnRates[BoxType], RemainingBoxes, GetSpawnInfo(EBoxType::Suspicious).RemainingBoxes) : ConvertPercentageToBox(SpawnRates[BoxType], RemainingBoxes, TotalBoxCount);
-			//BoxType == EBoxType::Dangerous ? SetUpSpawnRate(SpawnRate, RemainingBoxes, GetSpawnInfo(EBoxType::Suspicious).RemainingBoxes) : SetUpSpawnRate(SpawnRate, RemainingBoxes, TotalBoxCount); 
 		}
 		
 		BoxSpawnInfo.RemainingBoxes = RemainingBoxes;
-		//BoxSpawnInfo.CurrentSpawnRate = SpawnRate;
 		Boxes.Add(BoxSpawnInfo);
 		
 		if (BoxType == EBoxType::Small)
@@ -300,26 +256,28 @@ void USpawnAI::ConvertAllPercentageToBoxes()
 		}
 	}
 	
-	TotalWeight = 0;
+	EnsurePercentageIsValid();
+}
+
+double USpawnAI::AddTotalWeightForBoxType(TMap<EBoxType, double> AllBoxesOfType)
+{
+	double TotalWeight = 0.0;
 	
-	for (const TPair<EBoxAddress, double>& Pair : AddressTypes)
+	for (const TPair<EBoxType, double>& Pair : AllBoxesOfType)
 	{
 		TotalWeight += Pair.Value;
 	}
 	
-	for (EBoxAddress Address : AllAddressTypes)
+	return TotalWeight;
+}
+
+void USpawnAI::CheckAndHandlePercentageForWeightedBoxes(EBoxType BoxType, TMap<EBoxType, double> AllBoxesOfType, double TotalWeight, int& RemainingBoxes, int DependencyFromAmount)
+{
+	if (AllBoxesOfType.Contains(BoxType))
 	{
-		FAddressInfo BoxAddressInfo = FAddressInfo(Address);
-		int RemainingBoxes;
-		
-		double Percentage = ConvertWeightToPercentage(AddressTypes[Address], TotalWeight);
-		ConvertPercentageToBox(Percentage, RemainingBoxes, TotalBoxCount);
-		
-		BoxAddressInfo.RemainingBoxes = RemainingBoxes;
-		Addresses.Add(BoxAddressInfo);
+		double Percentage = ConvertWeightToPercentage(AllBoxesOfType[BoxType], TotalWeight);
+		ConvertPercentageToBox(Percentage, RemainingBoxes, DependencyFromAmount);
 	}
-	
-	EnsurePercentageIsValid();
 }
 
 void USpawnAI::ConvertPercentageToBox(double Percentage, int& TypeOfRemainingBoxes, int DependencyFromAmount)
@@ -338,35 +296,28 @@ double USpawnAI::ConvertWeightToPercentage(double Weight, double TotalWeight)
 
 void USpawnAI::EnsurePercentageIsValid()
 {
-	int TotalDangerousBoxes = 0;
-	TArray<FBoxSpawnInfo> DangerousBoxes;
+	EnsureValidityForBoxType(DangerousTypes, GetSpawnInfo(EBoxType::Dangerous).RemainingBoxes);
+	EnsureValidityForBoxType(AddressTypes, TotalBoxCount);
+}
+
+void USpawnAI::EnsureValidityForBoxType(TMap<EBoxType, double> AllBoxesOfType, int DependencyFromAmount)
+{
+	int TotalAmount = 0;
+	TArray<FBoxSpawnInfo> RemainingBoxes;
 	
-	for (FBoxSpawnInfo Box : Boxes)
+	for (FBoxSpawnInfo Info : Boxes)
 	{
-		if (DangerousTypes.Contains(Box.BoxType))
+		if (AllBoxesOfType.Contains(Info.BoxType))
 		{
-			TotalDangerousBoxes+= Box.RemainingBoxes;
-			DangerousBoxes.Add(Box);
+			TotalAmount+= Info.RemainingBoxes;
+			RemainingBoxes.Add(Info);
 		}
 	}
 	
-	while (TotalDangerousBoxes > GetSpawnInfo(EBoxType::Dangerous).RemainingBoxes)
+	while (TotalAmount > DependencyFromAmount)
 	{
-		DangerousBoxes[FMath::RandRange(0, DangerousBoxes.Num()-1)].DecrementBoxCount();
-	}
-	
-	int TotalAddressAmount = 0;
-	TArray<FAddressInfo> RemainingAddresses;
-	
-	for (FAddressInfo Info : Addresses)
-	{
-		TotalAddressAmount += Info.RemainingBoxes;
-		RemainingAddresses.Add(Info);
-	}
-	
-	while (TotalAddressAmount > TotalBoxCount)
-	{
-		RemainingAddresses[FMath::RandRange(0, RemainingAddresses.Num()-1)].DecrementBoxAddressCount();
+		// does this need reference hm
+		RemainingBoxes[FMath::RandRange(0, RemainingBoxes.Num()-1)].DecrementBoxCount();
 	}
 }
 
@@ -375,12 +326,7 @@ void USpawnAI::SetUpSpawnRate(double& SpawnRate, int RemainingBoxType, int Depen
 	if (RemainingBoxType > 0)
 	{
 		SpawnRate = static_cast<double>(RemainingBoxType) / static_cast<double>(DependencyFromAmount);
-		//UBoxSpawnRateManager->SpawnRate;
 	}
-	/*else
-	{
-		SpawnRate = 0.0;
-	}*/
 }
 
 bool USpawnAI::RollForProperty(EBoxType BoxType)
@@ -403,7 +349,7 @@ double USpawnAI::GiveRandomPercentage()
 	return FMath::RandRange(0.0, 1.0);
 }
 
-double USpawnAI::GiveBadBoxesMaxPercentage(double MaxPercentage)
+double USpawnAI::GiveWeightedBoxesMaxPercentage(double MaxPercentage)
 {
 	return FMath::RandRange(0.0, MaxPercentage);
 }
@@ -435,16 +381,6 @@ FBoxSpawnInfo& USpawnAI::GetSpawnInfo(EBoxType Type)
 	}
 	
 	return Boxes[0];
-}
-
-FAddressInfo& USpawnAI::GetAddressSpawnInfo(EBoxAddress Type)
-{
-	for (FAddressInfo& Info : Addresses)
-	{
-		if (Info.BoxAddress == Type) return Info;
-	}
-	
-	return Addresses[0];
 }
 
 void USpawnAI::AddProperty(TArray<EBoxType>& Properties, EBoxType Type)
