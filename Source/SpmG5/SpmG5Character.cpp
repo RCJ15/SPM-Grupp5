@@ -70,6 +70,7 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		
 		// Pause menu navigation
 		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &ASpmG5Character::Pause);
+		EnhancedInputComponent->BindAction(ResetCharacterAction, ETriggerEvent::Triggered, this, &ASpmG5Character::Respawn);
 		//interact
 		//EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &ASpmG5Character::Interact);
 	}
