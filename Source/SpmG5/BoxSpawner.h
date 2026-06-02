@@ -60,6 +60,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> BombToSpawn;
 	
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> ToxicWasteToSpawn;
+	
 	// UPROPERTY(EditAnywhere)
 	// AActor* ItemToSpawn;
 

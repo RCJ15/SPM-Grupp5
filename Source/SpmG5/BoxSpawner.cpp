@@ -78,7 +78,14 @@ AItem* ABoxSpawner::SpawnItem()
 	
 	if (Properties.Contains(EBoxType::Dangerous))
 	{
-		ItemToSpawn = BombToSpawn;
+		if (Properties.Contains(EBoxType::Bomb))
+		{
+			ItemToSpawn = BombToSpawn;
+		}
+		else if (Properties.Contains(EBoxType::ToxicWaste))
+		{
+			ItemToSpawn = ToxicWasteToSpawn;
+		}
 	}
 
 	// Sets all properties of an item before spawning it
