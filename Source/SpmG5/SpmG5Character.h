@@ -42,7 +42,7 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USceneComponent* HoldingLocation;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float IncapacitationMeter = 0; 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -88,6 +88,8 @@ protected:
 	//FHitResult HitResultBox;
 	//FHitResult HitResultConvayer;
 	
+	FVector StartLocation = FVector(0.0f, 0.0f, 0.0f);
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AItem* HeldItem = nullptr;
 	UPROPERTY()
@@ -110,6 +112,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* PauseAction;
+	
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* ResetCharacterAction;
 	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	bool IsInteracting = false;
@@ -151,7 +156,7 @@ protected:
 	void ChooseInteractOrPickup();
 	
 	void AttachPackage();
-	
+	void Respawn(){SetActorLocation(StartLocation);}
 	
 	void Hold();
 	
@@ -166,6 +171,7 @@ protected:
 public:
 	void AddVelocity(FVector Force){AddMovementInput(Force);}
 
+	void SetSpawnLocation(FVector Location){StartLocation = Location;}
 	
 	UFUNCTION(BlueprintCallable, Blueprintable, BlueprintImplementableEvent)
 	void AttatchPackageToConstaint(AItem* ItemToAttatch);
