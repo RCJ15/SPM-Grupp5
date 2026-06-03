@@ -31,4 +31,10 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool StopCameraMove = false;
 	
+	UPROPERTY(BlueprintReadWrite)
+	int Player0CustomizationIndex = 0;
+	
+	UPROPERTY(BlueprintReadWrite)
+	int Player1CustomizationIndex = 0;
+	
 };
