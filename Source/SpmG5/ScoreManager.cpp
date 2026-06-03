@@ -144,6 +144,7 @@ void UScoreManager::ResetScore()
 {
 	Score = 0.f;
 	ComboMultiplier = 1;
+	CorrectlySortedBoxes = 0;
 }
 
 void UScoreManager::SaveScore()

@@ -88,6 +88,7 @@ protected:
 	//FHitResult HitResultBox;
 	//FHitResult HitResultConvayer;
 	
+	UPROPERTY(BlueprintReadOnly)
 	FVector StartLocation = FVector(0.0f, 0.0f, 0.0f);
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -156,7 +157,9 @@ protected:
 	void ChooseInteractOrPickup();
 	
 	void AttachPackage();
-	void Respawn(){SetActorLocation(StartLocation); Drop(); DoRagdoll();}
+	
+	UFUNCTION(Blueprintable, BlueprintImplementableEvent)
+	void Respawn();
 	
 	void Hold();
 	
