@@ -65,6 +65,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool bIsInStation = false;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool ShouldBreakOnDestruction = true;
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -240,7 +243,6 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Blueprintable, BlueprintCallable)
 	void ActivateOvelay(bool SetTo);
-	
 	
 	virtual void CallActivateOvelay(bool SetTo) {ActivateOvelay(SetTo);}
 	
