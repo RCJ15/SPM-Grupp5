@@ -157,7 +157,10 @@ void AItem::Disintegrate(bool bThrownInTrash)
 		// Box breaks (it's fragile)
 		if (FragileBreakParticles)
 		{
-			UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), FragileBreakParticles, GetActorLocation(), GetActorRotation());
+			if (ShouldBreakOnDestruction)
+			{
+				UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), FragileBreakParticles, GetActorLocation(), GetActorRotation());
+			}
 		}
 	}
 	
