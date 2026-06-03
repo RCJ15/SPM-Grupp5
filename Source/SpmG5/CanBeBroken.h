@@ -21,7 +21,16 @@ class SPMG5_API ICanBeBroken
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
-public:
+public:	
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void Break();
+	
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void Repair();
+	
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void Finished();
+	
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void Cancelled();
 };

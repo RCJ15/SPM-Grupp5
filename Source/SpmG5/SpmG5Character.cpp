@@ -66,6 +66,7 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 		// Pickup and Drop
 		EnhancedInputComponent->BindAction(PickupOrDropAction, ETriggerEvent::Started, this, &ASpmG5Character::ChooseInteractOrPickup);//PickupAndDrop
+		EnhancedInputComponent->BindAction(PickupOrDropAction, ETriggerEvent::Completed, this, &ASpmG5Character::ReleaseInteract);//PickupAndDrop
 		//EnhancedInputComponent->BindAction(PickupOrDropAction, ETriggerEvent::Triggered, this, &ASpmG5Character::ChooseInteractOrPickup);//PickupAndDrop
 		EnhancedInputComponent->BindAction(ThrowAction, ETriggerEvent::Triggered, this, &ASpmG5Character::ChargeUpThrow);		
 		EnhancedInputComponent->BindAction(ThrowAction, ETriggerEvent::Completed, this, &ASpmG5Character::Throw);
@@ -199,6 +200,22 @@ void ASpmG5Character::ChooseInteractOrPickup()
             Drop();
         }
     }
+}
+
+void ASpmG5Character::ReleaseInteract()
+{
+	if (IsRepairing && RepairingActor)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ReleaseInteract"));
+		if (RepairingActor->Implements<UCanBeBroken>())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("BRAHHHHHH"));
+
+			//RepairingActor->IExecute_Cancelled()
+			ICanBeBroken::Execute_Cancelled(RepairingActor);
+		}
+
+	}
 }
 
 void ASpmG5Character::HoldToInteract()
@@ -399,6 +416,10 @@ void ASpmG5Character::Move(const FInputActionValue& Value)
 	if (bIsRagdolling)
 	{
 		StopRagdoll();
+		return;
+	}
+	if (IsRepairing)
+	{
 		return;
 	}
 	// input is a Vector2D
