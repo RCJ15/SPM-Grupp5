@@ -70,6 +70,7 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		
 		// Pause menu navigation
 		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &ASpmG5Character::Pause);
+		EnhancedInputComponent->BindAction(ResetCharacterAction, ETriggerEvent::Triggered, this, &ASpmG5Character::Respawn);
 		//interact
 		//EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &ASpmG5Character::Interact);
 	}
@@ -131,6 +132,8 @@ void ASpmG5Character::FindBoxToPickup()
 
 void ASpmG5Character::ChooseInteractOrPickup()
 {
+	if (bIsRagdolling)
+		return;
     //Choosing between interact or pickup...
     bool bHitItem = false;
     AItem* ItemHit = nullptr;

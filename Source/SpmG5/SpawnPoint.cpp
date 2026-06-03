@@ -3,6 +3,7 @@
 
 #include "SpawnPoint.h"
 
+#include "SpmG5Character.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -13,5 +14,6 @@ void ASpawnPoint::BeginPlay()
 	if (IsValid(PlayerPawn))
 	{
 		PlayerPawn->SetActorLocation(GetActorLocation());
+		Cast<ASpmG5Character>(PlayerPawn)->SetSpawnLocation(GetActorLocation());
 	}
 }

@@ -41,7 +41,7 @@ struct FLevelInfo
 	TMap<EBoxType, double> DangerousTypes = {{ EBoxType::Bomb, 1.0 }, { EBoxType::ToxicWaste, 0.0 }, { EBoxType::FlashBang, 0.0 }};
 	
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Default", EditFixedSize, meta=(ReadOnlyKeys), meta=(ShowOnlyInnerProperties))
-	TMap<EBoxAddress, double> BoxAddresses = {{ EBoxAddress::CIRCLE, 1.0 }, { EBoxAddress::SQUARE, 1.0 }, { EBoxAddress::TRIANGLE, 1.0 }};
+	TMap<EBoxType, double> BoxAddresses = {{EBoxType::Circle, 1.0 }, { EBoxType::Square, 1.0 }, { EBoxType::Triangle, 1.0 }};
 };
 
 UCLASS()
