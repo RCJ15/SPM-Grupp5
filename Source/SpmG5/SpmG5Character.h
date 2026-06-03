@@ -156,7 +156,7 @@ protected:
 	void ChooseInteractOrPickup();
 	
 	void AttachPackage();
-	void Respawn(){SetActorLocation(StartLocation);}
+	void Respawn(){SetActorLocation(StartLocation); Drop(); DoRagdoll();}
 	
 	void Hold();
 	
