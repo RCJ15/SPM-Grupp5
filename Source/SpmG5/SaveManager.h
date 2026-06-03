@@ -24,13 +24,4 @@ public:
 	UFUNCTION(BlueprintCallable)
 	static FGameData LoadGame();
 	
-	UFUNCTION(BlueprintCallable)
-	static void ApplySettings();
-	
-	UFUNCTION(BlueprintCallable)
-	static bool DoesSaveExist();
-	
-private:
-	static FString GetSavePath();
-
 };
