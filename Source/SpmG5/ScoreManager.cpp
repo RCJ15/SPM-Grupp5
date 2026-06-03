@@ -143,6 +143,7 @@ void UScoreManager::AddScore(int ScoreChange)
 void UScoreManager::ResetScore()
 {
 	Score = 0.f;
+	ComboMultiplier = 1;
 }
 
 void UScoreManager::SaveScore()
