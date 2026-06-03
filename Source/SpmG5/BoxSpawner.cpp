@@ -81,47 +81,6 @@ AItem* ABoxSpawner::SpawnItem()
 		if (Properties.Contains(EBoxType::Bomb) && !Properties.Contains(EBoxType::Radioactive))
 		{
 			ItemToSpawn = BombToSpawn;
-			
-			UE_LOG(LogTemp, Warning, TEXT("	This went through????????"));
-			
-			FString sus;
-			
-			if (Properties.Contains(EBoxType::Suspicious))
-			{
-				sus = "True";
-			}
-			else
-			{
-				sus = "False";
-			}
-		
-			UE_LOG(LogTemp, Warning, TEXT("Suspicious: %s"), *sus);
-		
-			FString dan;
-		
-			if (Properties.Contains(EBoxType::Dangerous))
-			{
-				dan = "True";
-			}
-			else
-			{
-				dan = "False";
-			}
-		
-			UE_LOG(LogTemp, Warning, TEXT("Dangerous: %s"), *dan);
-			
-			FString rad;
-		
-			if (Properties.Contains(EBoxType::Radioactive))
-			{
-				rad = "True";
-			}
-			else
-			{
-				rad = "False";
-			}
-		
-			UE_LOG(LogTemp, Warning, TEXT("Radioactive: %s"), *rad);
 		}
 		else if (Properties.Contains(EBoxType::ToxicWaste))
 		{

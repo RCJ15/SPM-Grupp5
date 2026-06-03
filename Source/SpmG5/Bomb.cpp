@@ -2,6 +2,8 @@
 
 
 #include "Bomb.h"
+
+#include "CanBeBroken.h"
 #include "ConveyorBelt.h"
 #include "ConveyorBeltUpgraded.h"
 #include "FMODBlueprintStatics.h"
@@ -53,7 +55,7 @@ void ABomb::Explode()
 	//FVector End = GetActorLocation() + GetActorForwardVector() * Radius;
 	FQuat Rotation = GetActorRotation().Quaternion();
 		
-	GetWorld()->SweepMultiByChannel(Hit,GetActorLocation(), GetActorLocation(), Rotation, ECC_GameTraceChannel1, FCollisionShape::MakeSphere(Radius));
+	GetWorld()->SweepMultiByChannel(Hit,GetActorLocation(), GetActorLocation(), Rotation, ECC_GameTraceChannel6, FCollisionShape::MakeSphere(Radius));
 
 	//för varje item 
 	for (auto i : Hit)
@@ -89,6 +91,16 @@ void ABomb::Explode()
 				OtherItem->AddImpulse(GetActorLocation(), 5); //5 temp test för strength
 			if (OtherItem->GetIsFragile())
 				OtherItem->Disintegrate(false);
+		}
+		
+		if (i.GetActor() && i.GetComponent() && i.GetActor()->Implements<UCanBeBroken>())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("FGUCKKK"));
+			AActor* Thing = Cast<AActor>(i.GetActor());
+			//ICanBeBroken* BreakableActor = Cast<ICanBeBroken>(Thing);
+			//spelaren måste droppa item
+			
+			BreakCaller(Thing);
 		}
 	}
 	if (Shake != nullptr)

@@ -43,10 +43,13 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Blueprintable)
 	void ActivateBadOvelay(bool SetTo);
 	
-	virtual void CallActivateOvelay(bool SetTo) override {ActivateBadOvelay(SetTo);} 
+	virtual void CallActivateOvelay(bool SetTo) override {ActivateBadOvelay(SetTo);}
 	
 	UPROPERTY(Blueprintable, BlueprintReadWrite, BlueprintAssignable)
 	FExampleDelegate_OnSomething ExampleDelegateVariable;
+	
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void BreakCaller(AActor* Actor);
 	
 private:
 	/* SFX */
