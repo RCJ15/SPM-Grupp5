@@ -433,7 +433,6 @@ void ASpmG5Character::DecreaseIncapacitation(float Decrease)
 	if (IncapacitationMeter < 0)
 	{
 		IncapacitationMeter = 0;
-		StopRagdoll();
 	}
 		
 }
