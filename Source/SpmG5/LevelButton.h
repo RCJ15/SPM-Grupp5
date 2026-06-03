@@ -35,7 +35,7 @@ struct FLevelInfo
 	int AmountOfBoxesPerLevel = 100.f;
 	
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Default", EditFixedSize, meta=(UIMin = "0.0", UIMax = "100.0"), meta=(ReadOnlyKeys), meta=(ShowOnlyInnerProperties))
-	TMap<EBoxType, double> SpawnRates = {{ EBoxType::Small, 75.0 }, { EBoxType::Fragile, 15.0 },{ EBoxType::Suspicious, 40.0 },{ EBoxType::Dangerous, 50.0 }};
+	TMap<EBoxType, double> SpawnRates = {{ EBoxType::Small, 75.0 }, { EBoxType::Fragile, 15.0 }, { EBoxType::Radioactive, 0.0 }, { EBoxType::Suspicious, 40.0 },{ EBoxType::Dangerous, 50.0 }};
 	
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Default", EditFixedSize, meta=(ReadOnlyKeys), meta=(ShowOnlyInnerProperties))
 	TMap<EBoxType, double> DangerousTypes = {{ EBoxType::Bomb, 1.0 }, { EBoxType::ToxicWaste, 0.0 }, { EBoxType::FlashBang, 0.0 }};

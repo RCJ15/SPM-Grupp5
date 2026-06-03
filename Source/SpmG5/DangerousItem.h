@@ -18,7 +18,7 @@ protected:
 	virtual void BeginPlay() override;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Lifetime = 30.0f;
+	float Lifetime = 10.0f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FTimerHandle BadBoxTimer;
@@ -37,6 +37,9 @@ protected:
 
 
 public:
+	UFUNCTION(BlueprintCallable)
+	void StartCountDownTimer();
+	
 	UFUNCTION(BlueprintNativeEvent)
 	void OnEndTimer();
 	

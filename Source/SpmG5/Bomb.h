@@ -45,9 +45,9 @@ public:
 	
 	virtual void CallActivateOvelay(bool SetTo) override {ActivateBadOvelay(SetTo);} 
 	
-	
 	UPROPERTY(Blueprintable, BlueprintReadWrite, BlueprintAssignable)
 	FExampleDelegate_OnSomething ExampleDelegateVariable;
+	
 private:
 	/* SFX */
 	UPROPERTY(EditAnywhere, Category="Audio")
