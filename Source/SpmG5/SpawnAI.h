@@ -12,6 +12,7 @@ enum class EBoxType : uint8
 	Small,
 	Large,
 	Fragile,
+	Radioactive,
 	Suspicious,
 	Dangerous,
 	Bomb,
@@ -66,7 +67,7 @@ private:
 	TMap<EBoxType, double> AddressTypes;
 	
 	TArray<FBoxSpawnInfo> Boxes; //TMap<EBoxType, FBoxSpawnInfo> SpawnInfos; POTENTIELL UPGRADE ???
-	TArray<EBoxType> AllBoxTypes{EBoxType::Small, EBoxType::Large, EBoxType::Fragile, EBoxType::Suspicious, EBoxType::Dangerous, EBoxType::Bomb, EBoxType::ToxicWaste, EBoxType::FlashBang, EBoxType::Circle, EBoxType::Square, EBoxType::Triangle};
+	TArray<EBoxType> AllBoxTypes{EBoxType::Small, EBoxType::Large, EBoxType::Fragile, EBoxType::Radioactive, EBoxType::Suspicious, EBoxType::Dangerous, EBoxType::Bomb, EBoxType::ToxicWaste, EBoxType::FlashBang, EBoxType::Circle, EBoxType::Square, EBoxType::Triangle};
 	
 	FBoxSpawnInfo& GetSpawnInfo(EBoxType Type);
 	
