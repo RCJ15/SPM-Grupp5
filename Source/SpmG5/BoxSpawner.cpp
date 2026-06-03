@@ -41,7 +41,7 @@ AItem* ABoxSpawner::SpawnItem()
 		{		
 			if (IsDangerous)
 			{
-				ItemToSpawn = BombToSpawn;
+				//ItemToSpawn = BombToSpawn;
 			}
 		}
 	
@@ -78,14 +78,60 @@ AItem* ABoxSpawner::SpawnItem()
 	
 	if (Properties.Contains(EBoxType::Dangerous))
 	{
-		if (Properties.Contains(EBoxType::Bomb))
+		if (Properties.Contains(EBoxType::Bomb) && !Properties.Contains(EBoxType::Radioactive))
 		{
 			ItemToSpawn = BombToSpawn;
+			
+			UE_LOG(LogTemp, Warning, TEXT("	This went through????????"));
+			
+			FString sus;
+			
+			if (Properties.Contains(EBoxType::Suspicious))
+			{
+				sus = "True";
+			}
+			else
+			{
+				sus = "False";
+			}
+		
+			UE_LOG(LogTemp, Warning, TEXT("Suspicious: %s"), *sus);
+		
+			FString dan;
+		
+			if (Properties.Contains(EBoxType::Dangerous))
+			{
+				dan = "True";
+			}
+			else
+			{
+				dan = "False";
+			}
+		
+			UE_LOG(LogTemp, Warning, TEXT("Dangerous: %s"), *dan);
+			
+			FString rad;
+		
+			if (Properties.Contains(EBoxType::Radioactive))
+			{
+				rad = "True";
+			}
+			else
+			{
+				rad = "False";
+			}
+		
+			UE_LOG(LogTemp, Warning, TEXT("Radioactive: %s"), *rad);
 		}
 		else if (Properties.Contains(EBoxType::ToxicWaste))
 		{
 			ItemToSpawn = ToxicWasteToSpawn;
 		}
+	}
+	
+	if (Properties.Contains(EBoxType::Radioactive))
+	{
+		ItemToSpawn = RadioactiveItemToSpawn;
 	}
 
 	// Sets all properties of an item before spawning it
@@ -105,9 +151,12 @@ AItem* ABoxSpawner::SpawnItem()
 		if (Properties.Contains(EBoxType::Square))
 		{
 			Item->SetAddress(EBoxAddress::SQUARE);
-		}else if (Properties.Contains(EBoxType::Circle)){
+		}
+		else if (Properties.Contains(EBoxType::Circle))
+		{
 			Item->SetAddress(EBoxAddress::CIRCLE);
-		}else
+		}
+		else
 		{
 			Item->SetAddress(EBoxAddress::TRIANGLE);
 		}
@@ -135,7 +184,7 @@ AItem* ABoxSpawner::SpawnItem(bool IsDangerous, bool IsLarge, bool IsFragile, bo
 	{		
 		if (IsDangerous)
 		{
-			ItemToSpawn = BombToSpawn;
+			//ItemToSpawn = BombToSpawn;
 		}
 	}
 	
