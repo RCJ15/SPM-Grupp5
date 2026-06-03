@@ -155,6 +155,7 @@ protected:
 	TArray<FHitResult> DoSweep();
 	void FindBoxToPickup();
 	void ChooseInteractOrPickup();
+	void HoldToInteract();
 	
 	void AttachPackage();
 	

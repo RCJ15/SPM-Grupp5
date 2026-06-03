@@ -14,6 +14,7 @@
 #include "InputActionValue.h"
 #if WITH_EDITOR
 #endif
+#include "CanBeBroken.h"
 #include "SpmG5.h"
 #include "FMODBlueprintStatics.h"
 #include "Interactable.h"
@@ -65,6 +66,7 @@ void ASpmG5Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 		// Pickup and Drop
 		EnhancedInputComponent->BindAction(PickupOrDropAction, ETriggerEvent::Started, this, &ASpmG5Character::ChooseInteractOrPickup);//PickupAndDrop
+		//EnhancedInputComponent->BindAction(PickupOrDropAction, ETriggerEvent::Triggered, this, &ASpmG5Character::ChooseInteractOrPickup);//PickupAndDrop
 		EnhancedInputComponent->BindAction(ThrowAction, ETriggerEvent::Triggered, this, &ASpmG5Character::ChargeUpThrow);		
 		EnhancedInputComponent->BindAction(ThrowAction, ETriggerEvent::Completed, this, &ASpmG5Character::Throw);
 		
@@ -154,8 +156,14 @@ void ASpmG5Character::ChooseInteractOrPickup()
                     continue;
                 }
             }
+        	
+        	if (HitResult.GetActor()->Implements<UCanBeBroken>())
+        	{
+        		StationHit = Cast<UObject>(HitResult.GetActor());
+        		bHitStation = true;
+        	}
 
-            if (HitResult.GetActor()->Implements<UInteractable>())
+        	if (HitResult.GetActor()->Implements<UInteractable>())
             {
                 StationHit = Cast<UObject>(HitResult.GetActor());
                 bHitStation = true;
@@ -191,6 +199,11 @@ void ASpmG5Character::ChooseInteractOrPickup()
             Drop();
         }
     }
+}
+
+void ASpmG5Character::HoldToInteract()
+{
+	
 }
 
 void ASpmG5Character::Pickup(AItem* Item)
