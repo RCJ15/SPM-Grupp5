@@ -9,11 +9,6 @@
 #include "Serialization/JsonSerializer.h"
 #include "Serialization/JsonTypes.h"
 #include "Hal/FileManager.h"
-#include "JsonObjectConverter.h"
-#include "NiagaraDebuggerCommon.h"
-#include "ScoreManager.h"
-#include "SNegativeActionButton.h"
-
 
 
 void USaveManager::SaveGame(const FGameData& GameData)
@@ -59,6 +54,7 @@ FGameData USaveManager::LoadGame()
 		if (FJsonObjectConverter::JsonObjectToUStruct(JsonObject.ToSharedRef(), &SaveData))
 		{
 			UE_LOG(LogTemp, Warning, TEXT("JSON SUCCESSFULLY LOADED"));
+			UE_LOG(LogTemp, Error, TEXT("Music Volume: %f"), SaveData.MusicVolume);
 			return SaveData;
 		}
 	}
@@ -67,11 +63,3 @@ FGameData USaveManager::LoadGame()
 	return FGameData();
 }
 
-void USaveManager::ApplySettings()
-{
-}
-
-bool USaveManager::DoesSaveExist()
-{
-	return true;
-}

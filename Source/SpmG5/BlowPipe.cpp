@@ -24,7 +24,7 @@ void ABlowPipe::BeginPlay()
 {
 	Super::BeginPlay();
 	//Instantiete varibles
-	TimeBeforeBlowing = WaitTimeRange.Y;
+	TimeBeforeBlowing = Stream.FRandRange(WaitTimeRange.X, WaitTimeRange.Y);
 	TimeLeftBlowing = Stream.FRandRange(WaitTimeRange.X, WaitTimeRange.Y);
 	//Starting Loop
 	BlowStateLoop(TimeBeforeBlowing);
