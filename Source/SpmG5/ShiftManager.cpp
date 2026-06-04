@@ -42,6 +42,11 @@ void UShiftManager::StartTimer()
 		ShiftTimer, this, &UShiftManager::CountdownShift, TimeRate, true);
 }
 
+void UShiftManager::EndShiftEarly()
+{
+	TimeRemaining = 3;
+}
+
 void UShiftManager::CountdownShift()
 {
 	TimeRemaining -= TimeRate;

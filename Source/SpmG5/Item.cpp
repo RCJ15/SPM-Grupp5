@@ -177,6 +177,9 @@ void AItem::Disintegrate(bool bThrownInTrash)
 		}
 	}
 	
+	UGameManager* GameManager = Cast<UGameManager>(GetWorld()->GetGameInstance());
+	GameManager->BoxDead();
+
 	Destroy();
 }
 

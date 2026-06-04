@@ -53,7 +53,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void StartTimer();
 
+	UFUNCTION(BlueprintCallable)
+	void EndShiftEarly();
+	
 	void CountdownShift();
+	
 	
 	//UFUNCTION(BlueprintCallable, Blueprintable)
 	//void TimeRunsOut();
