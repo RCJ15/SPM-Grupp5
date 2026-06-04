@@ -56,7 +56,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ResetTime();
 
+	UFUNCTION(BlueprintCallable)
+	void EndShiftEarly();
+	
 	void CountdownShift();
+	
 	
 	//UFUNCTION(BlueprintCallable, Blueprintable)
 	//void TimeRunsOut();

@@ -46,6 +46,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	TSoftObjectPtr<UWorld> GetPreviousLevel();
 	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void BoxDead();
+	
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UUserWidget* HUDWidget;

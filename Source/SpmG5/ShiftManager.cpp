@@ -46,6 +46,10 @@ void UShiftManager::ResetTime()
 {
 	TimeRemaining = ShiftLengthInSeconds;
 }
+void UShiftManager::EndShiftEarly()
+{
+	TimeRemaining = 3;
+}
 
 void UShiftManager::CountdownShift()
 {
