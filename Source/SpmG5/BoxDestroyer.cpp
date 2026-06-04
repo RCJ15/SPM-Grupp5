@@ -1,6 +1,8 @@
 // Marcus hopefully approves of this.
 
 #include "BoxDestroyer.h"
+
+#include "GameManager.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -35,6 +37,7 @@ void ABoxDestroyer::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 {
 	if (OtherActor && OtherActor != this)
 	{
+		UE_LOG(LogTemp, Error, TEXT("faku"));
 		AItem* Item = Cast<AItem>(OtherActor);
 		
 		if (Item)
@@ -47,6 +50,8 @@ void ABoxDestroyer::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 					HandleBox(Item);
 				}
 				GetWorld()->GetSubsystem<UScoreManager>()->AddScore(Item->GetPoints());
+				UGameManager* GameManager = Cast<UGameManager>(GetWorld()->GetGameInstance());
+				GameManager->BoxDead();
 				Item->Destroy();
 				//UE_LOG(LogTemp, Warning, TEXT("Score: %d"), Item->GetPoints());
 			}
