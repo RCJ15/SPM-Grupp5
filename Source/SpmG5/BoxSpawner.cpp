@@ -102,6 +102,7 @@ AItem* ABoxSpawner::SpawnItem()
 		//UE_LOG(LogTemp, Warning, TEXT("Spawning Box"));
 		Item->SetIsLarge(Properties.Contains(EBoxType::Large));
 		Item->SetIsFragile(Properties.Contains(EBoxType::Fragile));
+		Item->SetIsRadioactive(Properties.Contains(EBoxType::Radioactive));
 		//Item->SetIsDangerous(ShouldHappen(DangerousBoxSpawnRate));
 		//Item->SetActorRotation(SpawnLocation->GetComponentRotation() + FRotator(0, FMath::RandRange(-15,15), 0));
 		Item->SetIsSuspicious(Properties.Contains(EBoxType::Suspicious));

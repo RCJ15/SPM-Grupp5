@@ -71,6 +71,11 @@ void AItem::SetPoints()
 		Points += FragileBoxPoints;
 	}
 	
+	if (IsRadioactive)
+	{
+		Points += RadioactiveBoxPoints;
+	}
+	
 	if (IsScanned)
 	{
 		Points += ScannedBoxPoints;
@@ -289,6 +294,11 @@ void AItem::SetIsLarge(bool SetTo)
 void AItem::SetIsFragile(bool SetTo)
 {
 	IsFragile = SetTo;
+}
+
+void AItem::SetIsRadioactive(bool SetTo)
+{
+	IsRadioactive = SetTo;
 }
 
 void AItem::SetIsSuspicious(bool SetTo)
