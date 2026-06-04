@@ -52,6 +52,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void StartTimer();
+	
+	UFUNCTION(BlueprintCallable)
+	void ResetTime();
 
 	void CountdownShift();
 	

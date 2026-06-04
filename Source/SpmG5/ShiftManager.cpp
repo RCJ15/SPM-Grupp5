@@ -34,12 +34,17 @@ void UShiftManager::StartTimer()
 {
 	OnTimeRunsOut.RemoveAll(this);
 	GetWorld()->GetTimerManager().ClearTimer(ShiftTimer);
-	TimeRemaining = ShiftLengthInSeconds;
+	ResetTime();
 	CurrentMin = ShiftLengthInSeconds / 60;
 	CurrentSec = ShiftLengthInSeconds % 60;
 	
 	GetWorld()->GetTimerManager().SetTimer(
 		ShiftTimer, this, &UShiftManager::CountdownShift, TimeRate, true);
+}
+
+void UShiftManager::ResetTime()
+{
+	TimeRemaining = ShiftLengthInSeconds;
 }
 
 void UShiftManager::CountdownShift()

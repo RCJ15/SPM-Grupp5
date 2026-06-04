@@ -102,26 +102,8 @@ void UScoreManager::AddScore(int ScoreChange)
 {
 	AddedScore = ScoreChange;
 	int NewScore = Score + ScoreChange;
-	
-	//Höj combo multiplier vid rätt sortering, och ta bort vid fel sortering
-	if (AddedScore < 0)
-	{
-		if (bUseComboMultiplier)
-		{
-			ChangeCombo(999);
-		}
-			
-	}
-	else
-	{
-		
-		if (bUseComboMultiplier)
-		{
-			NewScore = Score + (ScoreChange * ComboMultiplier);
-			ChangeCombo(1);
-		}
-		++CorrectlySortedBoxes;
-	}
+	if (bUseComboMultiplier)
+		NewScore = Score + (ScoreChange * ComboMultiplier);
 	
 	if (NewScore < 0)
 	{
@@ -136,7 +118,22 @@ void UScoreManager::AddScore(int ScoreChange)
 		OnScoreChanged.Broadcast();
 	}
 	
- 	UE_LOG(LogTemp, Warning, TEXT("Score: %d"), Score);
+	UE_LOG(LogTemp, Warning, TEXT("Score: %d"), Score);
+	
+	//Höj combo multiplier vid rätt sortering, och ta bort vid fel sortering
+	if (AddedScore < 0)
+	{
+		if (bUseComboMultiplier)
+			ChangeCombo(999);
+	}
+	else
+	{
+		if (bUseComboMultiplier)
+			ChangeCombo(1);
+		
+		++CorrectlySortedBoxes;
+	}
+	
 }
 
 
