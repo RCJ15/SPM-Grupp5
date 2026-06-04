@@ -105,10 +105,13 @@ protected:
 	EBoxAddress Address = EBoxAddress::SQUARE;
 	
 	UPROPERTY(EditAnywhere)
-	bool IsFragile;
-
-	UPROPERTY(EditAnywhere)
 	bool IsLarge;
+	
+	UPROPERTY(EditAnywhere)
+	bool IsFragile;
+	
+	UPROPERTY(EditAnywhere)
+	bool IsRadioactive;
 	
 	UPROPERTY(EditAnywhere)
 	bool IsSuspicious;
@@ -134,6 +137,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere)
 	int FragileBoxPoints = 5;
+	
+	UPROPERTY(EditAnywhere)
+	int RadioactiveBoxPoints = 10;
 	
 	UPROPERTY(EditAnywhere)
 	int ScannedBoxPoints = 5;
@@ -237,6 +243,7 @@ public:
 	
 	void SetIsLarge(bool SetTo);
 	void SetIsFragile(bool SetTo);
+	void SetIsRadioactive(bool SetTo);
 	void SetIsSuspicious(bool SetTo);
 	void SetIsDangerous(bool SetTo);
 	void SetAddress(EBoxAddress NewAddress);
