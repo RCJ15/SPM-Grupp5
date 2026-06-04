@@ -175,7 +175,13 @@ void AConveyorBeltUpgraded::Move()
 		FVector NewLoc = Path->GetLocationAtSplineInputKey(NewKey,ESplineCoordinateSpace::World);
 		AItem* Item = Current->Item;
 		if (IsValid(Item))
+		{
 			Item->SetActorLocation(NewLoc + Current->Offset);
+			if (Item->GetIsHeld()) //schröders box lösning
+				RemoveFromBelt(Current);
+		}
+			
+		
 		
 		//Rotera objekten?
 		//if (Item)
@@ -225,11 +231,11 @@ void AConveyorBeltUpgraded::GenerateSpline()
 	//lägg till punkt utanför arrayen för offset där de ska falla
 	FVector SegmentOrigin;
 	FVector SegmentBoxExtent;
-	Segments[0]->GetActorBounds(false, SegmentOrigin, SegmentBoxExtent);
+	Segments[Segments.Num()-1]->GetActorBounds(false, SegmentOrigin, SegmentBoxExtent);
 	FVector DirOffset = FVector(0,0,0) + (Segments[Segments.Num()-1] -> GetForward() * (SegmentBoxExtent.X-GuardRailLengthOffset));
 	
-	Path-> AddSplinePointAtIndex(Segments[Segments.Num()-1]->GetActorLocation() + DirOffset  + PathOffset,Segments.Num(),ESplineCoordinateSpace::World);
-	Path -> SetSplinePointType(Segments.Num(),ESplinePointType::Linear,true);
+	Path-> AddSplinePointAtIndex(Segments[Segments.Num()-1]->GetActorLocation()+ DirOffset  + PathOffset,Segments.Num(),ESplineCoordinateSpace::World);
+	Path-> SetSplinePointType(Segments.Num(),ESplinePointType::Linear,true);
 	
 }
 
