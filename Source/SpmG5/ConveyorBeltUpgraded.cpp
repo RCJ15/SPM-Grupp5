@@ -175,7 +175,13 @@ void AConveyorBeltUpgraded::Move()
 		FVector NewLoc = Path->GetLocationAtSplineInputKey(NewKey,ESplineCoordinateSpace::World);
 		AItem* Item = Current->Item;
 		if (IsValid(Item))
+		{
 			Item->SetActorLocation(NewLoc + Current->Offset);
+			if (Item->GetIsHeld()) //schröders box lösning
+				RemoveFromBelt(Current);
+		}
+			
+		
 		
 		//Rotera objekten?
 		//if (Item)
