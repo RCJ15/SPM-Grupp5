@@ -66,6 +66,7 @@ void ABlowPipe::CallBlowMethod()
 	if (TimeLeftBlowing > 0)
 	{
 		ActivateBlowing(true);
+		if (GetWorld())
 		TimeLeftBlowing -= GetWorld()->GetDeltaSeconds();
 	}
 	else
