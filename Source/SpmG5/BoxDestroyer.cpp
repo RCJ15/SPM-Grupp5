@@ -37,7 +37,6 @@ void ABoxDestroyer::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 {
 	if (OtherActor && OtherActor != this)
 	{
-		UE_LOG(LogTemp, Error, TEXT("faku"));
 		AItem* Item = Cast<AItem>(OtherActor);
 		
 		if (Item)

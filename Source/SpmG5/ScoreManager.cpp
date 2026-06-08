@@ -136,7 +136,6 @@ void UScoreManager::AddScore(int ScoreChange)
 	
 }
 
-
 void UScoreManager::ResetScore()
 {
 	Score = 0.f;
