@@ -58,8 +58,6 @@ public:
 	AItem();
 	
 	UPROPERTY(VisibleAnywhere)
-	AConveyorBelt* Conveyor = nullptr; //pekar til conveyor om den är attached
-	UPROPERTY(VisibleAnywhere)
 	AConveyorBeltUpgraded* ConveyorUpgraded = nullptr; //pekar til conveyor om den är attached
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)

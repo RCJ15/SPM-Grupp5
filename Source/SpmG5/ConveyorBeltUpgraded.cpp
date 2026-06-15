@@ -62,8 +62,7 @@ void AConveyorBeltUpgraded::RemoveFromBelt(AItem* Item)
 			}
 			Item->SetPhysics(true);
 			Item->SetCollitionDefultProfile(true);
-			Item ->Conveyor = nullptr; //sluta peka på denna conveyor
-			Item->ConveyorUpgraded = nullptr;
+			Item->ConveyorUpgraded = nullptr;//sluta peka på denna conveyor
 			//Current -> Destroy();
 			//Destroy(Current);
 			break;
@@ -89,8 +88,7 @@ void AConveyorBeltUpgraded::RemoveFromBelt(FObjectOnBelt* Obj)
 			}
 			Current->Item->SetPhysics(true);
 			Current->Item->SetCollitionDefultProfile(true);
-			Current->Item ->Conveyor = nullptr; //sluta peka på denna conveyor
-			Current->Item->ConveyorUpgraded = nullptr;
+			Current->Item->ConveyorUpgraded = nullptr;//sluta peka på denna conveyor
 			//Current -> Destroy();
 			//Destroy(Current);
 			break;

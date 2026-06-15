@@ -16,6 +16,7 @@ void UGameManager::LoadLevel(TSoftObjectPtr<UWorld> Level)
 	CurrentLevel = Level;
 	FLatentActionInfo LatentInfo;
 	LatentInfo.CallbackTarget = this;
+	
 	if(FirstTime || CurrentLevel != PreviousLevel)
 	{
 		LatentInfo.ExecutionFunction = FName("LevelLoaded");

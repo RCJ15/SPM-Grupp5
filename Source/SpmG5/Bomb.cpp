@@ -4,7 +4,6 @@
 #include "Bomb.h"
 
 #include "CanBeBroken.h"
-#include "ConveyorBelt.h"
 #include "ConveyorBeltUpgraded.h"
 #include "FMODBlueprintStatics.h"
 #include "NiagaraFunctionLibrary.h"
@@ -73,15 +72,9 @@ void ABomb::Explode()
 		{
 			AItem* OtherItem = Cast<AItem>(i.GetActor());
 			//check if connected to conveyor
-			if (OtherItem->Conveyor != nullptr)
-			{
-				//disconnect from conveyor
-				OtherItem->Conveyor->DropItem(OtherItem);
-				OtherItem->Conveyor = nullptr;
-			}
-			
 			if (OtherItem->ConveyorUpgraded != nullptr)
 			{
+				//disconnect from conveyor
 				OtherItem->ConveyorUpgraded->RemoveFromBelt(OtherItem);
 				OtherItem->ConveyorUpgraded = nullptr;
 			}
