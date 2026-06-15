@@ -1,9 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
-#include "ConveyorBelt.h"
+#include "ConveyorSegment.h"
 #include "ConveyorBeltUpgraded.h"
-
 #include "Item.h"
 #include "Components/StaticMeshComponent.h"
 #include "DSP/BufferDiagnostics.h"

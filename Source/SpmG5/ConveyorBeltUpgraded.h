@@ -3,10 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BoxSpawner.h"
 #include "Item.h"
 #include "Components/SplineComponent.h"
 #include "GameFramework/Actor.h"
-#include "ConveyorBelt.h"
+#include "ConveyorSegment.h"
 #include "ConveyorBeltUpgraded.generated.h"
 
 
