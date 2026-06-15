@@ -54,6 +54,9 @@ public:
 	void StartTimer();
 	
 	UFUNCTION(BlueprintCallable)
+	void StopTimer();
+	
+	UFUNCTION(BlueprintCallable)
 	void ResetTime();
 
 	UFUNCTION(BlueprintCallable)
