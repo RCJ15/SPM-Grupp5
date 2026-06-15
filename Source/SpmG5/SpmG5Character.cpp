@@ -463,15 +463,6 @@ void ASpmG5Character::DecreaseIncapacitation(float Decrease)
 		
 }
 
-void ASpmG5Character::StartFindingValidPosition()
-{
-	GetWorld()->GetTimerManager().SetTimer(FindValidPosTimer, this, &ASpmG5Character::FindValidPosition, 0.2, true, 0.2);
-}
-
-void ASpmG5Character::FindValidPosition()
-{
-}
-
 
 void ASpmG5Character::DoMove(float Right, float Forward)
 {

@@ -36,7 +36,6 @@ class ASpmG5Character : public ACharacter
 protected:
 	
 	FTimerHandle HoldingTimer;
-	FTimerHandle FindValidPosTimer;
 	
 	UPROPERTY()
 	UPrimitiveComponent* PrimComp;	
@@ -194,11 +193,6 @@ public:
 	void DoRagdoll();
 	UFUNCTION(BlueprintImplementableEvent, Blueprintable, BlueprintCallable, Category="Physics")
 	void StopRagdoll();
-	UFUNCTION(BlueprintCallable)
-	void StartFindingValidPosition();
-	
-	
-	void FindValidPosition();
 	
 	/** Handles move inputs from either controls or UI interfaces */
 	UFUNCTION(BlueprintCallable, Category="Input")

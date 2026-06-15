@@ -22,7 +22,7 @@ public:
 	int IndexInConveyorBelt = -1;
 	
 	UPROPERTY()
-	AConveyorBeltUpgraded* BeltUpgraded = nullptr;
+	class AConveyorBeltUpgraded* BeltUpgraded = nullptr;
 
 protected:
 	// Called when the game starts or when spawned
