@@ -239,10 +239,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetMostRecentHolder(AActor* holder);
 	
-	void SetIsLarge(bool SetTo);
+	UFUNCTION(BlueprintCallable)
 	void SetIsFragile(bool SetTo);
-	void SetIsRadioactive(bool SetTo);
+		
+	UFUNCTION(BlueprintCallable)
 	void SetIsSuspicious(bool SetTo);
+	
+	void SetIsLarge(bool SetTo);
+	void SetIsRadioactive(bool SetTo);
 	void SetIsDangerous(bool SetTo);
 	void SetAddress(EBoxAddress NewAddress);
 
