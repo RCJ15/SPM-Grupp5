@@ -2,11 +2,8 @@
 #include "SpmG5Character.h"
 #include "Item.h"
 #include "Engine/LocalPlayer.h"
-//#include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-//#include "GameFramework/SpringArmComponent.h"
-#include "ConveyorBelt.h"
 #include "ConveyorBeltUpgraded.h"
 #include "GameFramework/Controller.h"
 #include "EnhancedInputComponent.h"
@@ -230,11 +227,6 @@ void ASpmG5Character::Pickup(AItem* Item)
 		return;
 	HeldItem = Item;
 	HasItem = true;
-	if (HeldItem->Conveyor)
-	{
-		HeldItem->Conveyor->DropItem(HeldItem);
-		UE_LOG(LogTemp, Display, TEXT("Dropping item from conveyor"));
-	}
 	if (HeldItem->ConveyorUpgraded)
 	{
 		HeldItem->ConveyorUpgraded->RemoveFromBelt(HeldItem);
@@ -470,6 +462,12 @@ void ASpmG5Character::DecreaseIncapacitation(float Decrease)
 	}
 		
 }
+
+void ASpmG5Character::StartFindingValidPosition()
+{
+	GetWorld()->GetTimerManager().SetTimer(FindValidPosTimer, this, &ASpmG5Character::FindValidPosition, 0.2, true, 0.2);
+}
+
 
 void ASpmG5Character::DoMove(float Right, float Forward)
 {
