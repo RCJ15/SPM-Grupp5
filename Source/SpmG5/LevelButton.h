@@ -31,9 +31,6 @@ struct FLevelInfo
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Default")
 	bool IsTutorial;
 	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Default")
-	ACameraActor* LevelCamera = nullptr;
-	
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Default")
 	int AmountOfBoxesPerLevel = 100.f;
 	
