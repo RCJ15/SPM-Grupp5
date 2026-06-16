@@ -157,7 +157,6 @@ protected:
 	void FindBoxToPickup();
 	void ChooseInteractOrPickup();
 	void ReleaseInteract();
-	void HoldToInteract();
 	
 	void AttachPackage();
 	

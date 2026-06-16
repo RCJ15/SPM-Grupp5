@@ -215,11 +215,6 @@ void ASpmG5Character::ReleaseInteract()
 	}
 }
 
-void ASpmG5Character::HoldToInteract()
-{
-	
-}
-
 void ASpmG5Character::Pickup(AItem* Item)
 {
 	Drop();
