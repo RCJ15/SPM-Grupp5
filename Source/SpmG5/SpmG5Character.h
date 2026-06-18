@@ -48,7 +48,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIncreaseIncapacitation = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float MaxIncapacitation = 10;
+	float MaxIncapacitation = 6;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsRagdolling = false;
 	
