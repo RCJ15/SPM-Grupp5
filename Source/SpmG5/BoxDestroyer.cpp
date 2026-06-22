@@ -3,7 +3,6 @@
 #include "BoxDestroyer.h"
 
 #include "GameManager.h"
-#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ABoxDestroyer::ABoxDestroyer()
@@ -58,6 +57,7 @@ void ABoxDestroyer::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 			{
 				Item->Disintegrate(true);
 			}
+			GetWorld()->GetSubsystem<UScoreManager>()->FOnInteractedWithDestoyer;
 		}
 	}
 }
