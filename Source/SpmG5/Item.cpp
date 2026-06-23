@@ -32,7 +32,12 @@ void AItem::BeginPlay()
 	
 	BaseMesh->OnComponentHit.AddDynamic(this, &AItem::OnHit);
 	
-	SetPoints();
+	// SetPoints();
+}
+
+int AItem::GetPoints()
+{
+	return 0;
 }
 
 // Called every frame
@@ -46,50 +51,58 @@ void AItem::Tick(float DeltaTime)
 	}
 }
 
-void AItem::SetPoints()
+// void AItem::SetPoints()
+// {
+// 	Points = 0;
+// 	
+// 	if (IsDangerous)
+// 	{
+// 		SetNegativePoints();
+// 		return;
+// 	}
+// 	
+// 	if (IsLarge)
+// 	{
+// 		Points += LargeBoxPoints;
+// 	}
+// 	else
+// 	{
+// 		Points += SmallBoxPoints;
+// 	}
+// 	
+// 	if (IsFragile)
+// 	{
+// 		Points += FragileBoxPoints;
+// 	}
+// 	
+// 	if (IsRadioactive)
+// 	{
+// 		Points += RadioactiveBoxPoints;
+// 	}
+// 	
+// 	if (IsScanned)
+// 	{
+// 		Points += ScannedBoxPoints;
+// 	}
+// 	
+// 	if (IsInspected)
+// 	{
+// 		Points += InspectedBoxPoints;
+// 	}
+// }
+
+void AItem::PrepareDestroy()
 {
-	Points = 0;
-	
-	if (IsDangerous)
+	for(UBaseItemComponent& Component : Components)
 	{
-		SetNegativePoints();
-		return;
-	}
-	
-	if (IsLarge)
-	{
-		Points += LargeBoxPoints;
-	}
-	else
-	{
-		Points += SmallBoxPoints;
-	}
-	
-	if (IsFragile)
-	{
-		Points += FragileBoxPoints;
-	}
-	
-	if (IsRadioactive)
-	{
-		Points += RadioactiveBoxPoints;
-	}
-	
-	if (IsScanned)
-	{
-		Points += ScannedBoxPoints;
-	}
-	
-	if (IsInspected)
-	{
-		Points += InspectedBoxPoints;
-	}
+		Component.OnItemDestroy();
+	}	
 }
 
-void AItem::SetNegativePoints()
-{
-	Points = WrongBoxPoints;
-}
+// void AItem::SetNegativePoints()
+// {
+// 	Points = WrongBoxPoints;
+// }
 
 void AItem::SetPhysics(bool SetTo)
 {
@@ -106,25 +119,25 @@ void AItem::SetCollitionDefultProfile(bool SetTo)
 		PrimComp->SetCollisionProfileName("OnConveyor");//OnlyRaycast
 }
 
-void AItem::CalculateIfBreakIfFragile()
-{
-	if (IsFragile)
-	{
-		// Checks with how much force fragile item hits something
-		int CurrentSpeed = GetVelocity().Size();
-		UE_LOG(LogTemp, Warning, TEXT("Current Speed: %d"), CurrentSpeed);
-		
-		if (ShouldBreakOnImpact)
-		{
-			Disintegrate(false);
-		}
-		
-		if (CurrentSpeed > MaxSpeedIfFragile)
-		{
-			Disintegrate(false);
-		}
-	}
-}
+// void AItem::CalculateIfBreakIfFragile()
+// {
+// 	if (IsFragile)
+// 	{
+// 		// Checks with how much force fragile item hits something
+// 		int CurrentSpeed = GetVelocity().Size();
+// 		UE_LOG(LogTemp, Warning, TEXT("Current Speed: %d"), CurrentSpeed);
+// 		
+// 		if (ShouldBreakOnImpact)
+// 		{
+// 			Disintegrate(false);
+// 		}
+// 		
+// 		if (CurrentSpeed > MaxSpeedIfFragile)
+// 		{
+// 			Disintegrate(false);
+// 		}
+// 	}
+// }
 
 void AItem::Disintegrate(bool bThrownInTrash)
 {
@@ -159,13 +172,13 @@ void AItem::Disintegrate(bool bThrownInTrash)
 		
 		
 		// Box breaks (it's fragile)
-		if (FragileBreakParticles)
-		{
-			if (ShouldBreakOnDestruction)
-			{
-				UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), FragileBreakParticles, GetActorLocation(), GetActorRotation());
-			}
-		}
+		// if (FragileBreakParticles)
+		// {
+		// 	if (ShouldBreakOnDestruction)
+		// 	{
+		// 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), FragileBreakParticles, GetActorLocation(), GetActorRotation());
+		// 	}
+		// }
 	}
 	
 	//Play SFX - Ruben
@@ -189,6 +202,7 @@ void AItem::Disintegrate(bool bThrownInTrash)
 
 void AItem::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+	OnHitResult.Broadcast(OtherActor, NormalImpulse);
 	if (OtherActor && OtherActor != this)
 	{
 		//MostRecentHolder excludes person who was holding item so it can't destroy item right after dropping it
@@ -197,7 +211,7 @@ void AItem::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimit
 			if (OtherActor != MostRecentHolder)
 			{
 				MostRecentHolder = nullptr;
-				CalculateIfBreakIfFragile();
+				// CalculateIfBreakIfFragile();
 			}
 		}
 		
@@ -285,30 +299,30 @@ void AItem::SetMostRecentHolder(AActor* Holder)
 	//return (MostRecentHolder) ? MostRecentHolder : nullptr;
 }
 
-void AItem::SetIsLarge(bool SetTo)
-{
-	IsLarge = SetTo;
-}
-
-void AItem::SetIsFragile(bool SetTo)
-{
-	IsFragile = SetTo;
-}
-
-void AItem::SetIsRadioactive(bool SetTo)
-{
-	IsRadioactive = SetTo;
-}
-
-void AItem::SetIsSuspicious(bool SetTo)
-{
-	IsSuspicious = SetTo;
-}
-
-void AItem::SetIsDangerous(bool SetTo)
-{
-	IsDangerous = SetTo;
-}
+// void AItem::SetIsLarge(bool SetTo)
+// {
+// 	IsLarge = SetTo;
+// }
+//
+// void AItem::SetIsFragile(bool SetTo)
+// {
+// 	IsFragile = SetTo;
+// }
+//
+// void AItem::SetIsRadioactive(bool SetTo)
+// {
+// 	IsRadioactive = SetTo;
+// }
+//
+// void AItem::SetIsSuspicious(bool SetTo)
+// {
+// 	IsSuspicious = SetTo;
+// }
+//
+// void AItem::SetIsDangerous(bool SetTo)
+// {
+// 	IsDangerous = SetTo;
+// }
 
 void AItem::SetAddress(EBoxAddress NewAddress)
 {

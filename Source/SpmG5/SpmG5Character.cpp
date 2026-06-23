@@ -227,10 +227,10 @@ void ASpmG5Character::Pickup(AItem* Item)
 		HeldItem->ConveyorUpgraded->RemoveFromBelt(HeldItem);
 		UE_LOG(LogTemp, Display, TEXT("Dropping item from conveyor"));
 	}
-	if (Item->GetIsFragile())
-	{
-		Item->ShouldBreakOnImpact = false;
-	}
+	// if (Item->GetIsFragile())
+	// {
+	// 	Item->ShouldBreakOnImpact = false;
+	// }
 	Item->SetIsHeld(true);
 	
 	AttachPackage();
@@ -339,13 +339,13 @@ void ASpmG5Character::Throw(const FInputActionValue& Value)
 	
 	float HalfThrowForce = StartingThrowForce + ((MaxThrowForce - StartingThrowForce) * 0.66);
 	
-	if (HeldItem->GetIsFragile())
-	{
-		if (CurrentThrowForce >= HalfThrowForce)
-		{
-			HeldItem->ShouldBreakOnImpact = true;
-		}
-	}
+	// if (HeldItem->GetIsFragile())
+	// {
+	// 	if (CurrentThrowForce >= HalfThrowForce)
+	// 	{
+	// 		HeldItem->ShouldBreakOnImpact = true;
+	// 	}
+	// }
 	
 	// Play Throw SFX
 	FFMODEventInstance evt = UFMODBlueprintStatics::PlayEventAtLocation(this, ThrowSFX, FTransform(GetActorLocation()), true);

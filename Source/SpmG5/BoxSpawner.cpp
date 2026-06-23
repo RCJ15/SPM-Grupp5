@@ -52,12 +52,12 @@ AItem* ABoxSpawner::SpawnItem()
 		if (Item)
 		{
 			//UE_LOG(LogTemp, Warning, TEXT("Spawning Box"));
-			Item->SetIsLarge(ShouldHappen(LargeBoxSpawnRate));
-			Item->SetIsFragile(ShouldHappen(FragileBoxSpawnRate));
-			//Item->SetIsDangerous(ShouldHappen(DangerousBoxSpawnRate));
-			//Item->SetActorRotation(SpawnLocation->GetComponentRotation() + FRotator(0, FMath::RandRange(-15,15), 0));
-			Item->SetIsSuspicious(IsSuspicious);
-			Item->SetIsDangerous(IsDangerous);
+			// Item->SetIsLarge(ShouldHappen(LargeBoxSpawnRate));
+			// Item->SetIsFragile(ShouldHappen(FragileBoxSpawnRate));
+			// //Item->SetIsDangerous(ShouldHappen(DangerousBoxSpawnRate));
+			// //Item->SetActorRotation(SpawnLocation->GetComponentRotation() + FRotator(0, FMath::RandRange(-15,15), 0));
+			// Item->SetIsSuspicious(IsSuspicious);
+			// Item->SetIsDangerous(IsDangerous);
 			Item->SetPlaySound(PlayBoxSound);
 		}
 
@@ -100,13 +100,13 @@ AItem* ABoxSpawner::SpawnItem()
 	if (Item)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("Spawning Box"));
-		Item->SetIsLarge(Properties.Contains(EBoxType::Large));
-		Item->SetIsFragile(Properties.Contains(EBoxType::Fragile));
-		Item->SetIsRadioactive(Properties.Contains(EBoxType::Radioactive));
-		//Item->SetIsDangerous(ShouldHappen(DangerousBoxSpawnRate));
-		//Item->SetActorRotation(SpawnLocation->GetComponentRotation() + FRotator(0, FMath::RandRange(-15,15), 0));
-		Item->SetIsSuspicious(Properties.Contains(EBoxType::Suspicious));
-		Item->SetIsDangerous(Properties.Contains(EBoxType::Dangerous));
+		// Item->SetIsLarge(Properties.Contains(EBoxType::Large));
+		// Item->SetIsFragile(Properties.Contains(EBoxType::Fragile));
+		// Item->SetIsRadioactive(Properties.Contains(EBoxType::Radioactive));
+		// //Item->SetIsDangerous(ShouldHappen(DangerousBoxSpawnRate));
+		// //Item->SetActorRotation(SpawnLocation->GetComponentRotation() + FRotator(0, FMath::RandRange(-15,15), 0));
+		// Item->SetIsSuspicious(Properties.Contains(EBoxType::Suspicious));
+		// Item->SetIsDangerous(Properties.Contains(EBoxType::Dangerous));
 		
 		if (Properties.Contains(EBoxType::Square))
 		{
@@ -155,12 +155,12 @@ AItem* ABoxSpawner::SpawnItem(bool IsDangerous, bool IsLarge, bool IsFragile, bo
 	if (Item)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("Spawning Box"));
-		Item->SetIsLarge(IsLarge);
-		Item->SetIsFragile(IsFragile);
-		//Item->SetIsDangerous(ShouldHappen(DangerousBoxSpawnRate));
-		//Item->SetActorRotation(SpawnLocation->GetComponentRotation() + FRotator(0, FMath::RandRange(-15,15), 0));
-		Item->SetIsSuspicious(IsSuspicious);
-		Item->SetIsDangerous(IsDangerous);
+		// Item->SetIsLarge(IsLarge);
+		// Item->SetIsFragile(IsFragile);
+		// //Item->SetIsDangerous(ShouldHappen(DangerousBoxSpawnRate));
+		// //Item->SetActorRotation(SpawnLocation->GetComponentRotation() + FRotator(0, FMath::RandRange(-15,15), 0));
+		// Item->SetIsSuspicious(IsSuspicious);
+		// Item->SetIsDangerous(IsDangerous);
 		Item->SetAddress(Address);
 		Item->SetPlaySound(PlayBoxSound);
 	}
