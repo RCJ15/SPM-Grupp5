@@ -78,3 +78,4 @@ DerivedDataCache/*
 Plugins/FMODStudio/Binaries/Win64/UnrealEditor-FMODStudio.pdb
 Plugins/FMODStudio/Binaries/Win64/UnrealEditor-FMODStudioEditor.pdb
 Plugins/FMODStudioNiagara/Binaries/Win64/UnrealEditor-FMODStudioNiagara.pdb
+/.idea
