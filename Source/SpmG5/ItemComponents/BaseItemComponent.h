@@ -14,23 +14,11 @@ class SPMG5_API UBaseItemComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
-	UBaseItemComponent();
-
-protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
+	virtual void OnItemDestroy(){}
+	virtual int GetPoints();
+	
+protected:
 	UPROPERTY()
 	AItem* Owner;
-	
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	virtual void OnItemDestroy(){}
-	virtual int GetPoints();	
-	
-	
-	
-	
-		
 };

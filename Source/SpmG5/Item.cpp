@@ -9,6 +9,7 @@
 #include "StateTreeTypes.h"
 #include "DynamicMesh/DynamicMesh3.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "ItemComponents/FragileComponent.h"
 
 // Sets default values
 AItem::AItem()
@@ -37,7 +38,15 @@ void AItem::BeginPlay()
 
 int AItem::GetPoints()
 {
-	return 0;
+	if (OverridePoints != 0) return OverridePoints;
+	
+	int Points = 0;
+	for (UBaseItemComponent* Component : Components)
+	{
+		Points += Component->GetPoints();
+	}
+	Points += BonusPoints;
+	return Points;
 }
 
 // Called every frame
@@ -49,6 +58,11 @@ void AItem::Tick(float DeltaTime)
 	{
 		CollisionSFXTimer -= DeltaTime;
 	}
+}
+
+void AItem::AddComponent(UBaseItemComponent* Component)
+{
+	Components.Add(Component);
 }
 
 // void AItem::SetPoints()
@@ -93,16 +107,27 @@ void AItem::Tick(float DeltaTime)
 
 void AItem::PrepareDestroy()
 {
-	for(UBaseItemComponent& Component : Components)
+	for(UBaseItemComponent* Component : Components)
 	{
-		Component.OnItemDestroy();
+		Component->OnItemDestroy();
 	}	
+	Destroy();
 }
 
 // void AItem::SetNegativePoints()
 // {
 // 	Points = WrongBoxPoints;
 // }
+
+void AItem::SetOverridePoints(int Points)
+{
+	OverridePoints = Points;
+}
+
+void AItem::AddBonusPoints(int Points)
+{
+	BonusPoints += Points;
+}
 
 void AItem::SetPhysics(bool SetTo)
 {

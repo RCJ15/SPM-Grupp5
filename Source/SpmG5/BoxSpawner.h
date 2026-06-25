@@ -4,7 +4,12 @@
 #include "GameFramework/Actor.h"
 #include "Item.h"
 #include "SpawnAI.h"
+#include "ItemComponents/ExplosiveComponent.h"
+#include "ItemComponents/FragileComponent.h"
+#include "ItemComponents/RadioactiveComponent.h"
+#include "ItemComponents/SuspiciousComponent.h"
 #include "BoxSpawner.generated.h"
+
 
 UCLASS()
 class SPMG5_API ABoxSpawner : public AActor
@@ -35,6 +40,13 @@ protected:
 
 private:
 	static int SpawnedBoxes;
+	
+	TMap<EBoxType, const TSubclassOf<UBaseItemComponent>> PropertyToComponentMap = {
+		{EBoxType::Fragile, UFragileComponent::StaticClass()},
+		{EBoxType::Suspicious, USuspiciousComponent::StaticClass()},
+		{EBoxType::Bomb, UExplosiveComponent::StaticClass()},
+		{EBoxType::Radioactive, URadioactiveComponent::StaticClass()}
+	};
 	
 	UPROPERTY()
 	USpawnAI* SpawnAI;

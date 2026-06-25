@@ -10,7 +10,8 @@ void URadioactiveComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),Radiation,Owner->GetActorLocation(),Owner->GetActorRotation());
-	RadiationRadius = CreateDefaultSubobject<USphereComponent>("RadiationSphere");
+	
+	RadiationRadius = NewObject<USphereComponent>(Owner, USphereComponent::StaticClass(), TEXT("RadiationRadius"));
 	
 	RadiationRadius->InitSphereRadius(3.255);
 	RadiationRadius->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
@@ -29,14 +30,14 @@ void URadioactiveComponent::BeginPlay()
 
 void URadioactiveComponent::OnOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (ASpmG5Character* Car = Cast<ASpmG5Character>(OtherActor))
-		Car->IncreaseIncapacitation(true);
+	if (ASpmG5Character* Char = Cast<ASpmG5Character>(OtherActor))
+		Char->IncreaseIncapacitation(true);
 }
 
 void URadioactiveComponent::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (ASpmG5Character* Car = Cast<ASpmG5Character>(OtherActor))
-		Car->IncreaseIncapacitation(false);
+	if (ASpmG5Character* Char = Cast<ASpmG5Character>(OtherActor))
+		Char->IncreaseIncapacitation(false);
 }
 
 

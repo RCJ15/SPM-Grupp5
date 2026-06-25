@@ -75,7 +75,7 @@ AItem* ABoxSpawner::SpawnItem()
 	{
 		return nullptr;
 	}
-	
+	/*
 	if (Properties.Contains(EBoxType::Dangerous))
 	{
 		if (Properties.Contains(EBoxType::Bomb) && !Properties.Contains(EBoxType::Radioactive))
@@ -92,13 +92,22 @@ AItem* ABoxSpawner::SpawnItem()
 	{
 		ItemToSpawn = RadioactiveItemToSpawn;
 	}
-
+	*/
 	// Sets all properties of an item before spawning it
 	AActor* NewActor = GetWorld()->SpawnActorDeferred<AActor>(ItemToSpawn, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	AItem* Item = Cast<AItem>(NewActor);
 	
 	if (Item)
 	{
+		for (EBoxType Property : Properties)
+		{
+			if (PropertyToComponentMap.Contains(Property))
+			{
+				UBaseItemComponent* Comp = NewObject<UBaseItemComponent>(Item, *PropertyToComponentMap.Find(Property));
+				Comp->RegisterComponent();
+				Item->AddComponent(Comp);
+			}
+		}
 		//UE_LOG(LogTemp, Warning, TEXT("Spawning Box"));
 		// Item->SetIsLarge(Properties.Contains(EBoxType::Large));
 		// Item->SetIsFragile(Properties.Contains(EBoxType::Fragile));

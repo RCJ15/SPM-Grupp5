@@ -13,5 +13,4 @@ UCLASS()
 class SPMG5_API UConfettiComponent : public UBaseItemComponent
 {
 	GENERATED_BODY()
-	
 };

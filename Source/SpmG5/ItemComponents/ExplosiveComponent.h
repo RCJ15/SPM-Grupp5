@@ -15,42 +15,17 @@ UCLASS()
 class SPMG5_API UExplosiveComponent : public UBaseItemComponent
 {
 	GENERATED_BODY()
-	
-	
-protected:
-	virtual void BeginPlay() override;
-	
+
 public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<UCameraShakeBase> CameraShake;
-	
-	UPROPERTY(EditAnywhere)
-	UNiagaraSystem* ExplosionParticles;
+	virtual void BeginPlay() override;
 	
 	UFUNCTION()
 	void Explode();
 	
 	UFUNCTION()
 	void StartCountDownTimer();
-	
-	UFUNCTION()
-	void OnEndTimer();
 		
 private:
-	/* SFX */
-	UPROPERTY(EditAnywhere, Category="Audio")
-	
-	UFMODEvent* FuseSFX;
-	UPROPERTY()
-	UFMODAudioComponent* FuseSFXInstance;
-	float FuseSFXTimer = 0;
-	
-	UPROPERTY(EditAnywhere, Category="Audio")
-	UFMODEvent* ExplodeSFX;
-	
 	UPROPERTY(EditAnywhere)
 	float Lifetime = 10.0f;
 	
@@ -74,4 +49,22 @@ private:
 	
 	void Shake();
 	
+	/* VFX */
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* ExplosionParticles;
+	
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UCameraShakeBase> CameraShake;
+	
+	/* SFX */
+	float FuseSFXTimer = 0;
+	
+	UPROPERTY(EditAnywhere, Category="Audio")
+	UFMODEvent* FuseSFX;
+	
+	UPROPERTY(EditAnywhere, Category="Audio")
+	UFMODEvent* ExplodeSFX;
+	
+	UPROPERTY()
+	UFMODAudioComponent* FuseSFXInstance;
 };

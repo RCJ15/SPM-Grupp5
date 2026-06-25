@@ -15,6 +15,8 @@ class SPMG5_API USuspiciousComponent : public UBaseItemComponent
 	GENERATED_BODY()
 public:
 	virtual int GetPoints() override;
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool GetIsBad(){return IsBad;}
 	void SetIsBad(bool SetTo){IsBad = SetTo;}
 	//icon??

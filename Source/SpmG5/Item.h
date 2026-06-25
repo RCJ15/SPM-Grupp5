@@ -15,6 +15,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHitResult, AActor*, OtherActor, FVector, NormalImpulse);
 
 
+
 class AConveyorBeltUpgraded;
 
 UENUM(BlueprintType)
@@ -343,7 +344,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EBoxAddress Address = EBoxAddress::SQUARE;
 	
-	TArray<UBaseItemComponent> Components;
+	UPROPERTY()
+	TArray<UBaseItemComponent*> Components;
 	
 	UPROPERTY(EditAnywhere)
 	bool IsScanned = false;
@@ -360,15 +362,32 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	AActor* MostRecentHolder;
 	
+	int OverridePoints = 0;
+	
+	int BonusPoints = 0;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	int ScannedBoxPoints = 5;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	int InspectedPoints = 5;
 	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	
+	void AddComponent(UBaseItemComponent* Component);
 		
 	void PrepareDestroy();
 		
 	UFUNCTION(BlueprintCallable)
 	UPrimitiveComponent* GetPrimitive(){return PrimComp;}
+	
+	UFUNCTION(BlueprintCallable)
+	void SetOverridePoints(int Points);
+	
+	UFUNCTION(BlueprintCallable)
+	void AddBonusPoints(int Points);
 	
 	void SetPhysics(bool SetTo);
 	void SetCollitionDefultProfile(bool SetTo);

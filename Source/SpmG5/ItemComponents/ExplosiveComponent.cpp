@@ -32,14 +32,9 @@ void UExplosiveComponent::StartCountDownTimer()
 	GetWorld()->GetTimerManager().SetTimer(
 		BadBoxTimer,
 		this,
-		&UExplosiveComponent::OnEndTimer,
+		&UExplosiveComponent::Explode,
 		Lifetime,
 		false);
-}
-
-void UExplosiveComponent::OnEndTimer()
-{
-	Explode();
 }
 
 void UExplosiveComponent::StartShake()
@@ -61,29 +56,21 @@ void UExplosiveComponent::Shake()
 	Owner->SetActorLocation(FVector(OldLoc.X + FMath::RandRange(-ShakeIntensity,ShakeIntensity), OldLoc.Y + FMath::RandRange(-ShakeIntensity,ShakeIntensity), OldLoc.Z));
 }
 
-void UExplosiveComponent::TickComponent(float DeltaTime, enum ELevelTick TickType,
-                                        FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-}
-
 void UExplosiveComponent::Explode()
 {
-	//skapa sweepsphere
+	// Setup sweep sphere
 	TArray<FHitResult> Hit;
 	float Radius = 200.0f;
-	//FVector End = GetActorLocation() + GetActorForwardVector() * Radius;
 	FQuat Rotation = Owner->GetActorRotation().Quaternion();
-		
+	
+	// Trace channel for Item, character and UCanBeBroken
 	GetWorld()->SweepMultiByChannel(Hit,Owner->GetActorLocation(), Owner->GetActorLocation(), Rotation, ECC_GameTraceChannel6, FCollisionShape::MakeSphere(Radius));
-
-	//för varje item 
+	
 	for (auto i : Hit)
 	{
 		if (i.GetActor() && i.GetComponent() && Cast<ASpmG5Character>(i.GetActor()))
 		{
 			ASpmG5Character* Character = Cast<ASpmG5Character>(i.GetActor());
-			//spelaren måste droppa item
 			Character->Drop();
 			Character->AddVelocity((Owner->GetActorLocation() - Character->GetActorLocation())/Owner->GetActorLocation()*10);
 			Character->DoRagdoll();
