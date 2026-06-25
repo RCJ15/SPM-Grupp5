@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/WorldSubsystem.h"
+#include "ConveyorBeltUpgraded.h"
 #include "DifficultyManager.generated.h"
 
 /**
@@ -14,6 +15,12 @@ class SPMG5_API UDifficultyManager : public UWorldSubsystem
 {
 	GENERATED_BODY()
 	
+	
+public:
+	void UpdateDifficulty();
+	
+	UPROPERTY()
+	TArray<AConveyorBeltUpgraded*> ConveyorBelts;
 private:
 	void CheckPerformance();
 	void SetBeltSpeed(float BeltSpeed);
@@ -23,4 +30,5 @@ private:
 	void SetBlowRate();
 	void SetPlayerSpeed(float PlayerSpeed);
 	void SetMultiplier(float Multiplier);
+	
 };

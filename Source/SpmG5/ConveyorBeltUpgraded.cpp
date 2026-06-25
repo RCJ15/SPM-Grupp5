@@ -2,6 +2,9 @@
 
 #include "ConveyorBeltUpgraded.h"
 
+#include "DifficultyManager.h"
+#include "K2Node_GetSubsystem.h"
+
 // Sets default values
 AConveyorBeltUpgraded::AConveyorBeltUpgraded()
 {
@@ -15,7 +18,10 @@ AConveyorBeltUpgraded::AConveyorBeltUpgraded()
 void AConveyorBeltUpgraded::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
+	//gör belts synliga för difficulty manager
+	UDifficultyManager* DifficultyManager = GetWorld()->GetSubsystem<UDifficultyManager>();
+	DifficultyManager->ConveyorBelts.Add(this);
 
 	for (int i = 0; i < Segments.Num(); i++)
 	{
