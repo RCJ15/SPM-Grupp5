@@ -19,10 +19,12 @@ class SPMG5_API UExplosiveComponent : public UBaseItemComponent
 public:	
 	virtual void BeginPlay() override;
 	
-	UFUNCTION()
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	
+	UFUNCTION(BlueprintCallable)
 	void Explode();
 	
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void StartCountDownTimer();
 		
 private:

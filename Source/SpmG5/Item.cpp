@@ -231,13 +231,9 @@ void AItem::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimit
 	if (OtherActor && OtherActor != this)
 	{
 		//MostRecentHolder excludes person who was holding item so it can't destroy item right after dropping it
-		if (MostRecentHolder)
+		if (MostRecentHolder && OtherActor != MostRecentHolder)
 		{
-			if (OtherActor != MostRecentHolder)
-			{
-				MostRecentHolder = nullptr;
-				// CalculateIfBreakIfFragile();
-			}
+			MostRecentHolder = nullptr;
 		}
 		
 		//FIXA EFTER SPLETEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

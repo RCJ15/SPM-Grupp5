@@ -11,7 +11,19 @@
 void UExplosiveComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	StartShakeAt = 5;
 	
+	FuseSFXInstance = UFMODBlueprintStatics::PlayEventAttached(
+		FuseSFX, //FMOD event asset
+		Owner->BaseMesh, //component to attach to
+		NAME_None, //optional socket name
+		FVector::ZeroVector, 
+		EAttachLocation::KeepRelativeOffset, 
+		true, 
+		true, 
+		true
+		);
+
 	if (ShakeWhenTimerLow)
 	{
 		FTimerHandle ShakeWhenLowCountdownTimer;
@@ -25,6 +37,13 @@ void UExplosiveComponent::BeginPlay()
 			false
 		);
 	}	
+}
+
+void UExplosiveComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	//set SFX Progress for dynamic pitch increase as the timer goes - Ruben
+	FuseSFXTimer += DeltaTime;
+	FuseSFXInstance->SetParameter("Progress", FuseSFXTimer / Lifetime);
 }
 
 void UExplosiveComponent::StartCountDownTimer()

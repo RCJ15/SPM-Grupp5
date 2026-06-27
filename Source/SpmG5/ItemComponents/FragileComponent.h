@@ -22,6 +22,7 @@ class SPMG5_API UFragileComponent : public UBaseItemComponent
 public:
 	virtual int GetPoints() override {return Points;}
 	virtual void OnItemDestroy() override;
+	void SetShouldBreakOnImpact(bool ShouldBreak) {ShouldBreakOnImpact = ShouldBreak;}
 	
 protected:
 	virtual void BeginPlay() override;
@@ -32,7 +33,7 @@ private:
 	void OnHit(AActor* OtherActor, FVector NormalImpulse);
 		
 	int Points = 5;
-	float MaxSpeed = 400;
+	float MaxSpeed = 500;
 	bool ShouldBreakOnImpact = false;
 	
 	UPROPERTY(EditAnywhere)

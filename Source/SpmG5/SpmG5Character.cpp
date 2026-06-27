@@ -339,13 +339,13 @@ void ASpmG5Character::Throw(const FInputActionValue& Value)
 	
 	float HalfThrowForce = StartingThrowForce + ((MaxThrowForce - StartingThrowForce) * 0.66);
 	
-	// if (HeldItem->GetIsFragile())
-	// {
-	// 	if (CurrentThrowForce >= HalfThrowForce)
-	// 	{
-	// 		HeldItem->ShouldBreakOnImpact = true;
-	// 	}
-	// }
+	if (UFragileComponent* FragComp = HeldItem->GetComponentByClass<UFragileComponent>())
+	{
+		if (CurrentThrowForce >= HalfThrowForce)
+		{
+			FragComp->SetShouldBreakOnImpact(true);
+		}
+	}
 	
 	// Play Throw SFX
 	FFMODEventInstance evt = UFMODBlueprintStatics::PlayEventAtLocation(this, ThrowSFX, FTransform(GetActorLocation()), true);

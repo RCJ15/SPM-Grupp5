@@ -38,15 +38,12 @@ protected:
 	//UPROPERTY(EditAnywhere)
 	//FVector SpawnLocation = FVector(50,50,120);
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TMap<EBoxType, const TSubclassOf<UBaseItemComponent>> PropertyToComponentMap;
+	
 private:
 	static int SpawnedBoxes;
 	
-	TMap<EBoxType, const TSubclassOf<UBaseItemComponent>> PropertyToComponentMap = {
-		{EBoxType::Fragile, UFragileComponent::StaticClass()},
-		{EBoxType::Suspicious, USuspiciousComponent::StaticClass()},
-		{EBoxType::Bomb, UExplosiveComponent::StaticClass()},
-		{EBoxType::Radioactive, URadioactiveComponent::StaticClass()}
-	};
 	
 	UPROPERTY()
 	USpawnAI* SpawnAI;

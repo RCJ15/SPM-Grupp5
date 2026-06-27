@@ -8,7 +8,7 @@
 
 class AItem;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SPMG5_API UBaseItemComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -18,7 +18,10 @@ public:
 	virtual void OnItemDestroy(){}
 	virtual int GetPoints();
 	
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void BreakCaller(AActor* Actor);
+	
 protected:
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	AItem* Owner;
 };
