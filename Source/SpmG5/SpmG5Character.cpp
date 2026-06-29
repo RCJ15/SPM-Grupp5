@@ -440,6 +440,7 @@ void ASpmG5Character::IncreaseIncapacitation(float Increase)
 	if (IncapacitationMeter > MaxIncapacitation && !bIsRagdolling)
 	{
 		DoRagdoll();
+		IncapacitationMeter = 0.f;
 	}
 }
 

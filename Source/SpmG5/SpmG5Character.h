@@ -45,8 +45,7 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float IncapacitationMeter = 0; 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bIncreaseIncapacitation = false;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxIncapacitation = 10;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -139,6 +138,9 @@ protected:
 public:
 	/** Constructor */
 	ASpmG5Character();	
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIncreaseIncapacitation = false;
 
 protected:
 	//Om ska implementera som timer istället
