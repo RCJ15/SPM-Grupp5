@@ -47,7 +47,9 @@ void ABoxDestroyer::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 				{
 					HandleBox(Item);
 				}
-				GetWorld()->GetSubsystem<UScoreManager>()->AddScore(Item->GetPoints());
+				int Score = Item->GetPoints();
+				UE_LOG(LogTemp, Error, TEXT("Item Score: %d"), Score);
+				GetWorld()->GetSubsystem<UScoreManager>()->AddScore(Score);
 				UGameManager* GameManager = Cast<UGameManager>(GetWorld()->GetGameInstance());
 				GameManager->BoxDead();
 				Item->Destroy();

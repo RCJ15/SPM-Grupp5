@@ -17,9 +17,8 @@ void URadioactiveComponent::BeginPlay()
 	CenterPosition.SetLocation(FVector(0.0f, 0.0f, (Max.Z - Min.Z)/2));
 	
 	RadiationRadius = Cast<USphereComponent>(Owner->AddComponentByClass(USphereComponent::StaticClass(),false, CenterPosition, true));
-	RadiationRadius->InitSphereRadius(87.5);
+	RadiationRadius->InitSphereRadius(95);
 	Owner->FinishAddComponent(RadiationRadius, false, CenterPosition);
-	Owner->AddInstanceComponent(RadiationRadius);
 	
 	RadiationRadius->OnComponentBeginOverlap.AddDynamic(this, &URadioactiveComponent::OnOverlapStart);
 	RadiationRadius->OnComponentEndOverlap.AddDynamic(this, &URadioactiveComponent::OnOverlapEnd);
@@ -27,14 +26,18 @@ void URadioactiveComponent::BeginPlay()
 	RadiationComponent = Cast<UNiagaraComponent>(Owner->AddComponentByClass(UNiagaraComponent::StaticClass(),false, CenterPosition, true));
 	RadiationComponent->SetAsset(RadiationFX);
 	Owner->FinishAddComponent(RadiationComponent, false, CenterPosition);
-	Owner->AddInstanceComponent(RadiationComponent);
+}
+
+int URadioactiveComponent::GetPoints()
+{
+	return Points;
 }
 
 void URadioactiveComponent::OnOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (ASpmG5Character* Char = Cast<ASpmG5Character>(OtherActor))
 	{
-		Char->bIncreaseIncapacitation = true;
+		Char->bRadioactiveOverlapCounter++;
 	}
 }
 
@@ -42,6 +45,6 @@ void URadioactiveComponent::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AA
 {
 	if (ASpmG5Character* Char = Cast<ASpmG5Character>(OtherActor))
 	{
-		Char->bIncreaseIncapacitation = false;
+		Char->bRadioactiveOverlapCounter--;
 	}
 }

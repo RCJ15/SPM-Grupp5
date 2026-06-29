@@ -140,7 +140,7 @@ public:
 	ASpmG5Character();	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bIncreaseIncapacitation = false;
+	int bRadioactiveOverlapCounter = 0;
 
 protected:
 	//Om ska implementera som timer istället

@@ -390,7 +390,7 @@ void ASpmG5Character::Tick(float DeltaTime)
 	if (!HeldItem)
 		FindBoxToPickup();
 	
-	if (bIncreaseIncapacitation)
+	if (bRadioactiveOverlapCounter > 0)
 	{
 		IncreaseIncapacitation();
 	}

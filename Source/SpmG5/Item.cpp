@@ -40,7 +40,7 @@ int AItem::GetPoints()
 {
 	if (OverridePoints != 0) return OverridePoints;
 	
-	int Points = 0;
+	int Points = 5;
 	for (UBaseItemComponent* Component : Components)
 	{
 		Points += Component->GetPoints();
