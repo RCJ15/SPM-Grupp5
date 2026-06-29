@@ -32,6 +32,12 @@ struct FLevelInfo
 	bool IsTutorial;
 	
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Default")
+	bool bShowInstructionsWidget; 
+	
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Default", meta=(EditCondition="bShowInstructionsWidget", EditConditionHides))
+	UTexture2D* InstructionsImage;
+	
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Default")
 	int AmountOfBoxesPerLevel = 100.f;
 	
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Default", EditFixedSize, meta=(UIMin = "0.0", UIMax = "100.0"), meta=(ReadOnlyKeys), meta=(ShowOnlyInnerProperties))
