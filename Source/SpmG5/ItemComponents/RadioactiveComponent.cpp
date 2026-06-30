@@ -3,41 +3,48 @@
 
 #include "ItemComponents/RadioactiveComponent.h"
 
-#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 #include "SpmG5Character.h"
 
 void URadioactiveComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(),Radiation,Owner->GetActorLocation(),Owner->GetActorRotation());
 	
-	RadiationRadius = NewObject<USphereComponent>(Owner, USphereComponent::StaticClass(), TEXT("RadiationRadius"));
+	FTransform CenterPosition;
+	FVector Min = FVector::ZeroVector;
+	FVector Max = FVector::ZeroVector;
+	Owner->BaseMesh->GetLocalBounds(Min,Max);
+	CenterPosition.SetLocation(FVector(0.0f, 0.0f, (Max.Z - Min.Z)/2));
 	
-	RadiationRadius->InitSphereRadius(3.255);
-	RadiationRadius->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
-	RadiationRadius->SetVisibility(true);
-	
-	RadiationRadius->SetGenerateOverlapEvents(true);
-	
-	RadiationRadius->AttachToComponent(Owner->GetRootComponent(), FAttachmentTransformRules::KeepWorldTransform);
-	RadiationRadius->RegisterComponent();
-	
+	RadiationRadius = Cast<USphereComponent>(Owner->AddComponentByClass(USphereComponent::StaticClass(),false, CenterPosition, true));
+	RadiationRadius->InitSphereRadius(95);
+	Owner->FinishAddComponent(RadiationRadius, false, CenterPosition);
 	
 	RadiationRadius->OnComponentBeginOverlap.AddDynamic(this, &URadioactiveComponent::OnOverlapStart);
 	RadiationRadius->OnComponentEndOverlap.AddDynamic(this, &URadioactiveComponent::OnOverlapEnd);
 	
+	RadiationComponent = Cast<UNiagaraComponent>(Owner->AddComponentByClass(UNiagaraComponent::StaticClass(),false, CenterPosition, true));
+	RadiationComponent->SetAsset(RadiationFX);
+	Owner->FinishAddComponent(RadiationComponent, false, CenterPosition);
+}
+
+int URadioactiveComponent::GetPoints()
+{
+	return Points;
 }
 
 void URadioactiveComponent::OnOverlapStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (ASpmG5Character* Char = Cast<ASpmG5Character>(OtherActor))
-		Char->IncreaseIncapacitation(true);
+	{
+		Char->bRadioactiveOverlapCounter++;
+	}
 }
 
 void URadioactiveComponent::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	if (ASpmG5Character* Char = Cast<ASpmG5Character>(OtherActor))
-		Char->IncreaseIncapacitation(false);
+	{
+		Char->bRadioactiveOverlapCounter--;
+	}
 }
-
-

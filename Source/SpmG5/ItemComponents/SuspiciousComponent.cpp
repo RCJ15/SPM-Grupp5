@@ -5,5 +5,9 @@
 
 int USuspiciousComponent::GetPoints()
 {
-	return Points;
-}
+	if (IsBad)
+	{
+		return Points;
+	}
+	return 0;
+}	
