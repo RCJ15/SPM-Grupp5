@@ -8,6 +8,9 @@
 #include "ScoreManager.h"
 #include "BoxDestroyer.generated.h"
 
+UDELEGATE(BlueprintCallable)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractedWithDestoyer);
+
 UCLASS()
 class SPMG5_API ABoxDestroyer : public AActor
 {
@@ -16,6 +19,9 @@ class SPMG5_API ABoxDestroyer : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ABoxDestroyer();
+	
+	UPROPERTY(Blueprintable, BlueprintReadWrite, BlueprintAssignable, BlueprintCallable)
+	FOnInteractedWithDestoyer OnInteractedWithDestoyer;
 
 protected:
 	// Called when the game starts or when spawned
@@ -27,6 +33,9 @@ protected:
 	// Can act as both collecting station and trash chute
 	UPROPERTY(EditAnywhere)
 	bool IsTrashChute = false;
+	
+	UFUNCTION()
+	void test(){UE_LOG(LogTemp, Warning, TEXT("Test happens"))}
 
 public:	
 	// Called every frame

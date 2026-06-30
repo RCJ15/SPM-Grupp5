@@ -25,6 +25,8 @@ void ABoxDestroyer::BeginPlay()
 	
 	// So far, box destruction is called when a box touches the lid of the mesh
 	LidMesh->OnComponentHit.AddDynamic(this, &ABoxDestroyer::OnHit);
+	
+	OnInteractedWithDestoyer.AddUniqueDynamic(this, &ABoxDestroyer::test);
 }
 
 void ABoxDestroyer::Tick(float DeltaTime)
@@ -34,6 +36,10 @@ void ABoxDestroyer::Tick(float DeltaTime)
 
 void ABoxDestroyer::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+	
+	
+	OnInteractedWithDestoyer.Broadcast();
+	
 	if (OtherActor && OtherActor != this)
 	{
 		AItem* Item = Cast<AItem>(OtherActor);
@@ -57,7 +63,6 @@ void ABoxDestroyer::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 			{
 				Item->Disintegrate(true);
 			}
-			GetWorld()->GetSubsystem<UScoreManager>()->FOnInteractedWithDestoyer;
 		}
 	}
 }
