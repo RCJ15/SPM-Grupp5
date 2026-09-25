@@ -15,6 +15,8 @@
 #include "SpmG5.h"
 #include "FMODBlueprintStatics.h"
 #include "Interactable.h"
+#include "StateTreeTypes.h"
+#include "Dataflow/DataflowEngineUtil.h"
 
 ASpmG5Character::ASpmG5Character()
 {
@@ -114,6 +116,8 @@ void ASpmG5Character::FindBoxToPickup()
 		FirstBoxIndex++;
 	}
 		
+	DrawDebugBox(GetWorld(), HoldingLocation->GetComponentLocation(), FVector(HoldingLocation->GetComponentLocation() + GetActorForwardVector() * 5.f), FColor(0,255,0));
+	
 	if (HitResults.IsValidIndex(FirstBoxIndex) && Cast<AItem>(HitResults[FirstBoxIndex].GetActor()))
 	{
 		AItem* TestCastItemToPickup = Cast<AItem>(HitResults[FirstBoxIndex].GetActor());
